@@ -6,36 +6,24 @@
     "start": "npm run prod",
     "server": "node ./server/bin/www",
     "transpile": "./node_modules/babel ./server --out-dir dist-server",
-    "clean": "rimraf dist-server",
+    "clean": "rm -r dist-server",
     "build": "npm-run-all clean transpile",
     "dev": "NODE_ENV=development npm-run-all server",
     "prod": "NODE_ENV=production npm-run-all server",
     "watch-dev": "nodemon --legacy-watch"
   },
   "dependencies": {
-    "@babel/core": "^7.12.3",
-    "@babel/plugin-transform-runtime": "^7.12.1",
-    "@babel/preset-env": "^7.12.1",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "~4.16.1",
     "morgan": "~1.9.1",
     "nodemon": "^2.0.6",
-    "npm-run-all": "^4.1.5",
-    "rimraf": "^3.0.2"
+    "npm-run-all": "^4.1.5"
   },
   "nodemonConfig": {
     "exec": "npm run dev",
     "watch": [
       "server/*"
-    ]
-  },
-  "babel": {
-    "presets": [
-      "@babel/preset-env"
-    ],
-    "plugins": [
-      "@babel/plugin-transform-runtime"
     ]
   }
 }
