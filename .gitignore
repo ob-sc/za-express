@@ -1,5 +1,9 @@
 node_modules
 alt
 
+*.log
+
+config.js
+
 package-lock.json
 yarn.lock
