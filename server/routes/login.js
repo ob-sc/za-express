@@ -1,12 +1,15 @@
 var express = require('express');
 var router = express.Router();
 
-var query = require('../util/db.js');
+var connection = require('../util/connection.js');
+var query = require('../util/query.js');
 
-/* GET home page. */
-router.get('/login', function (req, res) {
-  var result = query('SELECT * FROM benutzer');
-  res.json({ result });
+router.get('/', async (req, res) => {
+  const conn = await connection().catch(console.log);
+  const results = await query(conn, 'SELECT * FROM benutzer').catch(
+    console.log
+  );
+  res.json({ results });
 });
 
 module.exports = router;
