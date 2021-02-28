@@ -1,10 +1,10 @@
 {
+  "editor.tabSize": 2,
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "prettier.requireConfig": true,
 
-  "eslint.enable": true,
-  "eslint.packageManager": "npm",
+  "eslint.packageManager": "yarn",
   "eslint.validate": ["javascript"],
   "eslint.lintTask.enable": true
 }

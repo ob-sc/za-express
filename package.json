@@ -2,9 +2,12 @@
   "name": "za-express",
   "version": "0.0.2",
   "private": true,
+  "engines": {
+    "node": ">=15.0.0"
+  },
   "scripts": {
     "start": "npm run prod",
-    "server": "node -r dotenv/config ./server/bin/www",
+    "server": "node -r dotenv/config ./server/bin/www --trace-sync-io",
     "dev": "sh clear_port.sh && NODE_ENV=development npm run server",
     "prod": "NODE_ENV=production npm run server",
     "watch": "nodemon"
@@ -13,6 +16,7 @@
     "cookie-parser": "^1.4.4",
     "debug": "^2.6.9",
     "express": "^4.16.1",
+    "express-mysql-session": "^2.1.5",
     "express-session": "^1.17.1",
     "morgan": "^1.9.1",
     "mysql": "^2.18.1",
