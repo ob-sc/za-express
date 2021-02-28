@@ -1,14 +1,14 @@
-var express = require('express');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const express = require('express');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
 
-var indexRouter = require('./routes/index');
-var loginRouter = require('./routes/login');
+const indexRouter = require('./routes/index');
+const loginRouter = require('./routes/login');
 
-var errorHandler = require('./middleware/errorHandler');
-var notFound = require('./middleware/notFound');
+const errorHandler = require('./middleware/errorHandler');
+const notFound = require('./middleware/notFound');
 
-var app = express();
+const app = express();
 
 app.use(logger('dev'));
 app.use(express.json());

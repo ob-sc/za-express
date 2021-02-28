@@ -1,18 +1,24 @@
 module.exports = (err, req, res, next) => {
-  var msg;
+  let msg;
+  const isDev = process.env.NODE_ENV === 'development';
+
   switch (err.code) {
     case 'ENETUNREACH':
       msg = 'Netzwerk nicht erreichbar';
       break;
+    case 'ECONNREFUSED':
+      msg = 'Verbindung verweigert';
+      break;
 
     default:
-      msg = 'Interner Serverfehler';
+      msg = err.code;
       break;
   }
 
-  next(err);
+  res.status(500).json({
+    error: isDev ? msg : 'Interner Serverfehler',
+  });
 
-  console.log(err);
-  res.status(500).json({ error: msg });
+  next(err);
   // res.status(500).send({ error: msg });
 };

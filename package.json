@@ -1,15 +1,13 @@
 {
   "name": "za-express",
-  "version": "0.0.0",
+  "version": "0.0.2",
   "private": true,
   "scripts": {
     "start": "npm run prod",
-    "server": "node ./server/bin/www",
-    "pserver": "PORT=8000 node ./server/bin/www",
-    "dev": "NODE_ENV=development npm run pserver",
+    "server": "node -r dotenv/config ./server/bin/www",
+    "dev": "sh clear_port.sh && NODE_ENV=development npm run server",
     "prod": "NODE_ENV=production npm run server",
-    "watch": "nodemon",
-    "cw": "bash clearport.sh && nodemon"
+    "watch": "nodemon"
   },
   "dependencies": {
     "cookie-parser": "^1.4.4",
@@ -21,6 +19,7 @@
     "nodemon": "^2.0.6"
   },
   "devDependencies": {
+    "dotenv": "^8.2.0",
     "eslint": "^7.20.0",
     "eslint-config-prettier": "^7.2.0",
     "eslint-plugin-node": "^11.1.0",

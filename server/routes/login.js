@@ -1,8 +1,8 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-var connection = require('../util/connection.js');
-var query = require('../util/query.js');
+const connection = require('../util/connection.js');
+const query = require('../util/query.js');
 
 router.get('/', async (req, res, next) => {
   try {
