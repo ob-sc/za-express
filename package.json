@@ -5,9 +5,11 @@
   "scripts": {
     "start": "npm run prod",
     "server": "node ./server/bin/www",
-    "dev": "NODE_ENV=development npm run server",
-    "prod": "NODE_ENV=production nnpm run server",
-    "watch": "nodemon"
+    "pserver": "PORT=8000 node ./server/bin/www",
+    "dev": "NODE_ENV=development npm run pserver",
+    "prod": "NODE_ENV=production npm run server",
+    "watch": "nodemon",
+    "cw": "bash clearport.sh && nodemon"
   },
   "dependencies": {
     "cookie-parser": "^1.4.4",
