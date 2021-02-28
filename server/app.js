@@ -26,8 +26,8 @@ app.use(
   })
 );
 
-app.use('/', indexRouter);
-app.use('/login', loginRouter);
+app.use('/api', indexRouter);
+app.use('/api/login', loginRouter);
 
 app.use(errorHandler);
 app.use(notFound);
