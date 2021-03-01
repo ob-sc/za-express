@@ -1,8 +1,8 @@
-const app = require('../app');
+const app = require('./app');
 const debug = require('debug')('za-express:server');
 const http = require('http');
 
-const envport = require('../config').port;
+const envport = require('./config').port;
 
 const port = normalizePort(envport || '3000');
 app.set('port', port);

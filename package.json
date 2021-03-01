@@ -7,14 +7,15 @@
   },
   "scripts": {
     "start": "npm run prod",
-    "server": "node -r dotenv/config ./server/bin/www --trace-sync-io",
-    "dev": "sh clear_port.sh && NODE_ENV=development npm run server",
+    "server": "node -r dotenv/config index.js",
+    "dev": "NODE_ENV=development npm run server",
     "prod": "NODE_ENV=production npm run server",
     "watch": "nodemon"
   },
   "dependencies": {
     "cookie-parser": "^1.4.4",
     "debug": "^2.6.9",
+    "esm": "^3.2.25",
     "express": "^4.16.1",
     "express-mysql-session": "^2.1.5",
     "express-session": "^1.17.1",
@@ -32,7 +33,7 @@
     "prettier": "^2.2.1"
   },
   "nodemonConfig": {
-    "exec": "npm run dev",
+    "exec": "sh clear_port.sh && npm run dev",
     "watch": [
       "server/*"
     ]

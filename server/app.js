@@ -6,8 +6,7 @@ const MySQLStore = require('express-mysql-session')(session);
 
 const config = require('./config');
 
-const indexRouter = require('./routes/index');
-const loginRouter = require('./routes/login');
+import { loginRoutes } from './routes/index';
 
 const errorHandler = require('./middleware/errorHandler');
 const notFound = require('./middleware/notFound');
@@ -26,8 +25,10 @@ app.use(
   })
 );
 
-app.use('/api', indexRouter);
-app.use('/api/login', loginRouter);
+// Router
+const apiRouter = express.Router();
+app.use('/api', apiRouter);
+apiRouter.use('/login', loginRoutes);
 
 app.use(errorHandler);
 app.use(notFound);
