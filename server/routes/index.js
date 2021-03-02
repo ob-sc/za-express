@@ -1,4 +1,3 @@
-import loginRoutes from './login';
+import userRoutes from './user';
 
-// syntactic sugar for { loginRoutes: loginRoutes }
-export { loginRoutes };
+export { userRoutes };

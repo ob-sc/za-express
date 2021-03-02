@@ -1,15 +1,16 @@
-const express = require('express');
-const cookieParser = require('cookie-parser');
+import express from 'express';
+import cookieParser from 'cookie-parser';
+import session from 'express-session';
+import { userRoutes } from './routes/index';
+import errorHandler from './middleware/errorHandler';
+import notFound from './middleware/notFound';
+
+// todo morgan = https://github.com/expressjs/morgan/issues/190
+// todo mysqlstore import?
+// todo config import?
 const logger = require('morgan');
-const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
-
-const config = require('./config');
-
-import { loginRoutes } from './routes/index';
-
-const errorHandler = require('./middleware/errorHandler');
-const notFound = require('./middleware/notFound');
+import { sess, db } from './config';
 
 const app = express();
 
@@ -20,17 +21,17 @@ app.use(cookieParser());
 
 app.use(
   session({
-    ...config.session,
-    store: new MySQLStore(config.database),
+    ...sess,
+    store: new MySQLStore(db),
   })
 );
 
-// Router
+// router
 const apiRouter = express.Router();
 app.use('/api', apiRouter);
-apiRouter.use('/login', loginRoutes);
+apiRouter.use('/users', userRoutes);
 
 app.use(errorHandler);
 app.use(notFound);
 
-module.exports = app;
+export default app;

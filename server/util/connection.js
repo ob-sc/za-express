@@ -1,17 +1,18 @@
-const mysql = require('mysql');
+import mysql from 'mysql';
+import { db } from '../config.js';
 
-const { database } = require('../config.js');
+const pool = mysql.createPool(db);
 
 // todo wenn config leer -> error
-
-module.exports = async () =>
+const connection = async () =>
   new Promise((resolve, reject) => {
-    const connection = mysql.createConnection(database);
-    connection.connect((error) => {
-      if (error) {
-        reject(error);
+    pool.getConnection((err, conn) => {
+      if (err) {
+        reject(err);
         return;
       }
-      resolve(connection);
+      resolve(conn);
     });
   });
+
+export default connection;
