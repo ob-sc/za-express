@@ -2,11 +2,15 @@ const NODE_ENV = process.env.NODE_ENV;
 const PORT = process.env.PORT;
 const sess = {
   cookie: {
+    maxAge: parseInt(process.env.SESS_LIFETIME),
+    sameSite: true,
     secure: process.env.NODE_ENV !== 'development',
   },
-  secret: process.env.SESSION,
+  name: process.env.SESS_NAME,
   resave: false,
+  rolling: true,
   saveUninitialized: false,
+  secret: process.env.SESS_SECRET,
 };
 const db = {
   host: process.env.DB_HOST,

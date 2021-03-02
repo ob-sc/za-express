@@ -1,13 +1,21 @@
 import Joi from 'joi';
 
-const username = Joi.string().trim().min(3).max(30).required();
-const password = Joi.string().trim().pattern(new RegExp('^[a-zA-Z0-9]{6,30}$'));
+const username = Joi.string()
+  .required()
+  .trim()
+  .lowercase()
+  .pattern(new RegExp('^[a-z.]{3,32}$'));
+const password = Joi.string()
+  .required()
+  .trim()
+  // > 6 characters, 1 upper, 1 lower and 1 number
+  .pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{6,}$)'));
 const repeat_password = Joi.ref('password');
 const station = Joi.number().required();
 
 // /@starcar\.de/
 
-export const signUp = Joi.object()
+const user = Joi.object()
   .keys({
     username,
     password,
@@ -16,7 +24,4 @@ export const signUp = Joi.object()
   })
   .with('password', 'repeat_password');
 
-export const signIn = Joi.object().keys({
-  username,
-  password,
-});
+export default user;

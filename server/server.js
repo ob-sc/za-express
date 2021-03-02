@@ -4,6 +4,8 @@ import { PORT } from './config';
 
 const debug = require('debug')('za-express:server');
 
+if (process.env.NODE_ENV === 'development') debug('devmode');
+
 const port = PORT === undefined || Number.isNaN(PORT) ? 3000 : PORT;
 app.set('port', port);
 
