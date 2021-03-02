@@ -52,7 +52,7 @@ router.delete('', (req, res, next) => {
         res.clearCookie(process.env.SESS_NAME);
         okmsg(res, 'Erfolgreich abgemeldet');
       });
-    } else errmsg(res, 'Etwas ist fehlgeschlagen');
+    } else errmsg(res, 'Etwas ist fehlgeschlagen', 422);
   } catch (err) {
     next(err);
   }
