@@ -8,8 +8,8 @@ NC='\033[0m' # No Color
 PID=$(lsof -i :$PORT -t)
 if [ -z $PID ]
     then
-        printf "$GREEN  port $PORT free $NC\n"
+        printf "\n$GREEN  port $PORT free $NC\n"
     else
         kill $PID
-        printf "$RED  cleared port $PORT $NC\n"
+        printf "\n$RED  cleared port $PORT $NC\n"
 fi

@@ -2,6 +2,7 @@ const NODE_ENV = process.env.NODE_ENV;
 const PORT = process.env.PORT;
 const sess = {
   cookie: {
+    httpOnly: true,
     maxAge: parseInt(process.env.SESS_LIFETIME),
     sameSite: true,
     secure: process.env.NODE_ENV !== 'development',
