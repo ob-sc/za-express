@@ -1,5 +1,7 @@
+import { errmsg } from '../util/response';
+
 const notFound = (req, res) => {
-  res.status(404).send('Seite nicht gefunden');
+  errmsg(res, 'Ressource nicht gefunden', 404);
 };
 
 export default notFound;

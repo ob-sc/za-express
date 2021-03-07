@@ -10,8 +10,10 @@ const router = express.Router();
 // check if logged in
 router.get('', (req, res) => {
   const { session } = req;
-  if (session.user === undefined) errmsg(res, 'Nicht angemeldet', 401);
-  else okmsg(res, 'Session aktiv');
+  if (session.user !== undefined && session.user.isLoggedIn === true)
+    okmsg(res, 'Session aktiv', req.session.user);
+  else okmsg(res, 'Nicht angemeldet', { isLoggedIn: false });
+  // else errmsg(res, 'Nicht angemeldet', 401);
 });
 
 // create session
@@ -30,8 +32,12 @@ router.post('', async (req, res, next) => {
       bcrypt.compare(password, selectUser[0]['password'], (error, result) => {
         if (error) throw error;
         if (result === true) {
-          req.session.user = { ...selectUser[0], password: '' };
-          res.redirect('/home');
+          req.session.user = {
+            ...selectUser[0],
+            password: null,
+            isLoggedIn: true,
+          };
+          okmsg(res, 'Angemeldet', req.session.user);
         } else errmsg(res, 'Benutzer oder Passwort falsch', 401);
       });
 
