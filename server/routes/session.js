@@ -37,7 +37,7 @@ router.post('', async (req, res, next) => {
             password: null,
             isLoggedIn: true,
           };
-          okmsg(res, 'Angemeldet', req.session.user);
+          okmsg(res, 'Angemeldet');
         } else errmsg(res, 'Benutzer oder Passwort falsch', 401);
       });
 
