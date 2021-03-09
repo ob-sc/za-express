@@ -13,7 +13,6 @@ router.get('', (req, res) => {
   if (session.user !== undefined && session.user.isLoggedIn === true)
     okmsg(res, 'Session aktiv', req.session.user);
   else okmsg(res, 'Nicht angemeldet', { isLoggedIn: false });
-  // else errmsg(res, 'Nicht angemeldet', 401);
 });
 
 // create session
@@ -28,18 +27,23 @@ router.post('', async (req, res, next) => {
     const selectUser = await query(conn, selectUserSQL, [username]);
 
     if (selectUser.isEmpty) errmsg(res, 'Benutzer oder Passwort falsch', 401);
-    else
-      bcrypt.compare(password, selectUser[0]['password'], (error, result) => {
+    else {
+      const user = selectUser[0];
+      bcrypt.compare(password, user.password, (error, result) => {
         if (error) throw error;
         if (result === true) {
           req.session.user = {
-            ...selectUser[0],
-            password: null,
+            username: user.username,
+            station: user.station,
+            status: user.status,
+            region: user.region,
+            extstat: user.extstat,
             isLoggedIn: true,
           };
           okmsg(res, 'Angemeldet');
         } else errmsg(res, 'Benutzer oder Passwort falsch', 401);
       });
+    }
 
     conn.release();
   } catch (err) {
