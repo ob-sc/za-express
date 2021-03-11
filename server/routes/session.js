@@ -7,7 +7,7 @@ import { errmsg, okmsg } from '../util/response.js';
 
 const router = express.Router();
 
-// check if logged in
+// check ob logged in
 router.get('', (req, res) => {
   const { session } = req;
   if (session.user !== undefined && session.user.isLoggedIn === true)
@@ -15,7 +15,7 @@ router.get('', (req, res) => {
   else okmsg(res, 'Nicht angemeldet', { isLoggedIn: false });
 });
 
-// create session
+// session erstellen
 router.post('', async (req, res, next) => {
   try {
     const { error, value } = sessionValidation.validate(req.body);
@@ -38,6 +38,7 @@ router.post('', async (req, res, next) => {
             status: user.status,
             region: user.region,
             extstat: user.extstat,
+            currentStation: user.station,
             isLoggedIn: true,
           };
           okmsg(res, 'Angemeldet');
@@ -51,7 +52,21 @@ router.post('', async (req, res, next) => {
   }
 });
 
-// destroy session
+// station ändern
+router.put('', (req, res, next) => {
+  const { body, session } = req;
+  try {
+    const user = session.user;
+    if (user) {
+      session.user.currentStation = body.station;
+      okmsg(res, 'Station geändert');
+    } else errmsg(res, 'Etwas ist fehlgeschlagen', 422);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// session entfernen
 router.delete('', (req, res, next) => {
   const { session } = req;
   try {
