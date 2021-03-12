@@ -35,7 +35,7 @@ router.post('', async (req, res, next) => {
           req.session.user = {
             username: user.username,
             station: user.station,
-            status: user.status,
+            access: user.access,
             region: user.region,
             extstat: user.extstat,
             currentStation: user.station,
