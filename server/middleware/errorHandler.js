@@ -14,6 +14,7 @@ const errorHandler = (err, req, res, next) => {
         errmsg(res, 'Interner Serverfehler', 500, err);
         break;
     }
+
   // validation error
   if (err.isJoi === true)
     switch (err.details[0].context.label) {
@@ -23,7 +24,7 @@ const errorHandler = (err, req, res, next) => {
       case 'password':
         errmsg(res, 'Passwort nicht gültig', 400, err);
         break;
-      case 'value':
+      case 'repeat_password':
         errmsg(res, 'Die Passwörter sind nicht identisch', 400, err);
         break;
       case 'station':

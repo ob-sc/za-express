@@ -22,9 +22,9 @@ function onError(error) {
 
   switch (error.code) {
     case 'EACCES':
-      throw new Error(`Port ${port} requires elevated privileges`);
+      throw new Error(`Port ${port} braucht höheren Zugriff`);
     case 'EADDRINUSE':
-      throw new Error(`Port ${port} is already in use`);
+      throw new Error(`Port ${port} wird bereits verwendet`);
     default:
       throw error;
   }
@@ -32,5 +32,5 @@ function onError(error) {
 
 function onListening() {
   const addr = server.address();
-  debug(`Listening on port ${addr.port}`);
+  debug(`Lauscht auf port ${addr.port}`);
 }

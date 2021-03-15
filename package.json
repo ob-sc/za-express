@@ -3,14 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "engines": {
-    "node": ">=15.0.0"
+    "node": ">=8.4.0"
   },
   "scripts": {
     "start": "npm run prod",
     "server": "node -r dotenv/config index.js",
     "dev": "NODE_ENV=development npm run server",
     "prod": "NODE_ENV=production npm run server",
-    "watch": "nodemon"
+    "watch": "nodemon",
+    "lint": "eslint ."
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
