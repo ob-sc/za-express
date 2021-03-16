@@ -1,15 +1,28 @@
 import app from './app';
 import http from 'http';
+import https from 'https';
+import fs from 'fs';
+
 import { PORT } from './config';
 
 const debug = require('debug')('za-express:server');
 
-if (process.env.NODE_ENV === 'development') debug('devmode');
+const isDev = process.env.NODE_ENV === 'development';
+
+if (isDev) debug('devmode');
 
 const port = PORT === undefined || Number.isNaN(PORT) ? 3000 : PORT;
 app.set('port', port);
 
-const server = http.createServer(app);
+const server = isDev
+  ? http.createServer(app)
+  : https.createServer(
+      {
+        key: fs.readFileSync('/etc/nginx/ssl/key.pem'),
+        cert: fs.readFileSync('/etc/nginx/ssl/certificate.pem'),
+      },
+      app
+    );
 
 server.listen(port);
 server.on('error', onError);
