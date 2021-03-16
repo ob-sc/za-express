@@ -17,10 +17,10 @@ app.set('port', port);
 const server = isDev
   ? http.createServer(app)
   : https.createServer(
-      {
-        key: fs.readFileSync('/etc/nginx/ssl/key.pem'),
-        cert: fs.readFileSync('/etc/nginx/ssl/certificate.pem'),
-      },
+      // {
+      //   key: fs.readFileSync('/etc/nginx/ssl/key.pem'),
+      //   cert: fs.readFileSync('/etc/nginx/ssl/certificate.pem'),
+      // },
       app
     );
 
