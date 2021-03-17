@@ -25,10 +25,10 @@ const errorHandler = (err, req, res, next) => {
         errmsg(res, 'Passwort nicht gültig', 400, err);
         break;
       case 'repeat_password':
-        errmsg(res, 'Die Passwörter sind nicht identisch', 400, err);
+        errmsg(res, 'Passwort wiederholen nicht gültig', 400, err);
         break;
       case 'station':
-        errmsg(res, 'Fehler bei Auswahl der Station', 400, err);
+        errmsg(res, 'Stationsauswahl nicht gültig', 400, err);
         break;
       default:
         errmsg(res, 'Fehler bei Überprüfung der Angaben', 400, err);
