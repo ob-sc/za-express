@@ -11,8 +11,8 @@ const router = express.Router();
 router.get('', (req, res) => {
   const { session } = req;
   if (session.user !== undefined && session.user.isLoggedIn === true)
-    okmsg(res, 'Session aktiv', req.session.user);
-  else okmsg(res, 'Nicht angemeldet', { isLoggedIn: false });
+    okmsg(res, req.session.user);
+  else okmsg(res, { isLoggedIn: false });
 });
 
 // session erstellen
@@ -28,7 +28,7 @@ router.post('', async (req, res, next) => {
 
     if (selectUser.isEmpty) errmsg(res, 'Benutzer oder Passwort falsch', 401);
     else {
-      const user = selectUser[0];
+      const user = selectUser.result[0];
       bcrypt.compare(password, user.password, (error, result) => {
         if (error) throw error;
         if (result === true) {
@@ -41,7 +41,7 @@ router.post('', async (req, res, next) => {
             currentStation: user.station,
             isLoggedIn: true,
           };
-          okmsg(res, 'Angemeldet');
+          okmsg(res, {});
         } else errmsg(res, 'Benutzer oder Passwort falsch', 401);
       });
     }
@@ -59,7 +59,7 @@ router.put('', (req, res, next) => {
     const user = session.user;
     if (user) {
       session.user.currentStation = body.station;
-      okmsg(res, 'Station geändert');
+      okmsg(res, {});
     } else errmsg(res, 'Etwas ist fehlgeschlagen', 422);
   } catch (err) {
     next(err);
@@ -75,7 +75,7 @@ router.delete('', (req, res, next) => {
       session.destroy((err) => {
         if (err) throw err;
         res.clearCookie(process.env.SESS_NAME);
-        okmsg(res, 'Erfolgreich abgemeldet');
+        okmsg(res, {});
       });
     } else errmsg(res, 'Etwas ist fehlgeschlagen', 422);
   } catch (err) {

@@ -2,7 +2,7 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import { sess, db } from './config';
-import { sessionRoutes, userRoutes } from './routes/index';
+import { sessionRoutes, userRoutes, aushilfenRoutes } from './routes/index';
 import errorHandler from './middleware/errorHandler';
 import notFound from './middleware/notFound';
 
@@ -32,6 +32,7 @@ const apiRouter = express.Router();
 app.use('/api', apiRouter);
 apiRouter.use('/users', userRoutes);
 apiRouter.use('/session', sessionRoutes);
+apiRouter.use('/aushilfen', aushilfenRoutes);
 
 app.use(errorHandler);
 app.use(notFound);

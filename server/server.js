@@ -14,6 +14,8 @@ app.set('port', port);
 
 const server = http.createServer(app);
 
+// const server = isDev ? http.createServer(app) : https.createServer({key: '', cert: ''},app) genaues objekt mit key und cert raussuchen
+
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
