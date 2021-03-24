@@ -13,7 +13,7 @@ router.get('', async (req, res, next) => {
   try {
     const conn = await connection();
     const allAushilfenSQL =
-      "SELECT * FROM aushilfen WHERE status <> 'passiv' ORDER BY nachname";
+      "SELECT * FROM aushilfen WHERE status <> 'passiv' ORDER BY station, nachname";
     const { result } = await query(conn, allAushilfenSQL);
 
     okmsg(res, result);
