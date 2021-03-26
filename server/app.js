@@ -2,9 +2,14 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import { sess, db } from './config';
-import { sessionRoutes, userRoutes, aushilfenRoutes } from './routes/index';
 import errorHandler from './middleware/errorHandler';
 import notFound from './middleware/notFound';
+import {
+  sessionRoutes,
+  userRoutes,
+  aushilfenRoutes,
+  angemeldetRoutes,
+} from './routes/index';
 
 // todo morgan = https://github.com/expressjs/morgan/issues/190
 // todo mysqlstore import?
@@ -33,6 +38,7 @@ app.use('/api', apiRouter);
 apiRouter.use('/users', userRoutes);
 apiRouter.use('/session', sessionRoutes);
 apiRouter.use('/aushilfen', aushilfenRoutes);
+apiRouter.use('/angemeldet', angemeldetRoutes);
 
 app.use(errorHandler);
 app.use(notFound);
