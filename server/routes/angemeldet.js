@@ -12,8 +12,13 @@ router.use(auth);
 router.get('', async (req, res, next) => {
   try {
     const conn = await connection();
-    const allAushilfenSQL = `SELECT * FROM angemeldet WHERE station = ${req.session.user.station}`;
-    const { result } = await query(conn, allAushilfenSQL);
+
+    const sql =
+      'SELECT ang.ahid AS id, ang.date, ang.start, ah.vorname, ah.nachname FROM angemeldet AS ang INNER JOIN aushilfen AS ah ON ang.ahid = ah.id WHERE ang.station = ?';
+
+    const { result } = await query(conn, sql, [
+      req.session.user.currentStation,
+    ]);
 
     okmsg(res, result);
     conn.release();

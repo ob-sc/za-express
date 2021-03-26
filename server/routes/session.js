@@ -26,8 +26,8 @@ router.post('', async (req, res, next) => {
     // bis jetzt nur nach session expire auf dem server
     // dafür müsste hier in dem SQL block jmd schuld sein
     const conn = await connection();
-    const selectUserSQL = 'SELECT * FROM benutzer WHERE username = ?';
-    const selectUser = await query(conn, selectUserSQL, [username]);
+    const sql = 'SELECT * FROM benutzer WHERE username = ?';
+    const selectUser = await query(conn, sql, [username]);
     conn.release();
 
     if (selectUser.isEmpty) errmsg(res, 'Benutzer oder Passwort falsch', 401);
@@ -45,7 +45,7 @@ router.post('', async (req, res, next) => {
             currentStation: user.station,
             isLoggedIn: true,
           };
-          okmsg(res, {});
+          okmsg(res);
         } else errmsg(res, 'Benutzer oder Passwort falsch', 401);
       });
     }
@@ -61,7 +61,7 @@ router.put('', (req, res, next) => {
     const user = session.user;
     if (user) {
       session.user.currentStation = body.station;
-      okmsg(res, {});
+      okmsg(res);
     } else errmsg(res, 'Etwas ist fehlgeschlagen', 422);
   } catch (err) {
     next(err);

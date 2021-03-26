@@ -15,16 +15,16 @@ router.post('', async (req, res, next) => {
     const { username, password, station } = value;
 
     const conn = await connection();
-    const checkUserSQL = 'SELECT * FROM benutzer WHERE username = ?';
-    const checkUser = await query(conn, checkUserSQL, [username]);
+    const sql = 'SELECT * FROM benutzer WHERE username = ?';
+    const checkUser = await query(conn, sql, [username]);
 
     if (!checkUser.isEmpty) errmsg(res, 'Benutzer bereits vorhanden', 409);
     else
       bcrypt.hash(password, 10, (err, hash) => {
         if (err) throw err;
-        const signUpSQL =
+        const sql2 =
           'INSERT INTO benutzer (username, password, station) VALUES (?,?,?)';
-        query(conn, signUpSQL, [username, hash, station]).then((data) => {
+        query(conn, sql2, [username, hash, station]).then((data) => {
           if (data.affectedRows > 0) okmsg(res, 'Benutzer angelegt');
         });
       });

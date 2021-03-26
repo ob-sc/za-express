@@ -12,9 +12,9 @@ router.use(auth);
 router.get('', async (req, res, next) => {
   try {
     const conn = await connection();
-    const allAushilfenSQL =
+    const sql =
       "SELECT * FROM aushilfen WHERE status <> 'passiv' ORDER BY station, nachname";
-    const { result } = await query(conn, allAushilfenSQL);
+    const { result } = await query(conn, sql);
 
     okmsg(res, result);
     conn.release();
