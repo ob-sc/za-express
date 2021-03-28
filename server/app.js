@@ -35,7 +35,7 @@ app.use(
 // router
 const apiRouter = express.Router();
 app.use('/api', apiRouter);
-apiRouter.use('/users', userRoutes);
+apiRouter.use('/user', userRoutes);
 apiRouter.use('/session', sessionRoutes);
 apiRouter.use('/aushilfen', aushilfenRoutes);
 apiRouter.use('/angemeldet', angemeldetRoutes);

@@ -1,6 +1,5 @@
 import app from './app';
 import http from 'http';
-
 import { PORT } from './config';
 
 const debug = require('debug')('za-express:server');

@@ -27,12 +27,12 @@ router.post('', async (req, res, next) => {
     // dafür müsste hier in dem SQL block jmd schuld sein
     const conn = await connection();
     const sql = 'SELECT * FROM benutzer WHERE username = ?';
-    const selectUser = await query(conn, sql, [username]);
+    const data = await query(conn, sql, [username]);
     conn.release();
 
-    if (selectUser.isEmpty) errmsg(res, 'Benutzer oder Passwort falsch', 401);
+    if (data.isEmpty) errmsg(res, 'Benutzer oder Passwort falsch', 401);
     else {
-      const user = selectUser.result[0];
+      const user = data.result[0];
       bcrypt.compare(password, user.password, (error, result) => {
         if (error) throw error;
         if (result === true) {

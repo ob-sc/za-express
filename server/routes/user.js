@@ -25,7 +25,7 @@ router.post('', async (req, res, next) => {
         const sql2 =
           'INSERT INTO benutzer (username, password, station) VALUES (?,?,?)';
         query(conn, sql2, [username, hash, station]).then((data) => {
-          if (data.affectedRows > 0) okmsg(res, 'Benutzer angelegt');
+          if (data.isUpdated) okmsg(res);
         });
       });
 

@@ -1,5 +1,4 @@
 import express from 'express';
-
 import { okmsg } from '../util/response.js';
 import auth from '../middleware/auth.js';
 import connection from '../util/connection.js';
