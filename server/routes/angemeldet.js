@@ -8,7 +8,6 @@ const router = express.Router();
 
 router.use(auth);
 
-// session erstellen
 router.post('', async (req, res, next) => {
   try {
     const { ahid, date, start } = req.body;
@@ -32,7 +31,7 @@ router.get('', async (req, res, next) => {
     const conn = await connection();
 
     const sql =
-      'SELECT ang.ahid AS id, ang.date, ang.start, ah.vorname, ah.nachname FROM angemeldet AS ang INNER JOIN aushilfen AS ah ON ang.ahid = ah.id WHERE ang.station = ?';
+      'SELECT ang.id, ang.ahid, ang.date, ang.start, ah.vorname, ah.nachname FROM angemeldet AS ang INNER JOIN aushilfen AS ah ON ang.ahid = ah.id WHERE ang.station = ?';
 
     const { result } = await query(conn, sql, [
       req.session.user.currentStation,
@@ -40,6 +39,22 @@ router.get('', async (req, res, next) => {
 
     okmsg(res, result);
     conn.release();
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.delete('', async (req, res, next) => {
+  try {
+    const { id } = req.body;
+
+    const conn = await connection();
+    const sql = 'DELETE FROM angemeldet WHERE id = ?';
+    const data = await query(conn, sql, [id]);
+    conn.release();
+
+    if (data.isUpdated) okmsg(res);
+    else errmsg(res, 'Fehler beim Löschen der Anmeldung', 400);
   } catch (err) {
     next(err);
   }

@@ -15,7 +15,7 @@ router.get('', (req, res) => {
   else okmsg(res, { isLoggedIn: false });
 });
 
-// session erstellen
+// login
 router.post('', async (req, res, next) => {
   try {
     const { error, value } = sessionValidation.validate(req.body);
@@ -68,7 +68,7 @@ router.put('', (req, res, next) => {
   }
 });
 
-// session entfernen
+// logout
 router.delete('', (req, res, next) => {
   const { session } = req;
   try {
