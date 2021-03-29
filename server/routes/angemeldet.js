@@ -14,13 +14,21 @@ router.post('', async (req, res, next) => {
     const { station } = req.session.user;
 
     const conn = await connection();
-    const sql =
-      'INSERT INTO angemeldet (ahid, station, date, start) VALUES (?,?,?,?)';
-    const data = await query(conn, sql, [ahid, station, date, start]);
-    conn.release();
 
-    if (data.isUpdated) okmsg(res);
-    else errmsg(res, 'Fehler beim Anmelden der Aushilfe', 400);
+    const sql = 'SELECT * FROM angemeldet WHERE ahid = ?';
+    const checkAnmeldung = await query(conn, sql, [ahid]);
+
+    if (!checkAnmeldung.isEmpty)
+      errmsg(res, 'Aushilfe ist bereits angemeldet', 409);
+    else {
+      const sql2 =
+        'INSERT INTO angemeldet (ahid, station, date, start) VALUES (?,?,?,?)';
+      const data = await query(conn, sql2, [ahid, station, date, start]);
+
+      if (data.isUpdated) okmsg(res);
+      else errmsg(res, 'Fehler beim Anmelden der Aushilfe', 400);
+    }
+    conn.release();
   } catch (err) {
     next(err);
   }
