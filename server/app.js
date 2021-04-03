@@ -9,6 +9,7 @@ import {
   userRoutes,
   aushilfenRoutes,
   angemeldetRoutes,
+  zeitenRoutes,
 } from './routes/index';
 
 // todo morgan = https://github.com/expressjs/morgan/issues/190
@@ -39,6 +40,7 @@ apiRouter.use('/user', userRoutes);
 apiRouter.use('/session', sessionRoutes);
 apiRouter.use('/aushilfen', aushilfenRoutes);
 apiRouter.use('/angemeldet', angemeldetRoutes);
+apiRouter.use('/zeiten', zeitenRoutes);
 
 app.use(errorHandler);
 app.use(notFound);
