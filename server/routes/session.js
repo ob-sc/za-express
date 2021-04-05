@@ -4,6 +4,7 @@ import connection from '../util/connection.js';
 import query from '../util/query.js';
 import sessionValidation from '../validations/session.js';
 import { errmsg, okmsg } from '../util/response.js';
+const debug = require('debug')('za-express:server');
 
 const router = express.Router();
 
@@ -25,10 +26,14 @@ router.post('', async (req, res, next) => {
     // todo login dauert manchmal 10s
     // bis jetzt nur nach session expire auf dem server
     // dafür müsste hier in dem SQL block jmd schuld sein
+    debug('login', username);
     const conn = await connection();
+    debug(typeof conn, 'conn');
     const sql = 'SELECT * FROM benutzer WHERE username = ?';
     const data = await query(conn, sql, [username]);
+    debug(typeof data, 'data');
     conn.release();
+    debug('done');
 
     if (data.isEmpty) errmsg(res, 'Benutzer oder Passwort falsch', 401);
     else {
