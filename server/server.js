@@ -1,6 +1,8 @@
-import app from './app';
+import fs from 'fs';
 import http from 'http';
+import https from 'https';
 import { PORT } from './config';
+import app from './app';
 
 const debug = require('debug')('za-express:server');
 
@@ -11,9 +13,17 @@ if (isDev) debug('devmode');
 const port = PORT === undefined || Number.isNaN(PORT) ? 3000 : PORT;
 app.set('port', port);
 
-const server = http.createServer(app);
+// const server = http.createServer(app);
 
-// const server = isDev ? http.createServer(app) : https.createServer({key: '', cert: ''},app) genaues objekt mit key und cert raussuchen
+const server = isDev
+  ? http.createServer(app)
+  : https.createServer(
+      {
+        key: fs.readFileSync('/etc/nginx/ssl/key.pem'),
+        cert: fs.readFileSync('/etc/nginx/ssl/certificate.pem'),
+      },
+      app
+    );
 
 server.listen(port);
 server.on('error', onError);
