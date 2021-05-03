@@ -16,7 +16,7 @@ router.post('/max', async (req, res, next) => {
     const conn = await connection();
 
     const sql = isStudent
-      ? 'SELECT sum(arbeitszeit) as max FROM zeiten WHERE ahid = ? AND LOWER(ahmax) = "student" AND yearweek(DATE(datum), 1) = yearweek(CURDATE(), 1)'
+      ? 'SELECT sum(arbeitszeit) as max FROM zeiten WHERE ahid = ? AND yearweek(DATE(datum), 1) = yearweek(CURDATE(), 1)'
       : 'SELECT sum(gehalt) AS max FROM zeiten WHERE ahid = ? AND LOWER(ahmax) <> "student" AND datum BETWEEN ? AND CURDATE()';
     const qry = await query(conn, sql, [id, firstDayMonth]);
 

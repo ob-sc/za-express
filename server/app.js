@@ -1,6 +1,7 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
+import cors from 'cors';
 import { sess, db } from './config';
 import errorHandler from './middleware/errorHandler';
 import notFound from './middleware/notFound';
@@ -25,6 +26,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(cors());
 
 app.use(
   session({

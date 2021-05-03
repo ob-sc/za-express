@@ -15,8 +15,8 @@ router.get('', async (req, res, next) => {
       "SELECT * FROM aushilfen WHERE status <> 'passiv' ORDER BY station, nachname";
     const { result } = await query(conn, sql);
 
-    okmsg(res, result);
     conn.release();
+    okmsg(res, result);
   } catch (err) {
     next(err);
   }

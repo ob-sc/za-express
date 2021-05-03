@@ -35,7 +35,7 @@ router.post('', async (req, res, next) => {
     conn.release();
     debug('done');
 
-    if (data.isEmpty) errmsg(res, 'Benutzer oder Passwort falsch', 401);
+    if (data.isEmpty) errmsg(res, 'Benutzer nicht gefunden', 401);
     else {
       const user = data.result[0];
       bcrypt.compare(password, user.password, (error, result) => {
@@ -51,7 +51,7 @@ router.post('', async (req, res, next) => {
             isLoggedIn: true,
           };
           okmsg(res);
-        } else errmsg(res, 'Benutzer oder Passwort falsch', 401);
+        } else errmsg(res, 'Passwort falsch', 401);
       });
     }
   } catch (err) {
