@@ -3,6 +3,7 @@ import sessionRoutes from './session';
 import aushilfenRoutes from './aushilfen';
 import angemeldetRoutes from './angemeldet';
 import zeitenRoutes from './zeiten';
+import test from './test';
 
 export {
   userRoutes,
@@ -10,4 +11,5 @@ export {
   aushilfenRoutes,
   angemeldetRoutes,
   zeitenRoutes,
+  test,
 };
