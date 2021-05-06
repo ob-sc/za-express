@@ -7,9 +7,8 @@
   "scripts": {
     "start": "npm run prod",
     "watch": "npm run dev",
-    "server": "node -r dotenv/config index.js",
-    "dev": "NODE_ENV=development pm2-dev start ecosystem.config.js --env development",
-    "prod": "NODE_ENV=production pm2 ecosystem.config.js --env production",
+    "dev": "pm2-dev start ecosystem.config.js --env development",
+    "prod": "pm2 start ecosystem.config.js --env production",
     "lint": "eslint .",
     "dcup": "docker-compose up -d",
     "dcdown": "docker-compose down"
