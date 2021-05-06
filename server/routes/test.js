@@ -6,18 +6,18 @@ import auth from '../middleware/auth.js';
 const mail = async () => {
   // create reusable transporter object using the default SMTP transport
   let transporter = nodemailer.createTransport({
-    host: 'smtp.ethereal.email',
-    port: 587,
+    host: '192.168.100.50',
+    port: 25,
     secure: false, // true for 465, false for other ports
   });
 
   // send mail with defined transport object
   let info = await transporter.sendMail({
-    from: '"test" <test@starcar.de>', // sender address
-    to: 'bergen@starcar.de, ole.bergen@starcar.de', // list of receivers
-    subject: 'hi?', // Subject line
-    text: 'hi', // plain text body
-    html: '<span style="font-family: Arial, sans-serif;">hi</span>', // html body
+    from: 'STARCAR Onboarding <onboarding@starcar.de>', //
+    to: 'sven.andersen@starcar.de, ole.bergen@starcar.de',
+    subject: 'hi?',
+    text: 'hi',
+    html: '<span style="font-family: Arial, sans-serif;">hi</span>',
   });
 
   console.log('Message sent: %s', info.messageId);
