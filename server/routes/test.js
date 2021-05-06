@@ -30,7 +30,8 @@ router.use(auth);
 
 router.get('', async (req, res, next) => {
   try {
-    mail().then(() => okmsg(res));
+    await mail();
+    okmsg(res);
   } catch (err) {
     next(err);
   }
