@@ -14,7 +14,7 @@ const mail = async () => {
   // send mail with defined transport object
   let info = await transporter.sendMail({
     from: 'STARCAR Onboarding <onboarding@starcar.de>', //
-    to: 'sven.andersen@starcar.de, ole.bergen@starcar.de',
+    to: 'ole.bergen@starcar.de',
     subject: 'hi?',
     text: 'hi',
     html: '<span style="font-family: Arial, sans-serif;">hi</span>',

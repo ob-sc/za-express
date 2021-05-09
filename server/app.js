@@ -11,6 +11,7 @@ import {
   aushilfenRoutes,
   angemeldetRoutes,
   zeitenRoutes,
+  onboardingRoutes,
   test,
 } from './routes/index';
 
@@ -44,6 +45,7 @@ apiRouter.use('/session', sessionRoutes);
 apiRouter.use('/aushilfen', aushilfenRoutes);
 apiRouter.use('/angemeldet', angemeldetRoutes);
 apiRouter.use('/zeiten', zeitenRoutes);
+apiRouter.use('/onboarding', onboardingRoutes);
 apiRouter.use('/test', test);
 
 app.use(errorHandler);
