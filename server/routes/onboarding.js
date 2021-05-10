@@ -9,6 +9,7 @@ const router = express.Router();
 router.use(auth);
 
 // neuer ma
+// todo loop über request body und dann direkt sql mit values als string, ohne array in query?
 router.post('', async (req, res, next) => {
   try {
     const {
@@ -35,11 +36,14 @@ router.post('', async (req, res, next) => {
       ipadspez,
     } = req.body;
 
+    const ersteller = req.session.user.username;
+
     const conn = await connection();
     const sql =
-      'INSERT INTO onboarding (eintritt,vorname,nachname,station,position,kasse,crentstat,docuware,workflow,qlik,qlikapps,qlikstat,vpn,handy,laptop,pc,monitore,tastatur,maus,ipad,ipadspez) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
+      'INSERT INTO onboarding (ersteller,eintritt,vorname,nachname,station,position,kasse,crentstat,docuware,workflow,qlik,qlikapps,qlikstat,vpn,handy,laptop,pc,monitore,tastatur,maus,ipad,ipadspez) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
 
     const createNewMA = await query(conn, sql, [
+      ersteller,
       eintritt,
       vorname,
       nachname,
@@ -63,8 +67,10 @@ router.post('', async (req, res, next) => {
       ipadspez,
     ]);
 
-    if (!createNewMA.isUpdated) okmsg(res);
-    else errmsg(res, 'Fehler bei der Anfrage');
+    if (createNewMA.isUpdated) okmsg(res);
+    else errmsg(res);
+
+    console.log(createNewMA);
 
     conn.release();
   } catch (err) {
