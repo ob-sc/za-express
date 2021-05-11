@@ -8,71 +8,48 @@ const router = express.Router();
 
 router.use(auth);
 
+// alle ma
+router.get('', async (req, res) => {
+  const conn = await connection();
+  const sql = 'SELECT * FROM onboarding';
+
+  const selectAll = await query(conn, sql);
+  conn.release();
+
+  okmsg(res, selectAll.result);
+});
+
 // neuer ma
-// todo loop über request body und dann direkt sql mit values als string, ohne array in query?
 router.post('', async (req, res, next) => {
   try {
     const {
       eintritt,
       vorname,
       nachname,
-      station,
+      ort,
       position,
-      kasse,
-      crentstat,
-      docuware,
-      workflow,
-      qlik,
-      qlikapps,
-      qlikstat,
-      vpn,
-      handy,
-      laptop,
-      pc,
-      monitore,
-      tastatur,
-      maus,
-      ipad,
-      ipadspez,
+      anforderungen,
     } = req.body;
 
     const ersteller = req.session.user.username;
 
     const conn = await connection();
     const sql =
-      'INSERT INTO onboarding (ersteller,eintritt,vorname,nachname,station,position,kasse,crentstat,docuware,workflow,qlik,qlikapps,qlikstat,vpn,handy,laptop,pc,monitore,tastatur,maus,ipad,ipadspez) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
+      'INSERT INTO onboarding (ersteller,eintritt,vorname,nachname,ort,position,anforderungen) VALUES (?,?,?,?,?,?,?)';
 
     const createNewMA = await query(conn, sql, [
       ersteller,
       eintritt,
       vorname,
       nachname,
-      station,
+      ort,
       position,
-      kasse,
-      crentstat,
-      docuware,
-      workflow,
-      qlik,
-      qlikapps,
-      qlikstat,
-      vpn,
-      handy,
-      laptop,
-      pc,
-      monitore,
-      tastatur,
-      maus,
-      ipad,
-      ipadspez,
+      anforderungen,
     ]);
+    conn.release();
 
     if (createNewMA.isUpdated) okmsg(res);
     else errmsg(res);
-
-    console.log(createNewMA);
-
-    conn.release();
   } catch (err) {
     next(err);
   }
