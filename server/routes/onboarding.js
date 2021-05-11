@@ -9,14 +9,20 @@ const router = express.Router();
 router.use(auth);
 
 // alle ma
-router.get('', async (req, res) => {
-  const conn = await connection();
-  const sql = 'SELECT * FROM onboarding';
+router.get('', async (req, res, next) => {
+  try {
+    const conn = await connection();
+    const sql =
+      'SELECT id,status,ersteller,vorname,nachname,eintritt,ort FROM onboarding';
 
-  const selectAll = await query(conn, sql);
-  conn.release();
+    const selectAll = await query(conn, sql);
+    conn.release();
 
-  okmsg(res, selectAll.result);
+    if (!selectAll.isEmpty) okmsg(res, selectAll.result);
+    else errmsg(res);
+  } catch (err) {
+    next(err);
+  }
 });
 
 // neuer ma
