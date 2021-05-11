@@ -8,6 +8,21 @@ const router = express.Router();
 
 router.use(auth);
 
+router.get('', async (req, res, next) => {
+  try {
+    const conn = await connection();
+    const sql =
+      'SELECT id,status,ersteller,vorname,nachname,eintritt,ort FROM onboarding';
+
+    const allMA = await query(conn, sql);
+
+    if (!allMA.isEmpty) okmsg(res, allMA.result);
+    else errmsg(res);
+  } catch (err) {
+    next(err);
+  }
+});
+
 // neuer ma
 // todo loop über request body und dann direkt sql mit values als string, ohne array in query?
 router.post('', async (req, res, next) => {
