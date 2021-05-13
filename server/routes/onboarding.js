@@ -25,11 +25,28 @@ router.get('', async (req, res, next) => {
   }
 });
 
+// alle ma
+router.get('/ma/:id', async (req, res, next) => {
+  try {
+    const conn = await connection();
+    const sql = 'SELECT * FROM onboarding WHERE id=?';
+
+    const selectOne = await query(conn, sql, [req.params.id]);
+    conn.release();
+
+    if (!selectOne.isEmpty) okmsg(res, selectOne.result[0]);
+    else errmsg(res);
+  } catch (err) {
+    next(err);
+  }
+});
+
 // neuer ma
 router.post('', async (req, res, next) => {
   try {
     const {
       eintritt,
+      anrede,
       vorname,
       nachname,
       ort,
@@ -41,10 +58,11 @@ router.post('', async (req, res, next) => {
 
     const conn = await connection();
     const sql =
-      'INSERT INTO onboarding (ersteller,eintritt,vorname,nachname,ort,position,anforderungen) VALUES (?,?,?,?,?,?,?)';
+      'INSERT INTO onboarding (ersteller,anrede,eintritt,vorname,nachname,ort,position,anforderungen) VALUES (?,?,?,?,?,?,?,?)';
 
     const createNewMA = await query(conn, sql, [
       ersteller,
+      anrede,
       eintritt,
       vorname,
       nachname,
