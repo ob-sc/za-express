@@ -18,8 +18,7 @@ router.get('', async (req, res, next) => {
     const selectAll = await query(conn, sql);
     conn.release();
 
-    if (!selectAll.isEmpty) okmsg(res, selectAll.result);
-    else errmsg(res);
+    okmsg(res, selectAll.result);
   } catch (err) {
     next(err);
   }

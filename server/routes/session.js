@@ -53,6 +53,7 @@ router.post('', async (req, res, next) => {
             region: user.region,
             extstat: user.extstat,
             currentStation: user.station,
+            onboarding: user.onboarding,
             isLoggedIn: true,
           };
           okmsg(res);
