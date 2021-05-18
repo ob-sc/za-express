@@ -3,6 +3,7 @@ import auth from '../middleware/auth.js';
 import connection from '../util/connection.js';
 import query from '../util/query.js';
 import { errmsg, okmsg } from '../util/response.js';
+import checkStatus from '../util/status.js';
 
 const router = express.Router();
 
@@ -62,7 +63,7 @@ router.post('', async (req, res, next) => {
   }
 });
 
-// get id
+// get mit id
 router.get('/ma/:id', async (req, res, next) => {
   try {
     const conn = await connection();
@@ -86,6 +87,9 @@ router.put('/domain', async (req, res, next) => {
     const sql = 'UPDATE onboarding SET domain=? WHERE id=?';
 
     const putDomain = await query(conn, sql, [domain, id]);
+
+    const status = await checkStatus(conn, id);
+
     conn.release();
 
     if (putDomain.isUpdated) okmsg(res, putDomain.result[0]);
