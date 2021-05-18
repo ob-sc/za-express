@@ -6,7 +6,7 @@ module.exports = {
       watch: './server',
       node_args: '-r dotenv/config',
       autorestart: true,
-      log_file: 'combined.log',
+      log_file: 'logs/combined.log',
       // combine_logs: true,
       env_development: {
         NODE_ENV: 'development',
