@@ -7,7 +7,7 @@ const transporter = nodemailer.createTransport({
   secure: false,
 });
 
-// const aushilfen = async (to, subject, text, html) => {
+// const aushilfenMail = async (to, subject, text, html) => {
 //   await transporter.sendMail({
 //     from: 'STARCAR Aushilfen <aushilfen@starcar.local>',
 //     to,
@@ -45,21 +45,16 @@ export const onbNeuMail = async (query, data) => {
 };
 
 const template = (content) => `
-  <!DOCTYPE html>
-  <html>
-  <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <style>
-  a:link{color:#169}
-  a:visited{color:#169}
-  a:hover{color:#169}
-  a:active{color:#169}
-  </style>
-  </head>
-  <body style="font-family:sans-serif;font-size:14px;line-height:1.4em;color:#222">
-  ${content}
-  </body>
-  </html>
+<!DOCTYPE html><html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"><style>
+a:link{color:#169}
+a:visited{color:#169}
+a:hover{color:#169}
+a:active{color:#169}
+</style></head>
+<body style="font-family:sans-serif;font-size:14px;line-height:1.4em;color:#222">
+${content}
+</body></html>
 `;
 
 const divider =
