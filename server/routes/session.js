@@ -23,18 +23,6 @@ router.post('', async (req, res, next) => {
     if (error) throw error;
     const { username, password } = value;
 
-    // todo login dauert manchmal 10s
-    // bis jetzt nur nach session expire auf dem server
-    // dafür müsste hier in dem SQL block jmd schuld sein
-    // debug('login', username);
-    // const conn = await connection();
-    // debug(typeof conn, 'conn');
-    // const sql = 'SELECT * FROM benutzer WHERE username = ?';
-    // const data = await query(conn, sql, [username]);
-    // debug(typeof data, 'data');
-    // conn.release();
-    // debug('done');
-
     const conn = await connection();
     const sql = 'SELECT * FROM benutzer WHERE username = ?';
     const data = await query(conn, sql, [username]);
@@ -56,7 +44,7 @@ router.post('', async (req, res, next) => {
             onboarding: user.onboarding,
             isLoggedIn: true,
           };
-          okmsg(res);
+          okmsg(res, req.session.user);
         } else errmsg(res, 'Passwort falsch', 401);
       });
     }

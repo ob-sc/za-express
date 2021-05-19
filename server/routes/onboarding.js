@@ -1,6 +1,7 @@
 import express from 'express';
 import auth from '../middleware/auth.js';
 import connection from '../util/connection.js';
+import { onbNeuMail } from '../util/mail.js';
 import query from '../util/query.js';
 import { errmsg, okmsg } from '../util/response.js';
 import checkStatus from '../util/status.js';
@@ -28,36 +29,21 @@ router.get('', async (req, res, next) => {
 // neuer ma
 router.post('', async (req, res, next) => {
   try {
-    const {
-      eintritt,
-      anrede,
-      vorname,
-      nachname,
-      ort,
-      position,
-      anforderungen,
-    } = req.body;
-
     const ersteller = req.session.user.username;
 
-    const conn = await connection();
-    const sql =
-      'INSERT INTO onboarding (ersteller,anrede,eintritt,vorname,nachname,ort,position,anforderungen) VALUES (?,?,?,?,?,?,?,?)';
+    const data = { ersteller, ...req.body };
 
-    const createNewMA = await query(conn, sql, [
-      ersteller,
-      anrede,
-      eintritt,
-      vorname,
-      nachname,
-      ort,
-      position,
-      anforderungen,
-    ]);
+    const conn = await connection();
+    const sql = 'INSERT INTO onboarding SET ?';
+
+    const createNewMA = await query(conn, sql, data);
+
     conn.release();
 
-    if (createNewMA.isUpdated) okmsg(res);
-    else errmsg(res);
+    if (createNewMA.isUpdated) {
+      onbNeuMail(createNewMA, data);
+      okmsg(res);
+    } else errmsg(res);
   } catch (err) {
     next(err);
   }

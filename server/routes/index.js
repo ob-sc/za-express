@@ -4,7 +4,6 @@ import aushilfenRoutes from './aushilfen';
 import angemeldetRoutes from './angemeldet';
 import zeitenRoutes from './zeiten';
 import onboardingRoutes from './onboarding';
-import test from './test';
 
 export {
   userRoutes,
@@ -13,5 +12,4 @@ export {
   angemeldetRoutes,
   zeitenRoutes,
   onboardingRoutes,
-  test,
 };

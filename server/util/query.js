@@ -1,10 +1,11 @@
-const query = async (conn, q, params) =>
+const query = async (conn, sql, params) =>
   new Promise((resolve, reject) => {
-    conn.query(q, params, (err, res) => {
+    conn.query(sql, params, (err, res) => {
       if (err) reject(err);
       else
         resolve({
           result: res,
+          id: res.insertId,
           isEmpty: res.length === 0,
           isUpdated: res.affectedRows > 0,
         });
