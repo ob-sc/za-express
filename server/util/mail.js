@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-import { erstellerString } from './string';
+import { erstellerString, toLocalDate } from './string';
 
 const transporter = nodemailer.createTransport({
   host: '192.168.100.50',
@@ -24,7 +24,7 @@ const onboardingMail = async (to, subject, html) =>
     html,
   });
 
-export const onbNeuMail = async (data, ort) => {
+export const onbNeuMail = async (data) => {
   const { id, ersteller, eintritt, vorname, nachname, position } = data;
   const creator = erstellerString(ersteller);
   const url = `https://onboarding.starcar.local/ma/${id}`;
@@ -33,8 +33,8 @@ export const onbNeuMail = async (data, ort) => {
   ${divider}
   <h1 style="font-family:Helvetica, Verdana, sans-serif;margin:0px;font-size:1.3em;line-height:1.4em">${vorname} ${nachname}</h1>
   <ul style="margin-bottom:1.5em">
-  <li>Eintritt: ${eintritt}</li>
-  <li>Arbeitsort: ${ort}</li>
+  <li>Eintritt: ${toLocalDate(eintritt)}</li>
+  <li>Arbeitsort: ${data.ort}</li>
   <li>Position: ${position}</li></ul>
   <a href="${url}">Vorgang anzeigen</a>`;
 
@@ -52,14 +52,14 @@ export const onbDoneMail = async (data) => {
   let rows = '';
   for (const item of data.status) {
     if (item.required === true)
-      rows += `<tr><td>${item.label}</td><td>${item.value}</td></tr>`;
+      rows += `<tr><td style="padding:0px 1.2em;">${item.label}</td><td>${item.value}</td></tr>`;
   }
 
   const content = `Mitarbeiter <a href="${url}">#${id}</a> wurde fertig bearbeitet.
   ${divider}
-  <h1 style="font-family:Helvetica, Verdana, sans-serif;margin:0px;font-size:1.3em;line-height:1.4em">${vorname} ${nachname}</h1>
-  <table style="margin-bottom:1.5em"><tbody>${rows}</tbody></table>
-  <a href="${url}">Vorgang anzeigen</a>`;
+  <h1 style="font-family:Helvetica, Verdana, sans-serif;margin:0px;margin-bottom:1.3em;font-size:1.3em;line-height:1.4em">${vorname} ${nachname}</h1>
+  <table style="font-family:Helvetica, sans-serif;margin:0px;"><tbody>${rows}</tbody></table>
+  <div style="margin:1.3em 0px;"><a href="${url}">Vorgang anzeigen</a></div>`;
 
   await onboardingMail(
     ['bergen@starcar.de'],
@@ -70,10 +70,10 @@ export const onbDoneMail = async (data) => {
 
 const template = (content) => `<!DOCTYPE html><html><head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"><style>
-a:link{color:#169}
-a:visited{color:#169}
-a:hover{color:#169}
-a:active{color:#169}
+a:link{color:#169;text-decoration:none;}
+a:visited{color:#169;text-decoration:none;}
+a:hover{color:#169;text-decoration:underline;}
+a:active{color:#169;text-decoration:underline;}
 </style></head>
 <body style="font-family:Helvetica, sans-serif;font-size:14px;line-height:1.4em;color:#222">
 ${content}

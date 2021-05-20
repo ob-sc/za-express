@@ -14,13 +14,13 @@ router.use(auth);
 router.get('', async (req, res, next) => {
   try {
     const conn = await connection();
+
     const sql =
       'SELECT id,status,ersteller,vorname,nachname,eintritt,ort FROM onboarding ORDER BY status, id DESC';
-
-    const selectAll = await query(conn, sql);
+    const qry = await query(conn, sql);
     conn.release();
 
-    okmsg(res, selectAll.result);
+    okmsg(res, qry.result);
   } catch (err) {
     next(err);
   }
@@ -34,14 +34,17 @@ router.post('', async (req, res, next) => {
     const data = { ersteller, ...req.body };
 
     const conn = await connection();
-    const sql = 'INSERT INTO onboarding SET ?';
 
-    const createNewMA = await query(conn, sql, data);
+    const sql = 'INSERT INTO onboarding SET ?';
+    const qry = await query(conn, sql, data);
+
+    const sql2 = 'SELECT name FROM stationen WHERE id=?';
+    const qry2 = await query(conn, sql2, [data.ort]);
 
     conn.release();
 
-    if (createNewMA.isUpdated) {
-      onbNeuMail({ ...data, id: createNewMA.id });
+    if (qry.isUpdated) {
+      onbNeuMail({ ...data, id: qry.id, ort: qry2.result[0].name });
       okmsg(res);
     } else errmsg(res);
   } catch (err) {
@@ -53,12 +56,12 @@ router.post('', async (req, res, next) => {
 router.get('/ma/:id', async (req, res, next) => {
   try {
     const conn = await connection();
-    const sql = 'SELECT * FROM onboarding WHERE id=?';
 
-    const selectOne = await query(conn, sql, [req.params.id]);
+    const sql = 'SELECT * FROM onboarding WHERE id=?';
+    const qry = await query(conn, sql, [req.params.id]);
     conn.release();
 
-    if (!selectOne.isEmpty) okmsg(res, selectOne.result[0]);
+    if (!qry.isEmpty) okmsg(res, qry.result[0]);
     else errmsg(res);
   } catch (err) {
     next(err);
@@ -70,15 +73,17 @@ router.put('/domain', async (req, res, next) => {
   try {
     const { id, domain } = req.body;
     const conn = await connection();
+
     const sql = 'UPDATE onboarding SET domain=? WHERE id=?';
+    const qry = await query(conn, sql, [domain, id]);
 
-    const putDomain = await query(conn, sql, [domain, id]);
-
-    await checkStatus(conn, id);
+    const status = await checkStatus(conn, id);
 
     conn.release();
 
-    if (putDomain.isUpdated) okmsg(res, putDomain.result[0]);
+    const result = { status, updated: qry.result[0] };
+
+    if (qry.isUpdated) okmsg(res, result);
     else errmsg(res);
   } catch (err) {
     next(err);
@@ -92,10 +97,10 @@ router.put('/bitrix', async (req, res, next) => {
     const conn = await connection();
     const sql = 'UPDATE onboarding SET bitrix=? WHERE id=?';
 
-    const putBitrix = await query(conn, sql, [bitrix, id]);
+    const qry = await query(conn, sql, [bitrix, id]);
     conn.release();
 
-    if (putBitrix.isUpdated) okmsg(res, putBitrix.result[0]);
+    if (qry.isUpdated) okmsg(res, qry.result[0]);
     else errmsg(res);
   } catch (err) {
     next(err);
@@ -109,10 +114,10 @@ router.put('/crent', async (req, res, next) => {
     const conn = await connection();
     const sql = 'UPDATE onboarding SET crent=? WHERE id=?';
 
-    const putCrent = await query(conn, sql, [JSON.stringify(crent), id]);
+    const qry = await query(conn, sql, [JSON.stringify(crent), id]);
     conn.release();
 
-    if (putCrent.isUpdated) okmsg(res, putCrent.result[0]);
+    if (qry.isUpdated) okmsg(res, qry.result[0]);
     else errmsg(res);
   } catch (err) {
     next(err);
@@ -126,10 +131,10 @@ router.put('/docuware', async (req, res, next) => {
     const conn = await connection();
     const sql = 'UPDATE onboarding SET docuware=? WHERE id=?';
 
-    const putDocuware = await query(conn, sql, [docuware, id]);
+    const qry = await query(conn, sql, [docuware, id]);
     conn.release();
 
-    if (putDocuware.isUpdated) okmsg(res, putDocuware.result[0]);
+    if (qry.isUpdated) okmsg(res, qry.result[0]);
     else errmsg(res);
   } catch (err) {
     next(err);
@@ -143,10 +148,10 @@ router.put('/qlik', async (req, res, next) => {
     const conn = await connection();
     const sql = 'UPDATE onboarding SET qlik=? WHERE id=?';
 
-    const putQlik = await query(conn, sql, [qlik, id]);
+    const qry = await query(conn, sql, [qlik, id]);
     conn.release();
 
-    if (putQlik.isUpdated) okmsg(res, putQlik.result[0]);
+    if (qry.isUpdated) okmsg(res, qry.result[0]);
     else errmsg(res);
   } catch (err) {
     next(err);
@@ -160,10 +165,10 @@ router.put('/hardware', async (req, res, next) => {
     const conn = await connection();
     const sql = 'UPDATE onboarding SET hardware=? WHERE id=?';
 
-    const putHardware = await query(conn, sql, [hardware, id]);
+    const qry = await query(conn, sql, [hardware, id]);
     conn.release();
 
-    if (putHardware.isUpdated) okmsg(res, putHardware.result[0]);
+    if (qry.isUpdated) okmsg(res, qry.result[0]);
     else errmsg(res);
   } catch (err) {
     next(err);
@@ -177,10 +182,10 @@ router.put('/vpn', async (req, res, next) => {
     const conn = await connection();
     const sql = 'UPDATE onboarding SET vpn=? WHERE id=?';
 
-    const putVPN = await query(conn, sql, [vpn, id]);
+    const qry = await query(conn, sql, [vpn, id]);
     conn.release();
 
-    if (putVPN.isUpdated) okmsg(res, putVPN.result[0]);
+    if (qry.isUpdated) okmsg(res, qry.result[0]);
     else errmsg(res);
   } catch (err) {
     next(err);

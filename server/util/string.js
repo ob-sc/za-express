@@ -17,3 +17,15 @@ export const erstellerString = (str) => {
 
   return `${vorname} ${nachname}`;
 };
+
+export const prepend0 = (str) => (Number(str) < 10 ? `0${str}` : str);
+
+export const toLocalDate = (str) => {
+  const date = new Date(str);
+  const y = date.getFullYear();
+  const m = date.getMonth();
+  const d = date.getDate();
+
+  // monat ist zero-indexed
+  return `${prepend0(d)}.${prepend0(m + 1)}.${y}`;
+};
