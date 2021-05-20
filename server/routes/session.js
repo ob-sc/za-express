@@ -30,7 +30,7 @@ router.post('', async (req, res, next) => {
 
     if (data.isEmpty) errmsg(res, 'Benutzer nicht gefunden', 401);
     else {
-      const user = data.result[0];
+      const [user] = data.result;
       bcrypt.compare(password, user.password, (error, result) => {
         if (error) throw error;
         if (result === true) {

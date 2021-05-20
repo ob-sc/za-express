@@ -15,7 +15,7 @@ router.get('', async (req, res, next) => {
   try {
     const conn = await connection();
     const sql =
-      'SELECT id,status,ersteller,vorname,nachname,eintritt,ort FROM onboarding';
+      'SELECT id,status,ersteller,vorname,nachname,eintritt,ort FROM onboarding ORDER BY status, id DESC';
 
     const selectAll = await query(conn, sql);
     conn.release();
@@ -41,7 +41,7 @@ router.post('', async (req, res, next) => {
     conn.release();
 
     if (createNewMA.isUpdated) {
-      onbNeuMail(createNewMA, data);
+      onbNeuMail({ ...data, id: createNewMA.id });
       okmsg(res);
     } else errmsg(res);
   } catch (err) {
@@ -74,7 +74,7 @@ router.put('/domain', async (req, res, next) => {
 
     const putDomain = await query(conn, sql, [domain, id]);
 
-    const status = await checkStatus(conn, id);
+    await checkStatus(conn, id);
 
     conn.release();
 
