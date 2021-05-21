@@ -36,6 +36,7 @@ router.post('', async (req, res, next) => {
         if (result === true) {
           req.session.user = {
             username: user.username,
+            admin: user.admin === 1,
             station: user.station,
             access: user.access,
             region: user.region,

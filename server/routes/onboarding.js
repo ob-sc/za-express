@@ -16,7 +16,7 @@ router.get('', async (req, res, next) => {
     const conn = await connection();
 
     const sql =
-      'SELECT id,status,ersteller,vorname,nachname,eintritt,ort FROM onboarding ORDER BY status, id DESC';
+      'SELECT id,status,ersteller,vorname,nachname,eintritt,ort,anzeigen FROM onboarding ORDER BY status, id DESC';
     const qry = await query(conn, sql);
     conn.release();
 
@@ -52,16 +52,39 @@ router.post('', async (req, res, next) => {
   }
 });
 
+// freigabe von perso
+router.get('/freigabe/:id', async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const conn = await connection();
+
+    const sql = 'UPDATE onboarding SET anzeigen=1 WHERE id=?';
+    const qry = await query(conn, sql, [id]);
+
+    conn.release();
+
+    if (qry.isUpdated) okmsg(res);
+    else errmsg(res);
+  } catch (err) {
+    next(err);
+  }
+});
+
 // get mit id
 router.get('/ma/:id', async (req, res, next) => {
   try {
+    const { id } = req.params;
     const conn = await connection();
 
     const sql = 'SELECT * FROM onboarding WHERE id=?';
-    const qry = await query(conn, sql, [req.params.id]);
+    const qry = await query(conn, sql, [id]);
+
+    const [result] = qry.result;
+    const status = await checkStatus(conn, id);
+
     conn.release();
 
-    if (!qry.isEmpty) okmsg(res, qry.result[0]);
+    if (!qry.isEmpty) okmsg(res, { result, status });
     else errmsg(res);
   } catch (err) {
     next(err);
@@ -77,11 +100,11 @@ router.put('/domain', async (req, res, next) => {
     const sql = 'UPDATE onboarding SET domain=? WHERE id=?';
     const qry = await query(conn, sql, [domain, id]);
 
-    const status = await checkStatus(conn, id);
+    await checkStatus(conn, id);
 
     conn.release();
 
-    const result = { status, updated: qry.result[0] };
+    const result = qry.result[0];
 
     if (qry.isUpdated) okmsg(res, result);
     else errmsg(res);
@@ -95,9 +118,12 @@ router.put('/bitrix', async (req, res, next) => {
   try {
     const { id, bitrix } = req.body;
     const conn = await connection();
-    const sql = 'UPDATE onboarding SET bitrix=? WHERE id=?';
 
+    const sql = 'UPDATE onboarding SET bitrix=? WHERE id=?';
     const qry = await query(conn, sql, [bitrix, id]);
+
+    await checkStatus(conn, id);
+
     conn.release();
 
     if (qry.isUpdated) okmsg(res, qry.result[0]);
