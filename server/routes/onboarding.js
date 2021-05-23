@@ -4,7 +4,7 @@ import connection from '../util/connection.js';
 import { onbNeuMail } from '../util/mail.js';
 import query from '../util/query.js';
 import { errmsg, okmsg } from '../util/response.js';
-import checkStatus from '../util/status.js';
+import maStatus from '../util/onbStatus.js';
 
 const router = express.Router();
 
@@ -16,11 +16,26 @@ router.get('', async (req, res, next) => {
     const conn = await connection();
 
     const sql =
-      'SELECT id,status,ersteller,vorname,nachname,eintritt,ort,anzeigen FROM onboarding ORDER BY status, id DESC';
+      'SELECT o.id,o.status,o.ersteller,o.vorname,o.nachname,o.eintritt,o.anzeigen,s.name AS ort FROM onboarding AS o JOIN stationen AS s ON s.id = o.ort ORDER BY status, id DESC';
     const qry = await query(conn, sql);
+
     conn.release();
 
-    okmsg(res, qry.result);
+    const { result } = qry;
+
+    // versteckte zeilen für nicht admin und nicht ersteller raus
+    // rückwärts damit index richtig bleibt
+    let i = result.length;
+    while (i--) {
+      if (
+        result[parseInt(i)].anzeigen === 0 &&
+        req.session.user.username !== result[parseInt(i)].ersteller &&
+        req.session.user.admin !== true
+      )
+        result.splice(i, 1);
+    }
+
+    okmsg(res, result);
   } catch (err) {
     next(err);
   }
@@ -70,21 +85,17 @@ router.get('/freigabe/:id', async (req, res, next) => {
   }
 });
 
-// get mit id
+// get ma mit id
 router.get('/ma/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
     const conn = await connection();
 
-    const sql = 'SELECT * FROM onboarding WHERE id=?';
-    const qry = await query(conn, sql, [id]);
-
-    const [result] = qry.result;
-    const status = await checkStatus(conn, id);
+    const status = await maStatus(conn, id);
 
     conn.release();
 
-    if (!qry.isEmpty) okmsg(res, { result, status });
+    if (status !== null) okmsg(res, status);
     else errmsg(res);
   } catch (err) {
     next(err);
@@ -100,7 +111,7 @@ router.put('/domain', async (req, res, next) => {
     const sql = 'UPDATE onboarding SET domain=? WHERE id=?';
     const qry = await query(conn, sql, [domain, id]);
 
-    await checkStatus(conn, id);
+    await maStatus(conn, id);
 
     conn.release();
 
@@ -122,7 +133,7 @@ router.put('/bitrix', async (req, res, next) => {
     const sql = 'UPDATE onboarding SET bitrix=? WHERE id=?';
     const qry = await query(conn, sql, [bitrix, id]);
 
-    await checkStatus(conn, id);
+    await maStatus(conn, id);
 
     conn.release();
 

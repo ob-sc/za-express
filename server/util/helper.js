@@ -18,7 +18,8 @@ export const erstellerString = (str) => {
   return `${vorname} ${nachname}`;
 };
 
-export const prepend0 = (str) => (Number(str) < 10 ? `0${str}` : str);
+// todo das ist number nicht string, dann kann auch Number() weg
+const prepend0 = (num) => (num < 10 ? `0${num}` : num);
 
 export const toLocalDate = (str) => {
   const date = new Date(str);

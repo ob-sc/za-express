@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-import { erstellerString, toLocalDate } from './string';
+import { erstellerString, toLocalDate } from './helper';
 
 const transporter = nodemailer.createTransport({
   host: '192.168.100.50',
@@ -52,7 +52,9 @@ export const onbDoneMail = async (data) => {
   let rows = '';
   for (const item of data.status) {
     if (item.required === true)
-      rows += `<tr><td style="padding:0px 1.2em;">${item.label}</td><td>${item.value}</td></tr>`;
+      rows += `<tr><td style="padding:0px 1.2em;">${item.label}</td><td>${
+        item.value === true ? '✓' : item.value
+      }</td></tr>`;
   }
 
   const content = `Mitarbeiter <a href="${url}">#${id}</a> wurde fertig bearbeitet.
