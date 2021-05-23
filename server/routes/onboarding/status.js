@@ -1,15 +1,13 @@
-import { onbDoneMail } from './mail.js';
-import query from './query.js';
+import { onbDoneMail } from '../../util/mail.js';
+import query from '../../util/query.js';
+
+// nicht empty string
+const neStr = (value) => typeof value === 'string' && value !== '';
 
 const getValue = (value) =>
-  value === 1
-    ? true
-    : typeof value === 'string' && value !== ''
-    ? value
-    : false;
+  value === true || value === 1 ? true : neStr(value) ? value : false;
 
-const isRequested = (value) =>
-  value === true || (typeof value === 'string' && value !== '');
+const isRequested = (value) => getValue(value) === true || neStr(value);
 
 const isDone = (value) => value !== null;
 
@@ -25,13 +23,13 @@ const hardwareAnf = (anf) => {
   if (anf.handy === true) pushHardware('Handy', anf.handy);
   if (anf.laptop === true) pushHardware('Laptop', anf.laptop);
   if (anf.pc === true) pushHardware('Computer', anf.pc);
-  if (anf.monitore !== '') pushHardware('Monitore', anf.monitore);
+  if (neStr(anf.monitore)) pushHardware('Monitore', anf.monitore);
   if (anf.ipad === true) pushHardware('iPad', anf.ipad);
-  if (anf.ipadspez !== '') pushHardware('iPad spez.', anf.ipadspez);
+  if (neStr(anf.ipadspez)) pushHardware('iPad spez.', anf.ipadspez);
   if (anf.drucker === true) pushHardware('Drucker', anf.drucker);
   if (anf.tanken === true) pushHardware('Tankkarte', anf.tanken);
-  if (anf.freigabe !== '') pushHardware('Freigabe', anf.freigabe);
-  if (anf.sonstiges !== '') pushHardware('Sonstiges', anf.sonstiges);
+  if (neStr(anf.freigabe)) pushHardware('Freigabe', anf.freigabe);
+  if (neStr(anf.sonstiges)) pushHardware('Sonstiges', anf.sonstiges);
 
   return {
     required,
@@ -39,7 +37,7 @@ const hardwareAnf = (anf) => {
   };
 };
 
-const maStatus = async (conn, id) => {
+const status = async (conn, id) => {
   const sql =
     'SELECT onb.*, stat.name AS station_name FROM onboarding AS onb JOIN stationen AS stat ON onb.ort = stat.id WHERE onb.id=?';
   const qry = await query(conn, sql, [id]);
@@ -74,6 +72,7 @@ const maStatus = async (conn, id) => {
       done: isDone(crent.user),
       label: 'C-Rent Benutzer',
       required: true,
+      stationen: anforderungen.crentstat,
     },
     {
       value: crent.pn,
@@ -98,18 +97,22 @@ const maStatus = async (conn, id) => {
       done: isDone(data.docuware),
       label: 'Docuware',
       required: isRequested(anforderungen.docuware),
+      workflow: anforderungen.workflow,
     },
     {
       value: getValue(data.qlik),
       done: isDone(data.qlik, anforderungen.qlik),
       label: 'Qlik',
       required: isRequested(anforderungen.qlik),
+      stationen: anforderungen.qlikstat,
+      apps: anforderungen.qlikapps,
     },
     {
       value: getValue(data.hardware),
       done: isDone(data.hardware),
       label: 'Hardware',
       required: hardware.required,
+      hardware: hardware.array,
     },
     {
       value: getValue(data.vpn),
@@ -147,9 +150,8 @@ const maStatus = async (conn, id) => {
     eintritt: data.eintritt,
     ort: data.station_name,
     position: data.position,
-    hardware: hardware.array,
     reg_date: data.reg_date,
   };
 };
 
-export default maStatus;
+export default status;

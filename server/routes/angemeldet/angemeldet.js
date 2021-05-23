@@ -1,14 +1,8 @@
-import express from 'express';
-import { okmsg, errmsg } from '../util/response.js';
-import auth from '../middleware/auth.js';
-import connection from '../util/connection.js';
-import query from '../util/query.js';
+import { okmsg, errmsg } from '../../util/response.js';
+import connection from '../../util/connection.js';
+import query from '../../util/query.js';
 
-const router = express.Router();
-
-router.use(auth);
-
-router.post('', async (req, res, next) => {
+export const anmelden = async (req, res, next) => {
   try {
     const { ahid, date, start } = req.body;
     const { station } = req.session.user;
@@ -32,9 +26,9 @@ router.post('', async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-});
+};
 
-router.get('', async (req, res, next) => {
+export const getAnmeldungen = async (req, res, next) => {
   try {
     const conn = await connection();
 
@@ -50,9 +44,9 @@ router.get('', async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-});
+};
 
-router.delete('', async (req, res, next) => {
+export const deleteAnmeldung = async (req, res, next) => {
   try {
     const { id } = req.body;
 
@@ -66,6 +60,4 @@ router.delete('', async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-});
-
-export default router;
+};

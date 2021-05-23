@@ -1,17 +1,10 @@
-import express from 'express';
-import auth from '../middleware/auth.js';
-import connection from '../util/connection.js';
-import { onbNeuMail } from '../util/mail.js';
-import query from '../util/query.js';
-import { errmsg, okmsg } from '../util/response.js';
-import maStatus from '../util/onbStatus.js';
+import connection from '../../util/connection.js';
+import { onbNeuMail } from '../../util/mail.js';
+import query from '../../util/query.js';
+import { errmsg, okmsg } from '../../util/response.js';
+import maStatus from './status.js';
 
-const router = express.Router();
-
-router.use(auth);
-
-// alle ma
-router.get('', async (req, res, next) => {
+export const alleMa = async (req, res, next) => {
   try {
     const conn = await connection();
 
@@ -39,10 +32,9 @@ router.get('', async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-});
+};
 
-// neuer ma
-router.post('', async (req, res, next) => {
+export const neuerMa = async (req, res, next) => {
   try {
     const ersteller = req.session.user.username;
 
@@ -65,10 +57,9 @@ router.post('', async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-});
+};
 
-// freigabe von perso
-router.get('/freigabe/:id', async (req, res, next) => {
+export const freigabe = async (req, res, next) => {
   try {
     const { id } = req.params;
     const conn = await connection();
@@ -83,10 +74,9 @@ router.get('/freigabe/:id', async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-});
+};
 
-// get ma mit id
-router.get('/ma/:id', async (req, res, next) => {
+export const getMa = async (req, res, next) => {
   try {
     const { id } = req.params;
     const conn = await connection();
@@ -100,12 +90,13 @@ router.get('/ma/:id', async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-});
+};
 
-// update domain
-router.put('/domain', async (req, res, next) => {
+const updateDomain = async (req, res, next) => {
   try {
     const { id, domain } = req.body;
+    if (domain === undefined) next();
+
     const conn = await connection();
 
     const sql = 'UPDATE onboarding SET domain=? WHERE id=?';
@@ -122,12 +113,13 @@ router.put('/domain', async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-});
+};
 
-// update bitrix
-router.put('/bitrix', async (req, res, next) => {
+const updateBitrix = async (req, res, next) => {
   try {
     const { id, bitrix } = req.body;
+    if (bitrix === undefined) next();
+
     const conn = await connection();
 
     const sql = 'UPDATE onboarding SET bitrix=? WHERE id=?';
@@ -142,12 +134,13 @@ router.put('/bitrix', async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-});
+};
 
-// update crent
-router.put('/crent', async (req, res, next) => {
+const updateCrent = async (req, res, next) => {
   try {
     const { id, crent } = req.body;
+    if (crent === undefined) next();
+
     const conn = await connection();
     const sql = 'UPDATE onboarding SET crent=? WHERE id=?';
 
@@ -159,12 +152,13 @@ router.put('/crent', async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-});
+};
 
-// update docuware
-router.put('/docuware', async (req, res, next) => {
+const updateDocuware = async (req, res, next) => {
   try {
     const { id, docuware } = req.body;
+    if (docuware === undefined) next();
+
     const conn = await connection();
     const sql = 'UPDATE onboarding SET docuware=? WHERE id=?';
 
@@ -176,12 +170,13 @@ router.put('/docuware', async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-});
+};
 
-// update qlik
-router.put('/qlik', async (req, res, next) => {
+const updateQlik = async (req, res, next) => {
   try {
     const { id, qlik } = req.body;
+    if (qlik === undefined) next();
+
     const conn = await connection();
     const sql = 'UPDATE onboarding SET qlik=? WHERE id=?';
 
@@ -193,12 +188,13 @@ router.put('/qlik', async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-});
+};
 
-// update hardware
-router.put('/hardware', async (req, res, next) => {
+const updateHardware = async (req, res, next) => {
   try {
     const { id, hardware } = req.body;
+    if (hardware === undefined) next();
+
     const conn = await connection();
     const sql = 'UPDATE onboarding SET hardware=? WHERE id=?';
 
@@ -210,12 +206,13 @@ router.put('/hardware', async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-});
+};
 
-// update vpn
-router.put('/vpn', async (req, res, next) => {
+const updateVPN = async (req, res, next) => {
   try {
     const { id, vpn } = req.body;
+    if (vpn === undefined) next();
+
     const conn = await connection();
     const sql = 'UPDATE onboarding SET vpn=? WHERE id=?';
 
@@ -227,6 +224,14 @@ router.put('/vpn', async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-});
+};
 
-export default router;
+export const updateMitarbeiter = [
+  updateDomain,
+  updateBitrix,
+  updateCrent,
+  updateDocuware,
+  updateQlik,
+  updateHardware,
+  updateVPN,
+];

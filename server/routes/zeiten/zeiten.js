@@ -1,14 +1,8 @@
-import express from 'express';
-import { okmsg } from '../util/response.js';
-import auth from '../middleware/auth.js';
-import connection from '../util/connection.js';
-import query from '../util/query.js';
+import { okmsg } from '../../util/response.js';
+import connection from '../../util/connection.js';
+import query from '../../util/query.js';
 
-const router = express.Router();
-
-router.use(auth);
-
-router.post('/max', async (req, res, next) => {
+export const selectMax = async (req, res, next) => {
   try {
     const { id, status, firstDayMonth } = req.body;
     const isStudent = status.toLowerCase() === 'student';
@@ -30,6 +24,4 @@ router.post('/max', async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-});
-
-export default router;
+};

@@ -1,23 +1,29 @@
-import express from 'express';
 import bcrypt from 'bcryptjs';
-import connection from '../util/connection.js';
-import query from '../util/query.js';
-import sessionValidation from '../validations/session.js';
-import { errmsg, okmsg } from '../util/response.js';
-// const debug = require('debug')('za-express:server');
+import connection from '../../util/connection.js';
+import query from '../../util/query.js';
+import sessionValidation from '../../validations/session.js';
+import { errmsg, okmsg } from '../../util/response.js';
 
-const router = express.Router();
+const createSession = (user) => ({
+  username: user.username,
+  admin: user.admin === 1,
+  station: user.station,
+  access: user.access,
+  region: user.region,
+  extstat: user.extstat,
+  currentStation: user.station,
+  onboarding: user.onboarding,
+  isLoggedIn: true,
+});
 
-// check ob logged in
-router.get('', (req, res) => {
+export const isLoggedIn = (req, res) => {
   const { session } = req;
   if (session.user !== undefined && session.user.isLoggedIn === true)
     okmsg(res, req.session.user);
   else okmsg(res, { isLoggedIn: false });
-});
+};
 
-// login
-router.post('', async (req, res, next) => {
+export const login = async (req, res, next) => {
   try {
     const { error, value } = sessionValidation.validate(req.body);
     if (error) throw error;
@@ -34,17 +40,7 @@ router.post('', async (req, res, next) => {
       bcrypt.compare(password, user.password, (error, result) => {
         if (error) throw error;
         if (result === true) {
-          req.session.user = {
-            username: user.username,
-            admin: user.admin === 1,
-            station: user.station,
-            access: user.access,
-            region: user.region,
-            extstat: user.extstat,
-            currentStation: user.station,
-            onboarding: user.onboarding,
-            isLoggedIn: true,
-          };
+          req.session.user = createSession(user);
           okmsg(res, req.session.user);
         } else errmsg(res, 'Passwort falsch', 401);
       });
@@ -52,10 +48,9 @@ router.post('', async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-});
+};
 
-// station ändern
-router.put('', (req, res, next) => {
+export const updateStation = (req, res, next) => {
   const { body, session } = req;
   try {
     if (session.user !== undefined) {
@@ -65,10 +60,9 @@ router.put('', (req, res, next) => {
   } catch (err) {
     next(err);
   }
-});
+};
 
-// logout
-router.delete('', (req, res, next) => {
+export const logout = (req, res, next) => {
   const { session } = req;
   try {
     if (session.user !== undefined) {
@@ -81,6 +75,4 @@ router.delete('', (req, res, next) => {
   } catch (err) {
     next(err);
   }
-});
-
-export default router;
+};

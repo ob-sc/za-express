@@ -1,9 +1,9 @@
-import userRoutes from './user';
-import sessionRoutes from './session';
-import aushilfenRoutes from './aushilfen';
-import angemeldetRoutes from './angemeldet';
-import zeitenRoutes from './zeiten';
-import onboardingRoutes from './onboarding';
+import userRoutes from './user/route';
+import sessionRoutes from './session/route';
+import aushilfenRoutes from './aushilfen/route';
+import angemeldetRoutes from './angemeldet/route';
+import zeitenRoutes from './zeiten/route';
+import onboardingRoutes from './onboarding/route';
 
 export {
   userRoutes,

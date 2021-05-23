@@ -1,14 +1,10 @@
-import express from 'express';
 import bcrypt from 'bcryptjs';
-import connection from '../util/connection.js';
-import query from '../util/query.js';
-import userValidation from '../validations/user.js';
-import { errmsg, okmsg } from '../util/response.js';
+import connection from '../../util/connection.js';
+import query from '../../util/query.js';
+import userValidation from '../../validations/user.js';
+import { errmsg, okmsg } from '../../util/response.js';
 
-const router = express.Router();
-
-// sign up
-router.post('', async (req, res, next) => {
+export const signUp = async (req, res, next) => {
   try {
     const { error, value } = userValidation.validate(req.body);
     if (error) throw error;
@@ -33,6 +29,4 @@ router.post('', async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-});
-
-export default router;
+};
