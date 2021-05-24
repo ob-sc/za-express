@@ -9,7 +9,7 @@ const getValue = (value) =>
 
 const isRequested = (value) => getValue(value) === true || neStr(value);
 
-const isDone = (value) => value !== null;
+const isDone = (value) => neStr(value) && value !== 0 && value !== null;
 
 const hardwareAnf = (anf) => {
   let required = false;
@@ -56,71 +56,89 @@ const status = async (conn, id) => {
 
   const status = [
     {
+      name: 'domain',
       value: getValue(data.domain),
       done: isDone(data.domain),
       label: 'Citrix',
       required: true,
     },
     {
+      name: 'mail',
       value: getValue(data.domain) ? `${data.domain}@starcar.de` : false,
       done: isDone(data.domain),
       label: 'E-Mail',
       required: true,
     },
     {
-      value: crent.user,
+      name: 'crentuser',
+      value: getValue(crent.user),
       done: isDone(crent.user),
       label: 'C-Rent Benutzer',
       required: true,
-      stationen: anforderungen.crentstat,
     },
     {
-      value: crent.pn,
+      name: 'crentpn',
+      value: getValue(crent.pn),
       done: isDone(crent.pn),
       label: 'C-Rent PN',
       required: true,
     },
     {
-      value: crent.kasse,
+      name: 'crentkasse',
+      value: getValue(crent.kasse),
       done: isDone(crent.kasse),
       label: 'Kassenkonto',
       required: isRequested(anforderungen.kasse),
     },
     {
+      name: 'bitrix',
       value: getValue(data.bitrix),
       done: isDone(data.bitrix),
       label: 'Bitrix',
       required: true,
     },
     {
+      name: 'docuware',
       value: getValue(data.docuware),
       done: isDone(data.docuware),
       label: 'Docuware',
       required: isRequested(anforderungen.docuware),
-      workflow: anforderungen.workflow,
     },
     {
+      name: 'qlik',
       value: getValue(data.qlik),
       done: isDone(data.qlik, anforderungen.qlik),
       label: 'Qlik',
       required: isRequested(anforderungen.qlik),
-      stationen: anforderungen.qlikstat,
-      apps: anforderungen.qlikapps,
     },
     {
+      name: 'hardware',
       value: getValue(data.hardware),
       done: isDone(data.hardware),
       label: 'Hardware',
       required: hardware.required,
-      hardware: hardware.array,
     },
     {
+      name: 'vpn',
       value: getValue(data.vpn),
       done: isDone(data.vpn, anforderungen.vpn),
       label: 'VPN',
       required: isRequested(anforderungen.vpn),
     },
   ];
+
+  const requested = {
+    kasse: isRequested(anforderungen.kasse),
+    crentstat: anforderungen.crentstat,
+    docuware: isRequested(anforderungen.docuware),
+    qlik: isRequested(anforderungen.qlik),
+    qlikstat: anforderungen.qlikstat,
+    qlikapps: anforderungen.qlikapps,
+    hardware: hardware.required,
+    hardwareArray: hardware.array,
+    vpn: isRequested(anforderungen.vpn),
+    workflow: anforderungen.workflow,
+  };
 
   // wenn der MA in der DB noch status 0 hatte, jetzt also erst fertig ist
   if (data.status === 0) {
@@ -144,6 +162,7 @@ const status = async (conn, id) => {
     id: data.id,
     anzeigen: data.anzeigen,
     anforderungen: status,
+    optional: requested,
     anrede: data.anrede,
     vorname: data.vorname,
     nachname: data.nachname,
