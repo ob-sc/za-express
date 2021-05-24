@@ -9,7 +9,7 @@ const getValue = (value) =>
 
 const isRequested = (value) => getValue(value) === true || neStr(value);
 
-const isDone = (value) => neStr(value) && value !== 0 && value !== null;
+const isDone = (value) => neStr(value) || value === 1;
 
 const hardwareAnf = (anf) => {
   let required = false;
@@ -48,7 +48,7 @@ const status = async (conn, id) => {
   const anforderungen = JSON.parse(data.anforderungen);
 
   const crent =
-    data.crent && data.crent[0] === '{'
+    typeof data.crent === 'string' && data.crent[0] === '{'
       ? JSON.parse(data.crent)
       : { user: false, pn: false, kasse: false };
 
@@ -75,6 +75,7 @@ const status = async (conn, id) => {
       done: isDone(crent.user),
       label: 'C-Rent Benutzer',
       required: true,
+      stations: anforderungen.crentstat,
     },
     {
       name: 'crentpn',
@@ -103,6 +104,7 @@ const status = async (conn, id) => {
       done: isDone(data.docuware),
       label: 'Docuware',
       required: isRequested(anforderungen.docuware),
+      workflow: anforderungen.workflow,
     },
     {
       name: 'qlik',
@@ -110,6 +112,8 @@ const status = async (conn, id) => {
       done: isDone(data.qlik, anforderungen.qlik),
       label: 'Qlik',
       required: isRequested(anforderungen.qlik),
+      stations: anforderungen.qlikstat,
+      apps: anforderungen.qlikapps,
     },
     {
       name: 'hardware',
@@ -117,6 +121,7 @@ const status = async (conn, id) => {
       done: isDone(data.hardware),
       label: 'Hardware',
       required: hardware.required,
+      array: hardware.array,
     },
     {
       name: 'vpn',
@@ -126,19 +131,6 @@ const status = async (conn, id) => {
       required: isRequested(anforderungen.vpn),
     },
   ];
-
-  const requested = {
-    kasse: isRequested(anforderungen.kasse),
-    crentstat: anforderungen.crentstat,
-    docuware: isRequested(anforderungen.docuware),
-    qlik: isRequested(anforderungen.qlik),
-    qlikstat: anforderungen.qlikstat,
-    qlikapps: anforderungen.qlikapps,
-    hardware: hardware.required,
-    hardwareArray: hardware.array,
-    vpn: isRequested(anforderungen.vpn),
-    workflow: anforderungen.workflow,
-  };
 
   // wenn der MA in der DB noch status 0 hatte, jetzt also erst fertig ist
   if (data.status === 0) {
@@ -160,9 +152,8 @@ const status = async (conn, id) => {
 
   return {
     id: data.id,
-    anzeigen: data.anzeigen,
+    anzeigen: data.anzeigen === 1,
     anforderungen: status,
-    optional: requested,
     anrede: data.anrede,
     vorname: data.vorname,
     nachname: data.nachname,

@@ -27,7 +27,6 @@ export const alleMa = async (req, res, next) => {
       )
         result.splice(i, 1);
     }
-
     okmsg(res, result);
   } catch (err) {
     next(err);
@@ -95,7 +94,7 @@ export const getMa = async (req, res, next) => {
 const updateDomain = async (req, res, next) => {
   try {
     const { id, domain } = req.body;
-    if (domain === undefined) next();
+    if (domain === undefined) return next();
 
     const conn = await connection();
 
@@ -106,9 +105,7 @@ const updateDomain = async (req, res, next) => {
 
     conn.release();
 
-    const result = qry.result[0];
-
-    if (qry.isUpdated) okmsg(res, result);
+    if (qry.isUpdated) okmsg(res, domain);
     else errmsg(res);
   } catch (err) {
     next(err);
@@ -118,7 +115,7 @@ const updateDomain = async (req, res, next) => {
 const updateBitrix = async (req, res, next) => {
   try {
     const { id, bitrix } = req.body;
-    if (bitrix === undefined) next();
+    if (bitrix === undefined) return next();
 
     const conn = await connection();
 
@@ -129,7 +126,7 @@ const updateBitrix = async (req, res, next) => {
 
     conn.release();
 
-    if (qry.isUpdated) okmsg(res, qry.result[0]);
+    if (qry.isUpdated) okmsg(res, bitrix);
     else errmsg(res);
   } catch (err) {
     next(err);
@@ -139,15 +136,15 @@ const updateBitrix = async (req, res, next) => {
 const updateCrent = async (req, res, next) => {
   try {
     const { id, crent } = req.body;
-    if (crent === undefined) next();
+    if (crent === undefined) return next();
 
     const conn = await connection();
     const sql = 'UPDATE onboarding SET crent=? WHERE id=?';
 
-    const qry = await query(conn, sql, [JSON.stringify(crent), id]);
+    const qry = await query(conn, sql, [crent, id]);
     conn.release();
 
-    if (qry.isUpdated) okmsg(res, qry.result[0]);
+    if (qry.isUpdated) okmsg(res, crent);
     else errmsg(res);
   } catch (err) {
     next(err);
@@ -157,7 +154,7 @@ const updateCrent = async (req, res, next) => {
 const updateDocuware = async (req, res, next) => {
   try {
     const { id, docuware } = req.body;
-    if (docuware === undefined) next();
+    if (docuware === undefined) return next();
 
     const conn = await connection();
     const sql = 'UPDATE onboarding SET docuware=? WHERE id=?';
@@ -165,7 +162,7 @@ const updateDocuware = async (req, res, next) => {
     const qry = await query(conn, sql, [docuware, id]);
     conn.release();
 
-    if (qry.isUpdated) okmsg(res, qry.result[0]);
+    if (qry.isUpdated) okmsg(res, docuware);
     else errmsg(res);
   } catch (err) {
     next(err);
@@ -175,7 +172,7 @@ const updateDocuware = async (req, res, next) => {
 const updateQlik = async (req, res, next) => {
   try {
     const { id, qlik } = req.body;
-    if (qlik === undefined) next();
+    if (qlik === undefined) return next();
 
     const conn = await connection();
     const sql = 'UPDATE onboarding SET qlik=? WHERE id=?';
@@ -183,7 +180,7 @@ const updateQlik = async (req, res, next) => {
     const qry = await query(conn, sql, [qlik, id]);
     conn.release();
 
-    if (qry.isUpdated) okmsg(res, qry.result[0]);
+    if (qry.isUpdated) okmsg(res, qlik);
     else errmsg(res);
   } catch (err) {
     next(err);
@@ -193,7 +190,7 @@ const updateQlik = async (req, res, next) => {
 const updateHardware = async (req, res, next) => {
   try {
     const { id, hardware } = req.body;
-    if (hardware === undefined) next();
+    if (hardware === undefined) return next();
 
     const conn = await connection();
     const sql = 'UPDATE onboarding SET hardware=? WHERE id=?';
@@ -201,7 +198,7 @@ const updateHardware = async (req, res, next) => {
     const qry = await query(conn, sql, [hardware, id]);
     conn.release();
 
-    if (qry.isUpdated) okmsg(res, qry.result[0]);
+    if (qry.isUpdated) okmsg(res, hardware);
     else errmsg(res);
   } catch (err) {
     next(err);
@@ -211,7 +208,7 @@ const updateHardware = async (req, res, next) => {
 const updateVPN = async (req, res, next) => {
   try {
     const { id, vpn } = req.body;
-    if (vpn === undefined) next();
+    if (vpn === undefined) return next();
 
     const conn = await connection();
     const sql = 'UPDATE onboarding SET vpn=? WHERE id=?';
@@ -219,7 +216,7 @@ const updateVPN = async (req, res, next) => {
     const qry = await query(conn, sql, [vpn, id]);
     conn.release();
 
-    if (qry.isUpdated) okmsg(res, qry.result[0]);
+    if (qry.isUpdated) okmsg(res, vpn);
     else errmsg(res);
   } catch (err) {
     next(err);
