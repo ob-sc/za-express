@@ -1,5 +1,5 @@
 import connection from '../../util/connection.js';
-import { onbNeuMail } from '../../util/mail.js';
+import { onbNeuMail, onbFreigabeMail } from '../../util/mail.js';
 import query from '../../util/query.js';
 import { errmsg, okmsg } from '../../util/response.js';
 import maStatus from './status.js';
@@ -50,7 +50,7 @@ export const neuerMa = async (req, res, next) => {
     conn.release();
 
     if (qry.isUpdated) {
-      onbNeuMail({ ...data, id: qry.id, ort: qry2.result[0].name });
+      onbFreigabeMail({ ...data, id: qry.id, ort: qry2.result[0].name });
       okmsg(res);
     } else errmsg(res);
   } catch (err) {
@@ -66,7 +66,15 @@ export const freigabe = async (req, res, next) => {
     const sql = 'UPDATE onboarding SET anzeigen=1 WHERE id=?';
     const qry = await query(conn, sql, [id]);
 
+    const sql2 =
+      'SELECT o.id,o.ersteller,o.vorname,o.nachname,o.eintritt,o.position,s.name AS ort FROM onboarding AS o JOIN stationen AS s ON s.id = o.ort ORDER BY status, id DESC';
+    const qry2 = await query(conn, sql2, [id]);
+
     conn.release();
+
+    console.log(qry2)
+
+    if (!qry2.isEmpty) onbNeuMail(qry2.result[0]);
 
     if (qry.isUpdated) okmsg(res);
     else errmsg(res);

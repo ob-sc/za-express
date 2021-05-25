@@ -24,6 +24,27 @@ const onboardingMail = async (to, subject, html) =>
     html,
   });
 
+export const onbFreigabeMail = async (data) => {
+  const { id, ersteller, eintritt, vorname, nachname, position } = data;
+  const creator = erstellerString(ersteller);
+  const url = `https://onboarding.starcar.local/ma/${id}`;
+
+  const content = `Mitarbeiter <a href="${url}">#${id}</a> wurde angelegt von ${creator} und wartet auf die Freigabe.
+  ${divider}
+  <h1 style="font-family:Helvetica, Verdana, sans-serif;margin:0px;font-size:1.3em;line-height:1.4em">${vorname} ${nachname}</h1>
+  <ul style="margin-bottom:1.5em">
+  <li>Eintritt: ${toLocalDate(eintritt)}</li>
+  <li>Arbeitsort: ${data.ort}</li>
+  <li>Position: ${position}</li></ul>
+  <a href="${url}">Vorgang anzeigen</a>`;
+
+  await onboardingMail(
+    ['personalabteilung@starcar.de'],
+    'Freigabe neuer Mitarbeiter',
+    template(content)
+  );
+};
+
 export const onbNeuMail = async (data) => {
   const { id, ersteller, eintritt, vorname, nachname, position } = data;
   const creator = erstellerString(ersteller);
@@ -39,7 +60,7 @@ export const onbNeuMail = async (data) => {
   <a href="${url}">Vorgang anzeigen</a>`;
 
   await onboardingMail(
-    ['bergen@starcar.de'],
+    ['sc-neue-ma@starcar.de'],
     'Neuer Mitarbeiter',
     template(content)
   );
@@ -64,7 +85,7 @@ export const onbDoneMail = async (data) => {
   <div style="margin:1.3em 0px;"><a href="${url}">Vorgang anzeigen</a></div>`;
 
   await onboardingMail(
-    ['bergen@starcar.de'],
+    ['sc-neue-ma@starcar.de'],
     'Mitarbeiter fertig bearbeitet',
     template(content)
   );
