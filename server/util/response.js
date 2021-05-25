@@ -1,6 +1,5 @@
 const validateResponseCode = (code, def) => {
-  const isValidCode = code !== undefined && !Number.isNaN(code);
-  return isValidCode ? code : def;
+  return code === undefined || Number.isNaN(code) ? def : code;
 };
 
 export const okmsg = (res, payload = {}, code) => {
@@ -10,8 +9,11 @@ export const okmsg = (res, payload = {}, code) => {
 
 export const errmsg = (res, msg, code, error) => {
   const status = validateResponseCode(code, 500);
-  const response = { msg };
-  if (process.env.NODE_ENV === 'development') response.payload = error;
+  const message =
+    typeof msg === 'string' ? msg : 'Es ist ein Fehler aufgetreten';
+
+  const response = { msg: message };
+  if (error !== undefined) response.error = error?.toString();
 
   res.status(status).json(response);
 };

@@ -10,10 +10,9 @@ export const anmelden = async (req, res, next) => {
     const conn = await connection();
 
     const sql = 'SELECT * FROM angemeldet WHERE ahid = ?';
-    const checkAnmeldung = await query(conn, sql, [ahid]);
+    const qry = await query(conn, sql, [ahid]);
 
-    if (!checkAnmeldung.isEmpty)
-      errmsg(res, 'Aushilfe ist bereits angemeldet', 409);
+    if (!qry.isEmpty) errmsg(res, 'Aushilfe ist bereits angemeldet', 409);
     else {
       const sql2 =
         'INSERT INTO angemeldet (ahid, station, date, start) VALUES (?,?,?,?)';
@@ -35,12 +34,11 @@ export const getAnmeldungen = async (req, res, next) => {
     const sql =
       'SELECT ang.id, ang.ahid, ang.date, ang.start, ah.vorname, ah.nachname FROM angemeldet AS ang INNER JOIN aushilfen AS ah ON ang.ahid = ah.id WHERE ang.station = ?';
 
-    const { result } = await query(conn, sql, [
-      req.session.user.currentStation,
-    ]);
-
-    okmsg(res, result);
+    const qry = await query(conn, sql, [req.session.user.currentStation]);
     conn.release();
+
+    if (!qry.isEmpty) okmsg(res, qry.result);
+    else errmsg(res);
   } catch (err) {
     next(err);
   }
@@ -52,10 +50,10 @@ export const deleteAnmeldung = async (req, res, next) => {
 
     const conn = await connection();
     const sql = 'DELETE FROM angemeldet WHERE id = ?';
-    const data = await query(conn, sql, [id]);
+    const qry = await query(conn, sql, [id]);
     conn.release();
 
-    if (data.isUpdated) okmsg(res);
+    if (qry.isUpdated) okmsg(res);
     else errmsg(res, 'Fehler beim Löschen der Anmeldung', 400);
   } catch (err) {
     next(err);

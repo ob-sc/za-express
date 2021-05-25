@@ -1,7 +1,7 @@
 import connection from '../../util/connection.js';
-import { onbNeuMail, onbFreigabeMail } from '../../util/mail.js';
 import query from '../../util/query.js';
 import { errmsg, okmsg } from '../../util/response.js';
+import { onbNeuMail, onbFreigabeMail } from './mail.js';
 import maStatus from './status.js';
 
 export const alleMa = async (req, res, next) => {
@@ -10,11 +10,9 @@ export const alleMa = async (req, res, next) => {
 
     const sql =
       'SELECT o.id,o.status,o.ersteller,o.vorname,o.nachname,o.eintritt,o.anzeigen,s.name AS ort FROM onboarding AS o JOIN stationen AS s ON s.id = o.ort ORDER BY status, id DESC';
-    const qry = await query(conn, sql);
+    const { result } = await query(conn, sql);
 
     conn.release();
-
-    const { result } = qry;
 
     // versteckte zeilen für nicht admin und nicht ersteller raus
     // rückwärts damit index richtig bleibt

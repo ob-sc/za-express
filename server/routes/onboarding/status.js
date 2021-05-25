@@ -1,5 +1,5 @@
-import { onbDoneMail } from '../../util/mail.js';
 import query from '../../util/query.js';
+import { onbDoneMail } from './mail.js';
 
 // nicht empty string
 const neStr = (value) => typeof value === 'string' && value !== '';
@@ -150,6 +150,7 @@ const status = async (conn, id) => {
     }
   }
 
+  // data.ort = stationsnummer, wert aus form (arbeitsort)
   return {
     id: data.id,
     anzeigen: data.anzeigen === 1,
@@ -158,6 +159,7 @@ const status = async (conn, id) => {
     vorname: data.vorname,
     nachname: data.nachname,
     eintritt: data.eintritt,
+    station: data.ort,
     ort: data.station_name,
     position: data.position,
     reg_date: data.reg_date,

@@ -6,12 +6,12 @@ import { sess, db } from './config';
 import errorHandler from './middleware/errorHandler';
 import notFound from './middleware/notFound';
 import {
-  sessionRoutes,
-  userRoutes,
-  aushilfenRoutes,
-  angemeldetRoutes,
-  zeitenRoutes,
-  onboardingRoutes,
+  auth,
+  user,
+  aushilfen,
+  angemeldet,
+  zeiten,
+  onboarding,
 } from './routes/index';
 
 // todo morgan = https://github.com/expressjs/morgan/issues/190
@@ -39,12 +39,12 @@ app.use(
 // router
 const apiRouter = express.Router();
 app.use('/api', apiRouter);
-apiRouter.use('/user', userRoutes);
-apiRouter.use('/session', sessionRoutes);
-apiRouter.use('/aushilfen', aushilfenRoutes);
-apiRouter.use('/angemeldet', angemeldetRoutes);
-apiRouter.use('/zeiten', zeitenRoutes);
-apiRouter.use('/onboarding', onboardingRoutes);
+apiRouter.use('/user', user);
+apiRouter.use('/auth', auth);
+apiRouter.use('/aushilfen', aushilfen);
+apiRouter.use('/angemeldet', angemeldet);
+apiRouter.use('/zeiten', zeiten);
+apiRouter.use('/onboarding', onboarding);
 
 app.use(errorHandler);
 app.use(notFound);
