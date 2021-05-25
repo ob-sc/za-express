@@ -136,7 +136,7 @@ const status = async (conn, id) => {
   if (data.status === 0) {
     let isNotDone = false;
     for (const item of status) {
-      if (item.done !== true) {
+      if (item.required === true && item.done !== true) {
         isNotDone = true;
         break;
       }

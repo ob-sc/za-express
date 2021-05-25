@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-import { erstellerString, toLocalDate } from './helper';
+import { erstellerString, isDev, toLocalDate } from './helper';
 
 const transporter = nodemailer.createTransport({
   host: '192.168.100.50',
@@ -39,7 +39,7 @@ export const onbFreigabeMail = async (data) => {
   <a href="${url}">Vorgang anzeigen</a>`;
 
   await onboardingMail(
-    ['personalabteilung@starcar.de'],
+    isDev ? 'onboarding@starcar.de' : 'personalabteilung@starcar.de',
     'Freigabe neuer Mitarbeiter',
     template(content)
   );
@@ -60,7 +60,7 @@ export const onbNeuMail = async (data) => {
   <a href="${url}">Vorgang anzeigen</a>`;
 
   await onboardingMail(
-    ['sc-neue-ma@starcar.de'],
+    isDev ? 'onboarding@starcar.de' : 'sc-neue-ma@starcar.de',
     'Neuer Mitarbeiter',
     template(content)
   );
@@ -85,7 +85,7 @@ export const onbDoneMail = async (data) => {
   <div style="margin:1.3em 0px;"><a href="${url}">Vorgang anzeigen</a></div>`;
 
   await onboardingMail(
-    ['sc-neue-ma@starcar.de'],
+    isDev ? 'onboarding@starcar.de' : 'sc-neue-ma@starcar.de',
     'Mitarbeiter fertig bearbeitet',
     template(content)
   );

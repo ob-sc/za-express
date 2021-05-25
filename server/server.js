@@ -3,10 +3,9 @@ import http from 'http';
 import https from 'https';
 import { PORT } from './config';
 import app from './app';
+import { isDev } from './util/helper';
 
 const debug = require('debug')('za-express:server');
-
-const isDev = process.env.NODE_ENV === 'development';
 
 if (isDev) debug('devmode');
 

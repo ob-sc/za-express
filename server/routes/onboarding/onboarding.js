@@ -72,8 +72,6 @@ export const freigabe = async (req, res, next) => {
 
     conn.release();
 
-    console.log(qry2)
-
     if (!qry2.isEmpty) onbNeuMail(qry2.result[0]);
 
     if (qry.isUpdated) okmsg(res);

@@ -1,9 +1,11 @@
 const capitalize = (str) => str[0].toUpperCase() + str.substring(1);
 
 export const erstellerString = (str) => {
-  const creatorArray = str.split('.');
+  if (str.indexOf('.') === -1) return str;
 
+  const creatorArray = str.split('.');
   let vorname = creatorArray[0];
+
   if (vorname.indexOf('-') !== -1) {
     const vorArray = vorname.split('-');
     vorname = `${capitalize(vorArray[0])} ${capitalize(vorArray[1])}`;
@@ -30,3 +32,5 @@ export const toLocalDate = (str) => {
   // monat ist zero-indexed
   return `${prepend0(d)}.${prepend0(m + 1)}.${y}`;
 };
+
+export const isDev = process.env.NODE_ENV === 'development';
