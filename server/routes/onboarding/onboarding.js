@@ -47,7 +47,7 @@ export const neuerMa = async (req, res, next) => {
 
     conn.release();
 
-    if (qry.isUpdated) {
+    if (qry.isUpdated === true) {
       onbFreigabeMail({ ...data, id: qry.id, ort: qry2.result[0].name });
       okmsg(res);
     } else errmsg(res);
@@ -70,9 +70,9 @@ export const freigabe = async (req, res, next) => {
 
     conn.release();
 
-    if (!qry2.isEmpty) onbNeuMail(qry2.result[0]);
+    if (qry2.isEmpty === false) onbNeuMail(qry2.result[0]);
 
-    if (qry.isUpdated) okmsg(res);
+    if (qry.isUpdated === true) okmsg(res);
     else errmsg(res);
   } catch (err) {
     next(err);
@@ -109,7 +109,7 @@ const updateDomain = async (req, res, next) => {
 
     conn.release();
 
-    if (qry.isUpdated) okmsg(res, domain);
+    if (qry.isUpdated === true) okmsg(res, domain);
     else errmsg(res);
   } catch (err) {
     next(err);
@@ -130,7 +130,7 @@ const updateBitrix = async (req, res, next) => {
 
     conn.release();
 
-    if (qry.isUpdated) okmsg(res, bitrix);
+    if (qry.isUpdated === true) okmsg(res, bitrix);
     else errmsg(res);
   } catch (err) {
     next(err);
@@ -148,7 +148,7 @@ const updateCrent = async (req, res, next) => {
     const qry = await query(conn, sql, [crent, id]);
     conn.release();
 
-    if (qry.isUpdated) okmsg(res, crent);
+    if (qry.isUpdated === true) okmsg(res, crent);
     else errmsg(res);
   } catch (err) {
     next(err);
@@ -166,7 +166,7 @@ const updateDocuware = async (req, res, next) => {
     const qry = await query(conn, sql, [docuware, id]);
     conn.release();
 
-    if (qry.isUpdated) okmsg(res, docuware);
+    if (qry.isUpdated === true) okmsg(res, docuware);
     else errmsg(res);
   } catch (err) {
     next(err);
@@ -184,7 +184,7 @@ const updateQlik = async (req, res, next) => {
     const qry = await query(conn, sql, [qlik, id]);
     conn.release();
 
-    if (qry.isUpdated) okmsg(res, qlik);
+    if (qry.isUpdated === true) okmsg(res, qlik);
     else errmsg(res);
   } catch (err) {
     next(err);
@@ -202,7 +202,7 @@ const updateHardware = async (req, res, next) => {
     const qry = await query(conn, sql, [hardware, id]);
     conn.release();
 
-    if (qry.isUpdated) okmsg(res, hardware);
+    if (qry.isUpdated === true) okmsg(res, hardware);
     else errmsg(res);
   } catch (err) {
     next(err);
@@ -220,7 +220,7 @@ const updateVPN = async (req, res, next) => {
     const qry = await query(conn, sql, [vpn, id]);
     conn.release();
 
-    if (qry.isUpdated) okmsg(res, vpn);
+    if (qry.isUpdated === true) okmsg(res, vpn);
     else errmsg(res);
   } catch (err) {
     next(err);

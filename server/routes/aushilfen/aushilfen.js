@@ -10,7 +10,7 @@ export const getAushilfen = async (req, res, next) => {
     const qry = await query(conn, sql);
 
     conn.release();
-    if (!qry.isEmpty) okmsg(res, qry.result);
+    if (qry.isEmpty === false) okmsg(res, qry.result);
     else errmsg(res);
   } catch (err) {
     next(err);

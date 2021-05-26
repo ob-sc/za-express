@@ -34,7 +34,7 @@ export const login = async (req, res, next) => {
     const qry = await query(conn, sql, [username]);
     conn.release();
 
-    if (qry.isEmpty) errmsg(res, 'Benutzer nicht gefunden', 401);
+    if (qry.isEmpty === true) errmsg(res, 'Benutzer nicht gefunden', 401);
     else {
       const [user] = qry.result;
 

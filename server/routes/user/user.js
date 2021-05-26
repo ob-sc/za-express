@@ -58,21 +58,25 @@ export const confirmAccount = async (req, res, next) => {
 
     const sql = 'SELECT * FROM account WHERE token = ?';
     const qry = await query(conn, sql, [token]);
-    const { id, reg_date } = qry[0].result;
 
-    const sinceReg = Date.now() - new Date(reg_date).getTime();
-
-    if (sinceReg / 1000 / 60 / 60 > 24) errmsg(res, 'Link abgelaufen', 410);
+    if (qry.isEmpty === true) errmsg(res, 'Token nicht gefunden');
     else {
-      const sql2 = 'UPDATE benutzer SET active=1 WHERE id = ?';
-      const qry2 = await query(conn, sql2, [id]);
+      const [tokenResult] = qry.result;
 
-      if (qry2.isUpdated) okmsg(res, 'Account erfolgreich bestätigt');
-      else errmsg(res, 'Account nicht bestätigt');
+      const sinceReg = Date.now() - new Date(tokenResult.reg_date).getTime();
+
+      if (sinceReg / 1000 / 60 / 60 > 24) errmsg(res, 'Link abgelaufen', 410);
+      else {
+        const sql2 = 'UPDATE benutzer SET active=1 WHERE id = ?';
+        const qry2 = await query(conn, sql2, [tokenResult.id]);
+
+        if (qry2.isUpdated) okmsg(res, 'Account erfolgreich bestätigt');
+        else errmsg(res, 'Account nicht bestätigt');
+      }
+
+      const sql3 = 'DELETE FROM account WHERE token = ?';
+      await query(conn, sql3, [token]);
     }
-
-    const sql3 = 'DELETE FROM account WHERE token = ?';
-    await query(conn, sql3, [token]);
 
     conn.release();
   } catch (err) {
