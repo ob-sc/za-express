@@ -58,7 +58,7 @@ export const neuerMa = async (req, res, next) => {
 
 export const freigabe = async (req, res, next) => {
   try {
-    const { id } = req.params;
+    const { id } = req.body;
     const conn = await connection();
 
     const sql = 'UPDATE onboarding SET anzeigen=1 WHERE id=?';

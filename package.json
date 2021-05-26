@@ -7,6 +7,7 @@
   "scripts": {
     "start": "npm run prod",
     "watch": "npm run dev",
+    "reload": "pm2 reload http-api",
     "dev": "pm2-dev start ecosystem.config.js --env development",
     "prod": "pm2 start ecosystem.config.js --env production",
     "lint": "eslint .",

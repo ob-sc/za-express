@@ -38,8 +38,6 @@ export const signUp = async (req, res, next) => {
           if (qry3.isUpdated) okmsg(res);
           else errmsg(res, 'Kein token eingetragen');
 
-          console.log(token);
-
           const email = `${username}@starcar.de`;
           confirmMail(token, email);
         }

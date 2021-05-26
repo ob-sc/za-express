@@ -17,7 +17,7 @@ router.post('', neuerMa);
 router.put('', updateMitarbeiter);
 
 // freigabe von perso
-router.get('/freigabe/:id', freigabe);
+router.post('/freigabe', freigabe);
 
 // get ma mit id
 router.get('/ma/:id', getMa);
