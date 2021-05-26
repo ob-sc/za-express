@@ -37,13 +37,15 @@ export const login = async (req, res, next) => {
     if (qry.isEmpty) errmsg(res, 'Benutzer nicht gefunden', 401);
     else {
       const [user] = qry.result;
-      if (user.active !== 1) errmsg(res, 'Account nicht bestätigt');
+
       bcrypt.compare(password, user.password, (error, result) => {
         if (error) throw error;
-        if (result === true) {
+        if (result !== true) errmsg(res, 'Passwort falsch', 401);
+        else if (user.active !== 1) errmsg(res, 'Account nicht bestätigt', 400);
+        else {
           req.session.user = createSession(user);
           okmsg(res, req.session.user);
-        } else errmsg(res, 'Passwort falsch', 401);
+        }
       });
     }
   } catch (err) {

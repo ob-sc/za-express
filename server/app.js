@@ -12,6 +12,7 @@ import {
   angemeldet,
   zeiten,
   onboarding,
+  stationen,
 } from './routes/index';
 
 // todo morgan = https://github.com/expressjs/morgan/issues/190
@@ -45,6 +46,7 @@ apiRouter.use('/aushilfen', aushilfen);
 apiRouter.use('/angemeldet', angemeldet);
 apiRouter.use('/zeiten', zeiten);
 apiRouter.use('/onboarding', onboarding);
+apiRouter.use('/stationen', stationen);
 
 app.use(errorHandler);
 app.use(notFound);

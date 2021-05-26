@@ -13,7 +13,8 @@ export const errmsg = (res, msg, code, error) => {
     typeof msg === 'string' ? msg : 'Es ist ein Fehler aufgetreten';
 
   const response = { msg: message };
-  if (error !== undefined) response.error = error?.toString();
+  if (error !== undefined && error.toString !== undefined)
+    response.error = error.toString();
 
   res.status(status).json(response);
 };

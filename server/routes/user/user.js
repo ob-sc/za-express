@@ -4,6 +4,7 @@ import connection from '../../util/connection.js';
 import query from '../../util/query.js';
 import userValidation from '../../validations/user.js';
 import { errmsg, okmsg } from '../../util/response.js';
+import { confirmMail } from './mail';
 
 export const signUp = async (req, res, next) => {
   try {
@@ -17,20 +18,34 @@ export const signUp = async (req, res, next) => {
 
     if (!qry.isEmpty) errmsg(res, 'Benutzer bereits vorhanden', 409);
     else
-      bcrypt.hash(password, 10, (err, hash) => {
+      bcrypt.hash(password, 10, async (err, hash) => {
         if (err) throw err;
-        const sql2 =
-          'INSERT INTO benutzer (username, password, station) VALUES (?,?,?)';
-        query(conn, sql2, [username, hash, station]).then((data) => {
-          if (data.isUpdated) okmsg(res);
+        const sql2 = 'INSERT INTO benutzer SET ?';
+        const qry2 = await query(conn, sql2, {
+          username,
+          password: hash,
+          station,
         });
+        if (qry2.isUpdated) {
+          const token = crypto.randomBytes(20).toString('hex');
+
+          const sql3 = 'INSERT INTO account SET ?';
+          const qry3 = await query(conn, sql3, {
+            id: qry2.id,
+            token,
+          });
+
+          if (qry3.isUpdated) okmsg(res);
+          else errmsg(res, 'Kein token eingetragen');
+
+          console.log(token);
+
+          const email = `${username}@starcar.de`;
+          confirmMail(token, email);
+        }
       });
 
     conn.release();
-
-    const token = crypto.randomBytes(20).toString('hex');
-    const email = `${username}@starcar.de`;
-    await confirmAccount(token, email);
   } catch (err) {
     next(err);
   }
@@ -52,8 +67,8 @@ export const confirmAccount = async (req, res, next) => {
       const sql2 = 'UPDATE benutzer SET active=1 WHERE id = ?';
       const qry2 = await query(conn, sql2, [id]);
 
-      if (qry2.isUpdated) okmsg(res);
-      else errmsg(res, 'Benutzer nicht aktiviert');
+      if (qry2.isUpdated) okmsg(res, 'Account erfolgreich bestätigt');
+      else errmsg(res, 'Account nicht bestätigt');
     }
 
     const sql3 = 'DELETE FROM account WHERE token = ?';
