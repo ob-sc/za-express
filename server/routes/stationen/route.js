@@ -1,9 +1,9 @@
 import express from 'express';
-import { alleStationen, signatur } from './stationen.js';
+import { selectOptions, signatur } from './stationen.js';
 
 const router = express.Router();
 
-router.get('', alleStationen);
+router.get('', selectOptions);
 router.get('/sig/:id', signatur);
 
 export default router;
