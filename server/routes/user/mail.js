@@ -13,3 +13,13 @@ export const confirmMail = async (token, to) => {
     template(content)
   );
 };
+
+export const infoMail = async (user) => {
+  const content = `Benutzer ${user} hat sich einen Account erstellt`;
+
+  await onboardingMail(
+    isDev ? 'ole.bergen@starcar.de' : 'onboarding@starcar.de',
+    'Neuer Benutzer',
+    template(content)
+  );
+};

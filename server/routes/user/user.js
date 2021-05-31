@@ -4,7 +4,7 @@ import connection from '../../util/connection.js';
 import query from '../../util/query.js';
 import userValidation from '../../validations/user.js';
 import { errmsg, okmsg } from '../../util/response.js';
-import { confirmMail } from './mail';
+import { confirmMail, infoMail } from './mail';
 
 export const signUp = async (req, res, next) => {
   try {
@@ -40,6 +40,7 @@ export const signUp = async (req, res, next) => {
 
           const email = `${username}@starcar.de`;
           confirmMail(token, email);
+          infoMail(username);
         }
       });
 

@@ -1,5 +1,5 @@
 const validateResponseCode = (code, def) => {
-  return code === undefined || Number.isNaN(code) ? def : code;
+  return isNaN(code) ? def : code;
 };
 
 export const okmsg = (res, payload = {}, code) => {
