@@ -7,7 +7,6 @@ import { errmsg, okmsg } from '../../util/response.js';
 const createSession = (user) => ({
   username: user.username,
   admin: user.admin === 1,
-  allowOnboarding: user.allow_onboarding === 1,
   station: user.station,
   access: user.access,
   region: user.region,
@@ -34,6 +33,17 @@ export const login = async (req, res, next) => {
     const sql = 'SELECT * FROM benutzer WHERE username = ?';
     const qry = await query(conn, sql, [username]);
     conn.release();
+
+    if (
+      req.headers.host === 'onboarding.starcar.local' &&
+      query.result[0].allow_onboarding !== 1
+    )
+      return errmsg(
+        res,
+        'Benutzer ist nicht für das onboarding freigegeben',
+        401
+      );
+    console.log(req.headers.host);
 
     if (qry.isEmpty === true) errmsg(res, 'Benutzer nicht gefunden', 401);
     else {
