@@ -35,7 +35,7 @@ export const login = async (req, res, next) => {
     conn.release();
 
     if (
-      req.headers.host === 'onboarding.starcar.local' &&
+      req.headers.host.includes('onboarding') &&
       query.result[0].allow_onboarding !== 1
     )
       return errmsg(
@@ -43,7 +43,6 @@ export const login = async (req, res, next) => {
         'Benutzer ist nicht für das onboarding freigegeben',
         401
       );
-    console.log(req.headers.host);
 
     if (qry.isEmpty === true) errmsg(res, 'Benutzer nicht gefunden', 401);
     else {
