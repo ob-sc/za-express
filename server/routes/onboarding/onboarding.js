@@ -236,3 +236,16 @@ export const updateMitarbeiter = [
   updateHardware,
   updateVPN,
 ];
+
+export const stationsWechsel = async (req, res, next) => {
+  try {
+    const { name, station, docuware } = req.body;
+
+    const mail = { sent: false };
+
+    if (mail.sent === true) okmsg(res);
+    else errmsg(res);
+  } catch (err) {
+    next(err);
+  }
+};

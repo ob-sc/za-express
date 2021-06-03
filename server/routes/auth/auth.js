@@ -34,30 +34,29 @@ export const login = async (req, res, next) => {
     const qry = await query(conn, sql, [username]);
     conn.release();
 
+    if (qry.isEmpty === true)
+      return errmsg(res, 'Benutzer nicht gefunden', 401);
+
     if (
       req.headers.host.includes('onboarding') &&
       qry.result[0].allow_onboarding !== 1
     )
       return errmsg(
         res,
-        'Benutzer ist nicht für das onboarding freigegeben',
+        'Benutzer ist nicht für das Onboarding freigegeben',
         401
       );
 
-    if (qry.isEmpty === true) errmsg(res, 'Benutzer nicht gefunden', 401);
-    else {
-      const [user] = qry.result;
-
-      bcrypt.compare(password, user.password, (error, result) => {
-        if (error) throw error;
-        if (result !== true) errmsg(res, 'Passwort falsch', 401);
-        else if (user.active !== 1) errmsg(res, 'Account nicht bestätigt', 400);
-        else {
-          req.session.user = createSession(user);
-          okmsg(res, req.session.user);
-        }
-      });
-    }
+    const [user] = qry.result;
+    bcrypt.compare(password, user.password, (error, result) => {
+      if (error) throw error;
+      if (result !== true) errmsg(res, 'Passwort falsch', 401);
+      else if (user.active !== 1) errmsg(res, 'Account nicht bestätigt', 400);
+      else {
+        req.session.user = createSession(user);
+        okmsg(res, req.session.user);
+      }
+    });
   } catch (err) {
     next(err);
   }
