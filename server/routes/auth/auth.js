@@ -36,7 +36,7 @@ export const login = async (req, res, next) => {
 
     if (
       req.headers.host.includes('onboarding') &&
-      query.result[0].allow_onboarding !== 1
+      qry.result[0].allow_onboarding !== 1
     )
       return errmsg(
         res,
