@@ -67,3 +67,15 @@ export const onbDoneMail = async (data) => {
     template(content)
   );
 };
+
+export const statwMail = async (name, date, station, docuware, creator) => {
+  const ersteller = erstellerString(creator);
+
+  const content = `${name} wechselt am ${date} in Station `;
+
+  await onboardingMail(
+    isDev ? 'ole.bergen@starcar.de' : 'sc-neue-ma@starcar.de',
+    'Freigabe neuer Mitarbeiter',
+    template(content)
+  );
+};

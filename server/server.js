@@ -4,8 +4,7 @@ import https from 'https';
 import { PORT } from './config';
 import app from './app';
 import { isDev } from './util/helper';
-
-const debug = require('debug')('za-express:server');
+import { debug } from './util/debug';
 
 if (isDev) debug('devmode');
 

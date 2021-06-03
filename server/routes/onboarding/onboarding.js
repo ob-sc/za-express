@@ -239,11 +239,12 @@ export const updateMitarbeiter = [
 
 export const stationsWechsel = async (req, res, next) => {
   try {
-    const { name, station, docuware } = req.body;
+    const { name, date, station, docuware } = req.body;
 
-    const mail = { sent: false };
+    const dw =
+      typeof docuware === 'string' && docuware !== '' ? docuware : undefined;
 
-    if (mail.sent === true) okmsg(res);
+    if (false) okmsg(res);
     else errmsg(res);
   } catch (err) {
     next(err);

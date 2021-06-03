@@ -14,6 +14,7 @@ import {
   onboarding,
   stationen,
 } from './routes/index';
+import { isDev } from './util/helper';
 
 // todo morgan = https://github.com/expressjs/morgan/issues/190
 // todo mysqlstore import?
@@ -24,7 +25,7 @@ const app = express();
 
 app.set('trust proxy', 1);
 
-app.use(logger('dev'));
+app.use(logger(isDev ? 'dev' : 'combined'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
