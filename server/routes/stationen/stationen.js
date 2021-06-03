@@ -25,7 +25,7 @@ export const signatur = async (req, res, next) => {
     const qry = await query(conn, sql, [id]);
     conn.release();
 
-    if (!qry.isEmpty) okmsg(res, qry.result);
+    if (!qry.isEmpty) okmsg(res, qry.result[0]);
     else errmsg(res);
   } catch (err) {
     next(err);

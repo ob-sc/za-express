@@ -1,41 +1,13 @@
 import query from '../../util/query.js';
 import { onbDoneMail } from './mail.js';
-
-// nicht empty string
-const neStr = (value) => typeof value === 'string' && value !== '';
-
-const getValue = (value) =>
-  value === true || value === 1 ? true : neStr(value) ? value : false;
-
-const isRequested = (value) => getValue(value) === true || neStr(value);
-
-const isDone = (value) => neStr(value) || value === 1;
-
-const hardwareAnf = (anf) => {
-  let required = false;
-  const array = [];
-
-  const pushHardware = (label, value) => {
-    array.push({ label, value });
-    required = true;
-  };
-
-  if (anf.handy === true) pushHardware('Handy', anf.handy);
-  if (anf.laptop === true) pushHardware('Laptop', anf.laptop);
-  if (anf.pc === true) pushHardware('Computer', anf.pc);
-  if (neStr(anf.monitore)) pushHardware('Monitore', anf.monitore);
-  if (anf.ipad === true) pushHardware('iPad', anf.ipad);
-  if (neStr(anf.ipadspez)) pushHardware('iPad spez.', anf.ipadspez);
-  if (anf.drucker === true) pushHardware('Drucker', anf.drucker);
-  if (anf.tanken === true) pushHardware('Tankkarte', anf.tanken);
-  if (neStr(anf.freigabe)) pushHardware('Freigabe', anf.freigabe);
-  if (neStr(anf.sonstiges)) pushHardware('Sonstiges', anf.sonstiges);
-
-  return {
-    required,
-    array,
-  };
-};
+import {
+  getValue,
+  isRequested,
+  isDone,
+  hardwareAnf,
+  networkAnf,
+  suggestion,
+} from './statusHelper';
 
 const status = async (conn, id) => {
   const sql =
@@ -53,6 +25,9 @@ const status = async (conn, id) => {
       : { user: false, pn: false, kasse: false };
 
   const hardware = hardwareAnf(anforderungen);
+  const network = networkAnf(anforderungen);
+
+  const suggestions = suggestion(data.vorname, data.nachname);
 
   const status = [
     {
@@ -61,6 +36,7 @@ const status = async (conn, id) => {
       done: isDone(data.domain),
       label: 'Citrix',
       required: true,
+      suggestion: suggestions.domain,
     },
     {
       name: 'mail',
@@ -76,6 +52,7 @@ const status = async (conn, id) => {
       label: 'C-Rent Benutzer',
       required: true,
       stations: anforderungen.crentstat,
+      suggestion: suggestions.crent,
     },
     {
       name: 'crentpn',
@@ -109,7 +86,7 @@ const status = async (conn, id) => {
     {
       name: 'qlik',
       value: getValue(data.qlik),
-      done: isDone(data.qlik, anforderungen.qlik),
+      done: isDone(data.qlik),
       label: 'Qlik',
       required: isRequested(anforderungen.qlik),
       stations: anforderungen.qlikstat,
@@ -124,11 +101,12 @@ const status = async (conn, id) => {
       array: hardware.array,
     },
     {
-      name: 'vpn',
-      value: getValue(data.vpn),
-      done: isDone(data.vpn, anforderungen.vpn),
-      label: 'VPN',
-      required: isRequested(anforderungen.vpn),
+      name: 'network',
+      value: getValue(data.network),
+      done: isDone(data.network),
+      label: 'Netzwerk',
+      required: network.required,
+      array: network.array,
     },
   ];
 

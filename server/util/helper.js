@@ -1,3 +1,5 @@
+export const isDev = process.env.NODE_ENV === 'development';
+
 const capitalize = (str) => str[0].toUpperCase() + str.substring(1);
 
 export const erstellerString = (str) => {
@@ -20,7 +22,6 @@ export const erstellerString = (str) => {
   return `${vorname} ${nachname}`;
 };
 
-// todo das ist number nicht string, dann kann auch Number() weg
 const prepend0 = (num) => (num < 10 ? `0${num}` : num);
 
 export const toLocalDate = (str) => {
@@ -33,4 +34,5 @@ export const toLocalDate = (str) => {
   return `${prepend0(d)}.${prepend0(m + 1)}.${y}`;
 };
 
-export const isDev = process.env.NODE_ENV === 'development';
+// nicht empty string
+export const neStr = (value) => typeof value === 'string' && value !== '';
