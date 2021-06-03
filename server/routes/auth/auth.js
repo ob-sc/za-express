@@ -7,7 +7,7 @@ import { errmsg, okmsg } from '../../util/response.js';
 const createSession = (user) => ({
   username: user.username,
   admin: user.admin === 1,
-  allow_onboarding: user.allow_onboarding === 1,
+  allowOnboarding: user.allow_onboarding === 1,
   station: user.station,
   access: user.access,
   region: user.region,
