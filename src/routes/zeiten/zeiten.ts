@@ -1,18 +1,14 @@
-import { okmsg } from '../../util/response.js';
-import connection from '../../util/connection.js';
-import query from '../../util/query.js';
-
 export const selectMax = async (req, res, next) => {
   try {
     const { id, status, firstDayMonth } = req.body;
     const isStudent = status.toLowerCase() === 'student';
 
-    const conn = await connection();
+    const conn = await res.connection();
 
     const sql = isStudent
       ? 'SELECT sum(arbeitszeit) as max FROM zeiten WHERE ahid = ? AND yearweek(DATE(datum), 1) = yearweek(CURDATE(), 1)'
       : 'SELECT sum(gehalt) AS max FROM zeiten WHERE ahid = ? AND LOWER(ahmax) <> "student" AND datum BETWEEN ? AND CURDATE()';
-    const qry = await query(conn, sql, [id, firstDayMonth]);
+    const qry = await res.query(conn, sql, [id, firstDayMonth]);
 
     const result = {
       id,

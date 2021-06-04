@@ -6,9 +6,8 @@
   },
   "scripts": {
     "start": "npm run prod",
-    "watch": "npm run dev",
+    "watch": "nodemon index.ts",
     "reload": "pm2 reload http-api",
-    "dev": "pm2-dev start ecosystem.config.js --env development",
     "prod": "pm2 start ecosystem.config.js --env production",
     "lint": "eslint .",
     "dcup": "docker-compose up -d",
@@ -20,7 +19,6 @@
     "cors": "^2.8.5",
     "debug": "^2.6.9",
     "dotenv": "^9.0.0",
-    "esm": "^3.2.25",
     "express": "^4.16.1",
     "express-mysql-session": "^2.1.5",
     "express-session": "^1.17.1",
@@ -30,11 +28,27 @@
     "nodemailer": "^6.6.0"
   },
   "devDependencies": {
+    "@types/express": "^4.17.12",
+    "@types/node": "^15.12.1",
     "eslint": "^7.20.0",
     "eslint-config-prettier": "^7.2.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-security": "^1.4.0",
-    "prettier": "^2.2.1"
+    "nodemon": "^2.0.7",
+    "prettier": "^2.2.1",
+    "ts-node": "^10.0.0",
+    "typescript": "^4.3.2"
+  },
+  "nodemonConfig": {
+    "env": {
+      "NODE_ENV": "development"
+    },
+    "ignore": [
+      "node_modules/*",
+      "dist/*"
+    ],
+    "ext": "ts",
+    "verbose": true
   }
 }

@@ -12,7 +12,7 @@ import {
 const status = async (conn, id) => {
   const sql =
     'SELECT onb.*, stat.name AS station_name FROM onboarding AS onb JOIN stationen AS stat ON onb.ort = stat.id WHERE onb.id=?';
-  const qry = await query(conn, sql, [id]);
+  const qry = await res.query(conn, sql, [id]);
 
   const [data] = qry.result;
   if (qry.isEmpty === true) return null;
@@ -123,7 +123,7 @@ const status = async (conn, id) => {
     // wenn alle .done === true
     if (isNotDone === false) {
       const sql2 = 'UPDATE onboarding SET status=1 WHERE id=?';
-      const qry2 = await query(conn, sql2, [id]);
+      const qry2 = await res.query(conn, sql2, [id]);
       if (qry2.isUpdated === true) onbDoneMail({ ...data, status });
     }
   }

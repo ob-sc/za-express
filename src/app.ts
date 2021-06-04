@@ -2,9 +2,9 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import cors from 'cors';
+import { isDev } from './util/helper';
 import { sess, db } from './config';
-import errorHandler from './middleware/errorHandler';
-import notFound from './middleware/notFound';
+import { response, database, errorHandler, notFound } from './middleware';
 import {
   auth,
   user,
@@ -13,8 +13,7 @@ import {
   zeiten,
   onboarding,
   stationen,
-} from './routes/index';
-import { isDev } from './util/helper';
+} from './routes';
 
 // todo morgan = https://github.com/expressjs/morgan/issues/190
 // todo mysqlstore import?
@@ -31,6 +30,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors({ origin: /starcar\.local$/, credentials: true }));
 
+// res.okmsg & res.errmsg
+app.use(response);
+
+// res.connection & res.query
+app.use(database);
+
 app.use(
   session({
     ...sess,
@@ -38,7 +43,6 @@ app.use(
   })
 );
 
-// router
 const apiRouter = express.Router();
 app.use('/api', apiRouter);
 apiRouter.use('/user', user);
