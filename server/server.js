@@ -4,7 +4,7 @@ import https from 'https';
 import { PORT } from './config';
 import app from './app';
 import { isDev } from './util/helper';
-import { debug } from './util/debug';
+import debug from './util/debug';
 
 if (isDev) debug('devmode');
 

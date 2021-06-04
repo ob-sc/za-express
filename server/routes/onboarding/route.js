@@ -5,6 +5,8 @@ import {
   freigabe,
   getMa,
   neuerMa,
+  positionsWechsel,
+  stationsWechsel,
   updateMitarbeiter,
 } from './onboarding.js';
 
@@ -16,10 +18,13 @@ router.get('', alleMa);
 router.post('', neuerMa);
 router.put('', updateMitarbeiter);
 
+// get ma mit id
+router.get('/ma/:id', getMa);
+
 // freigabe von perso
 router.post('/freigabe', freigabe);
 
-// get ma mit id
-router.get('/ma/:id', getMa);
+router.post('/statw', stationsWechsel);
+router.post('/posw', positionsWechsel);
 
 export default router;

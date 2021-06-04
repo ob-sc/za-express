@@ -71,11 +71,31 @@ export const onbDoneMail = async (data) => {
 export const statwMail = async (name, date, station, docuware, creator) => {
   const ersteller = erstellerString(creator);
 
-  const content = `${name} wechselt am ${date} in Station `;
+  const ort = `${station === '1' ? 'Verwaltung' : `Station ${station}`}`;
+
+  let content = `${ersteller} meldet einen Stationswechsel:<br/>${name} wechselt am ${toLocalDate(
+    date
+  )} in die ${ort}`;
+  if (docuware !== undefined)
+    content += `<br/>Neue Docuware Workflow Gruppen: ${docuware}`;
 
   await onboardingMail(
     isDev ? 'ole.bergen@starcar.de' : 'sc-neue-ma@starcar.de',
-    'Freigabe neuer Mitarbeiter',
+    'Stationswechsel',
+    template(content)
+  );
+};
+
+export const poswMail = async (name, date, position, creator) => {
+  const ersteller = erstellerString(creator);
+
+  let content = `${ersteller} meldet einen Positionswechsel:<br/>${name} arbeitet ab ${toLocalDate(
+    date
+  )} als ${position}`;
+
+  await onboardingMail(
+    isDev ? 'ole.bergen@starcar.de' : 'sc-neue-ma@starcar.de',
+    'Positionswechsel',
     template(content)
   );
 };

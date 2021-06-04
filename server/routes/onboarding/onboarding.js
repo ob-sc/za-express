@@ -1,7 +1,8 @@
 import connection from '../../util/connection.js';
+import { neStr } from '../../util/helper.js';
 import query from '../../util/query.js';
 import { errmsg, okmsg } from '../../util/response.js';
-import { onbNeuMail, onbFreigabeMail } from './mail.js';
+import { onbNeuMail, onbFreigabeMail, statwMail, poswMail } from './mail.js';
 import maStatus from './status.js';
 
 export const alleMa = async (req, res, next) => {
@@ -209,18 +210,18 @@ const updateHardware = async (req, res, next) => {
   }
 };
 
-const updateVPN = async (req, res, next) => {
+const updateNetwork = async (req, res, next) => {
   try {
-    const { id, vpn } = req.body;
-    if (vpn === undefined) return next();
+    const { id, network } = req.body;
+    if (network === undefined) return next();
 
     const conn = await connection();
-    const sql = 'UPDATE onboarding SET vpn=? WHERE id=?';
+    const sql = 'UPDATE onboarding SET network=? WHERE id=?';
 
-    const qry = await query(conn, sql, [vpn, id]);
+    const qry = await query(conn, sql, [network, id]);
     conn.release();
 
-    if (qry.isUpdated === true) okmsg(res, vpn);
+    if (qry.isUpdated === true) okmsg(res, network);
     else errmsg(res);
   } catch (err) {
     next(err);
@@ -234,18 +235,30 @@ export const updateMitarbeiter = [
   updateDocuware,
   updateQlik,
   updateHardware,
-  updateVPN,
+  updateNetwork,
 ];
 
 export const stationsWechsel = async (req, res, next) => {
   try {
     const { name, date, station, docuware } = req.body;
 
-    const dw =
-      typeof docuware === 'string' && docuware !== '' ? docuware : undefined;
+    const dw = neStr(docuware) ? docuware : undefined;
 
-    if (false) okmsg(res);
-    else errmsg(res);
+    await statwMail(name, date, station, dw, req.session.user.username);
+
+    okmsg(res);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const positionsWechsel = async (req, res, next) => {
+  try {
+    const { name, date, position } = req.body;
+
+    await poswMail(name, date, position, req.session.user.username);
+
+    okmsg(res);
   } catch (err) {
     next(err);
   }

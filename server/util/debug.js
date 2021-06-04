@@ -1,1 +1,3 @@
-export const debug = require('debug')('za-express:server');
+const debug = require('debug')('za-express:server');
+
+export default debug;
