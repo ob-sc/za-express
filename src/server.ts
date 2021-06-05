@@ -20,7 +20,7 @@ const server = isDev
       app
     );
 
-server.listen(port);
+server.listen(PORT);
 server.on('error', onError);
 server.on('listening', onListening);
 
@@ -29,9 +29,9 @@ function onError(error: NodeJS.ErrnoException) {
 
   switch (error.code) {
     case 'EACCES':
-      throw new Error(`Port ${port} braucht höheren Zugriff`);
+      throw new Error(`Port ${PORT} braucht höheren Zugriff`);
     case 'EADDRINUSE':
-      throw new Error(`Port ${port} wird bereits verwendet`);
+      throw new Error(`Port ${PORT} wird bereits verwendet`);
     default:
       throw error;
   }

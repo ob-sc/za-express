@@ -1,19 +1,20 @@
-const validateStatusCode = (code) => {
-  if (isNaN(code)) throw new Error('Ungültiger Statuscode');
-  return code;
-};
+import { RequestHandler } from 'express';
+import { checkObject, notEmptyString } from '../util/helper';
 
-const response = (req, res, next) => {
-  res.okmsg = (message = 'ok', result = {}, code = 200) => {
-    const status = validateStatusCode(code);
-    return res.status(status).json({ message, result, code });
+const response: RequestHandler = (req, res, next) => {
+  res.okmsg = (response, code = 200) => {
+    const isString = notEmptyString(response);
+    const isObject = checkObject(response);
+
+    return res.status(code).json({
+      message: isString ? response : 'Operation erfolgreich',
+      code,
+      result: isObject ? response : {},
+    });
   };
 
-  res.errmsg = (message = 'Fehler', code = 500, error) => {
-    const status = validateStatusCode(code);
-    return res
-      .status(status)
-      .json({ message, code, error: error !== undefined ? error : null });
+  res.errmsg = (message = 'Fehler bei Operation', code = 500, error) => {
+    return res.status(code).json({ message, code, error });
   };
 
   next();

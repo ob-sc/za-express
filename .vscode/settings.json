@@ -2,9 +2,10 @@
   "editor.tabSize": 2,
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.acceptSuggestionOnCommitCharacter": false,
   "prettier.requireConfig": true,
 
   "eslint.packageManager": "yarn",
-  "eslint.validate": ["javascript"],
+  "eslint.validate": ["javascript", "typescript"],
   "eslint.lintTask.enable": true
 }

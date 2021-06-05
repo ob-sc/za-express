@@ -1,4 +1,6 @@
-const auth = (req, res, next) => {
+import { RequestHandler } from 'express';
+
+const auth: RequestHandler = (req, res, next) => {
   const { session } = req;
   if (session.user === undefined || session.user.isLoggedIn !== true)
     res.errmsg('Nicht angemeldet', 401);

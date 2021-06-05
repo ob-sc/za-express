@@ -1,8 +1,11 @@
+import { OkPacket } from 'mysql';
+
 export const isDev = process.env.NODE_ENV === 'development';
 
-const capitalize = (str) => str[0].toUpperCase() + str.substring(1);
+const capitalize: (str: string) => string = (str) =>
+  str[0].toUpperCase() + str.substring(1);
 
-export const erstellerString = (str) => {
+export const erstellerString: (str: string) => string = (str) => {
   if (str.indexOf('.') === -1) return str;
 
   const creatorArray = str.split('.');
@@ -22,9 +25,10 @@ export const erstellerString = (str) => {
   return `${vorname} ${nachname}`;
 };
 
-const prepend0 = (num) => (num < 10 ? `0${num}` : num);
+const prepend0: (num: number) => string = (num) =>
+  num < 10 ? `0${num}` : String(num);
 
-export const toLocalDate = (str) => {
+export const toLocalDate: (str: string) => string = (str) => {
   const date = new Date(str);
   const y = date.getFullYear();
   const m = date.getMonth();
@@ -35,4 +39,14 @@ export const toLocalDate = (str) => {
 };
 
 // nicht empty string
-export const neStr = (value) => typeof value === 'string' && value !== '';
+export const notEmptyString: (value: unknown) => boolean = (value) =>
+  typeof value === 'string' && value !== '';
+
+export const checkObject: (obj: unknown) => boolean = (obj) =>
+  typeof obj === 'object' && obj !== null;
+
+export const isEmpty: (array: unknown[]) => boolean = (array) =>
+  array.length === 0;
+
+export const isUpdated: (result: OkPacket) => boolean = (result) =>
+  result.affectedRows > 0;

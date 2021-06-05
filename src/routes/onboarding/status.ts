@@ -1,4 +1,5 @@
-import query from '../../util/query.js';
+import { Response } from 'express';
+import { PoolConnection } from 'mysql';
 import { onbDoneMail } from './mail.js';
 import {
   getValue,
@@ -9,13 +10,17 @@ import {
   suggestion,
 } from './statusHelper';
 
-const status = async (conn, id) => {
+const status: (res: Response, conn: PoolConnection, id: number) => void = (
+  res,
+  conn,
+  id
+) => {
   const sql =
     'SELECT onb.*, stat.name AS station_name FROM onboarding AS onb JOIN stationen AS stat ON onb.ort = stat.id WHERE onb.id=?';
-  const qry = await res.query(conn, sql, [id]);
+  const qry = res.query(conn, sql, [id]);
 
-  const [data] = qry.result;
-  if (qry.isEmpty === true) return null;
+  const data = qry?.result[0];
+  if (qry?.isEmpty === true) return null;
 
   const anforderungen = JSON.parse(data.anforderungen);
 
@@ -123,7 +128,7 @@ const status = async (conn, id) => {
     // wenn alle .done === true
     if (isNotDone === false) {
       const sql2 = 'UPDATE onboarding SET status=1 WHERE id=?';
-      const qry2 = await res.query(conn, sql2, [id]);
+      const qry2 = res.query(conn, sql2, [id]);
       if (qry2.isUpdated === true) onbDoneMail({ ...data, status });
     }
   }

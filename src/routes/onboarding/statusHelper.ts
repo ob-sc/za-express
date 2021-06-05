@@ -1,11 +1,12 @@
-import { neStr } from '../../util/helper.js';
+import { notEmptyString } from '../../util/helper.js';
 
 export const getValue = (value) =>
-  value === true || value === 1 ? true : neStr(value) ? value : false;
+  value === true || value === 1 ? true : notEmptyString(value) ? value : false;
 
-export const isRequested = (value) => getValue(value) === true || neStr(value);
+export const isRequested = (value) =>
+  getValue(value) === true || notEmptyString(value);
 
-export const isDone = (value) => neStr(value) || value === 1;
+export const isDone = (value) => notEmptyString(value) || value === 1;
 
 export const hardwareAnf = (anf) => {
   let required = false;
@@ -19,13 +20,13 @@ export const hardwareAnf = (anf) => {
   if (anf.handy === true) pushHardware('Handy', anf.handy);
   if (anf.laptop === true) pushHardware('Laptop', anf.laptop);
   if (anf.pc === true) pushHardware('Computer', anf.pc);
-  if (neStr(anf.monitore)) pushHardware('Monitore', anf.monitore);
+  if (notEmptyString(anf.monitore)) pushHardware('Monitore', anf.monitore);
   if (anf.ipad === true) pushHardware('iPad', anf.ipad);
-  if (neStr(anf.ipadspez)) pushHardware('iPad spez.', anf.ipadspez);
+  if (notEmptyString(anf.ipadspez)) pushHardware('iPad spez.', anf.ipadspez);
   if (anf.drucker === true) pushHardware('Drucker', anf.drucker);
   if (anf.tanken === true) pushHardware('Tankkarte', anf.tanken);
-  if (neStr(anf.freigabe)) pushHardware('Freigabe', anf.freigabe);
-  if (neStr(anf.sonstiges)) pushHardware('Sonstiges', anf.sonstiges);
+  if (notEmptyString(anf.freigabe)) pushHardware('Freigabe', anf.freigabe);
+  if (notEmptyString(anf.sonstiges)) pushHardware('Sonstiges', anf.sonstiges);
 
   return {
     required,
@@ -43,9 +44,10 @@ export const networkAnf = (anf) => {
   };
 
   if (anf.vpn === true) pushNetwork('VPN', anf.vpn);
-  if (neStr(anf.verteiler)) pushNetwork('Verteiler', anf.verteiler);
-  if (neStr(anf.netzdrucker)) pushNetwork('Drucker', anf.netzdrucker);
-  if (neStr(anf.stddrucker)) pushNetwork('Standard Drucker', anf.stddrucker);
+  if (notEmptyString(anf.verteiler)) pushNetwork('Verteiler', anf.verteiler);
+  if (notEmptyString(anf.netzdrucker)) pushNetwork('Drucker', anf.netzdrucker);
+  if (notEmptyString(anf.stddrucker))
+    pushNetwork('Standard Drucker', anf.stddrucker);
 
   return {
     required,

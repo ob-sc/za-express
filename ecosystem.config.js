@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: 'http-api',
-      script: './dist/index.js',
+      script: './dist/server.js',
       node_args: '-r dotenv/config',
       autorestart: true,
       log_file: 'logs/combined.log',
