@@ -23,7 +23,15 @@ export const onbFreigabeMail: (data) => Promise<void> = async (data) => {
 };
 
 export const onbNeuMail = async (data) => {
-  const { id, ersteller, eintritt, vorname, nachname, position } = data;
+  const {
+    id,
+    ersteller,
+    eintritt,
+    vorname,
+    nachname,
+    position,
+    station_name,
+  } = data;
   const creator = erstellerString(ersteller);
   const url = `https://onboarding.starcar.local/ma/${id}`;
 
@@ -32,7 +40,7 @@ export const onbNeuMail = async (data) => {
   <h1 style="font-family:Helvetica, Verdana, sans-serif;margin:0px;font-size:1.3em;line-height:1.4em">${vorname} ${nachname}</h1>
   <ul style="margin-bottom:1.5em">
   <li>Eintritt: ${toLocalDate(eintritt)}</li>
-  <li>Arbeitsort: ${data.ort}</li>
+  <li>Arbeitsort: ${station_name}</li>
   <li>Position: ${position}</li></ul>
   <a href="${url}">Vorgang anzeigen</a>`;
 

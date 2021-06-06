@@ -6,7 +6,7 @@ import { DateStr, TimeStr, TinyIntNull, VarCharNull } from './values';
 
 export type FormValue = boolean | string;
 export type StatusValue = FormValue;
-export type DBValue = TinyIntNull | VarCharNull;
+export type DBStatusVakue = TinyIntNull | VarCharNull;
 
 /**
  * Aus Form
@@ -79,7 +79,7 @@ export interface Hardware {
  * Status
  */
 
-export type GetValue = (value: DBValue) => StatusValue;
+export type GetValue = (value: DBStatusVakue) => StatusValue;
 export type IsRequested = (value: FormValue) => boolean;
 export type IsDone = (value: FormValue) => boolean;
 

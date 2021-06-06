@@ -1,13 +1,12 @@
 import { RequestHandler } from 'express';
+import { aushilfen } from '../../sql';
 import { Aushilfen } from '../../types/database';
 
 export const getAushilfen: RequestHandler = async (req, res) => {
   const { query, close } = res.database();
 
   await res.catchError(async () => {
-    const sql =
-      "SELECT * FROM aushilfen WHERE status <> 'passiv' ORDER BY station, nachname";
-    const qry = await query<Aushilfen>(sql);
+    const qry = await query<Aushilfen>(aushilfen.selectNotPassive);
     await close();
 
     res.okmsg(qry.results);

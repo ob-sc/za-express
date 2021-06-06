@@ -132,25 +132,8 @@ export interface AngemeldetName extends Angemeldet {
   nachname: Aushilfen['nachname'];
 }
 
-export interface OnboardingStation1 {
-  id: Onboarding['id'];
-  status: Onboarding['status'];
-  ersteller: Onboarding['ersteller'];
-  vorname: Onboarding['vorname'];
-  nachname: Onboarding['nachname'];
-  eintritt: Onboarding['eintritt'];
-  anzeigen: Onboarding['anzeigen'];
-  ort: Stationen['name'];
-}
-
-export interface OnboardingStation2 {
-  id: Onboarding['id'];
-  ersteller: Onboarding['ersteller'];
-  vorname: Onboarding['vorname'];
-  nachname: Onboarding['nachname'];
-  eintritt: Onboarding['eintritt'];
-  position: Onboarding['position'];
-  ort: Stationen['name'];
+export interface OnboardingStation extends Onboarding {
+  station_name: Stationen['name'];
 }
 
 /**

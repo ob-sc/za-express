@@ -4,6 +4,7 @@ import sessionValidation from '../../validation/session.js';
 import { sess } from '../../config.js';
 import { Benutzer } from '../../types/database.js';
 import { EmptySession, UserSession } from '../../types/session.js';
+import { benutzer } from '../../sql/index.js';
 
 const createSession: (user: Benutzer) => UserSession = (user) => ({
   username: user.username,
@@ -34,8 +35,7 @@ export const login: RequestHandler = async (req, res) => {
 
     const isOnboarding = req.headers.host?.includes('onboarding');
 
-    const sql = 'SELECT * FROM benutzer WHERE username = ?';
-    const qry = await query<Benutzer>(sql, [username]);
+    const qry = await query<Benutzer>(benutzer.selectUser, [username]);
     await close();
 
     const [user] = qry.results;
