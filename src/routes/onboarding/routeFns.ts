@@ -1,20 +1,15 @@
 import { RequestHandler } from 'express';
-import {
-  OnboardingStation1,
-  OnboardingStation2,
-  StationName,
-} from '../../types/database.js';
-import { notEmptyString } from '../../util/helper.js';
-import { onbNeuMail, onbFreigabeMail, statwMail, poswMail } from './mail.js';
+import { OnboardingStation, StationName } from '../../types/database.js';
+import { onboarding } from '../../sql';
+import { notEmptyString } from '../../util/helper';
+import { onbNeuMail, onbFreigabeMail, statwMail, poswMail } from './mail';
 import status from './status.js';
 
 export const alleMa: RequestHandler = async (req, res) => {
   const { query, close } = res.database();
 
   await res.catchError(async () => {
-    const sql =
-      'SELECT o.id,o.status,o.ersteller,o.vorname,o.nachname,o.eintritt,o.anzeigen,s.name AS ort FROM onboarding AS o JOIN stationen AS s ON s.id = o.ort ORDER BY status,id DESC';
-    const qry = await query<OnboardingStation1>(sql);
+    const qry = await query<OnboardingStation>(onboarding.selectWithStation);
 
     await close();
 
@@ -64,7 +59,9 @@ export const freigabe: RequestHandler = async (req, res) => {
 
     const sql2 =
       'SELECT o.id,o.ersteller,o.vorname,o.nachname,o.eintritt,o.position,s.name AS ort FROM onboarding AS o JOIN stationen AS s ON s.id = o.ort ORDER BY status,id DESC';
-    const qry2 = await query<OnboardingStation2>(sql2, [id]);
+    const qry2 = await query<OnboardingStation>(onboarding.selectWithStation, [
+      id,
+    ]);
     await close();
 
     await onbNeuMail(qry2.results[0]);
