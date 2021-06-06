@@ -44,7 +44,7 @@ export const signUp = (req, res, next) => {
         }
       });
 
-    conn.release();
+    await close();
   } catch (err) {
     next(err);
   }
@@ -77,7 +77,7 @@ export const confirmAccount = (req, res, next) => {
       res.query(conn, sql3, [token]);
     }
 
-    conn.release();
+    await close();
   } catch (err) {
     next(err);
   }

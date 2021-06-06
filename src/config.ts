@@ -1,3 +1,6 @@
+const parseEnv: (value: string | undefined) => number | undefined = (val) =>
+  val === undefined ? undefined : parseInt(val);
+
 const {
   NODE_ENV,
   PORT,
@@ -10,24 +13,37 @@ const {
   SESS_LIFETIME,
 } = process.env;
 
+const node_env = NODE_ENV;
+const port = parseEnv(PORT) ?? 3000;
+
+const db_host = DB_HOST ?? '';
+const db_user = DB_USER ?? '';
+const db_pass = DB_PASS ?? '';
+const db_name = DB_NAME ?? '';
+
+const sess_name = SESS_NAME ?? '';
+const sess_secret = SESS_SECRET ?? '';
+const sess_lifetime = parseEnv(SESS_LIFETIME) ?? 1800000;
+
+const db = {
+  host: db_host,
+  user: db_user,
+  password: db_pass,
+  database: db_name,
+};
+
 const sess = {
   cookie: {
     httpOnly: true,
-    maxAge: SESS_LIFETIME,
+    maxAge: sess_lifetime,
     sameSite: true,
     secure: NODE_ENV !== 'development',
   },
-  name: SESS_NAME,
+  name: sess_name,
   resave: false,
   rolling: true,
   saveUninitialized: false,
-  secret: SESS_SECRET,
-};
-const db = {
-  host: DB_HOST,
-  user: DB_USER,
-  password: DB_PASS,
-  database: DB_NAME,
+  secret: sess_secret,
 };
 
-export { NODE_ENV, PORT, sess, db };
+export { node_env, port, sess, db };

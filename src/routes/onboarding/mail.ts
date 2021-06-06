@@ -1,7 +1,7 @@
 import { erstellerString, isDev, toLocalDate } from '../../util/helper';
 import { template, divider, onboardingMail } from '../../util/mail';
 
-export const onbFreigabeMail = async (data) => {
+export const onbFreigabeMail: (data) => Promise<void> = async (data) => {
   const { id, ersteller, eintritt, vorname, nachname, position } = data;
   const creator = erstellerString(ersteller);
   const url = `https://onboarding.starcar.local/ma/${id}`;

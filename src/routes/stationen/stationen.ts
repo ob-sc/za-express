@@ -3,7 +3,7 @@ export const selectOptions = (req, res, next) => {
     const conn = res.connectDB();
     const sql = 'SELECT id AS optval, name AS optlabel FROM stationen';
     const qry = res.query(conn, sql);
-    conn.release();
+    await close();
 
     if (!qry.isEmpty) res.okmsg(res, qry.result);
     else res.errmsg();
@@ -19,7 +19,7 @@ export const signatur = (req, res, next) => {
     const conn = res.connectDB();
     const sql = 'SELECT * FROM stationen WHERE id = ?';
     const qry = res.query(conn, sql, [id]);
-    conn.release();
+    await close();
 
     if (!qry.isEmpty) res.okmsg(res, qry.result[0]);
     else res.errmsg();

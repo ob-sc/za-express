@@ -8,7 +8,7 @@ import {
   positionsWechsel,
   stationsWechsel,
   updateMitarbeiter,
-} from './onboarding.js';
+} from './routeFns.js';
 
 const router = express.Router();
 

@@ -1,5 +1,5 @@
 import express from 'express';
-import { isLoggedIn, login, logout, updateStation } from './auth.js';
+import { isLoggedIn, login, logout, updateStation } from './routeFns.js';
 
 const router = express.Router();
 

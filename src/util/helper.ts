@@ -1,5 +1,3 @@
-import { OkPacket } from 'mysql';
-
 export const isDev = process.env.NODE_ENV === 'development';
 
 const capitalize: (str: string) => string = (str) =>
@@ -44,9 +42,3 @@ export const notEmptyString: (value: unknown) => boolean = (value) =>
 
 export const checkObject: (obj: unknown) => boolean = (obj) =>
   typeof obj === 'object' && obj !== null;
-
-export const isEmpty: (array: unknown[]) => boolean = (array) =>
-  array.length === 0;
-
-export const isUpdated: (result: OkPacket) => boolean = (result) =>
-  result.affectedRows > 0;

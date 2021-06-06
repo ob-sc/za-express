@@ -4,7 +4,13 @@ import session from 'express-session';
 import cors from 'cors';
 import { isDev } from './util/helper';
 import { sess, db } from './config';
-import { response, database, errorHandler, notFound } from './middleware';
+import {
+  response,
+  database,
+  catchError,
+  errorHandler,
+  notFound,
+} from './middleware/';
 import {
   auth,
   user,
@@ -35,6 +41,9 @@ app.use(response);
 
 // res.connection & res.query
 app.use(database);
+
+// try / catch block der die Verbindung schließt
+app.use(catchError);
 
 app.use(
   session({

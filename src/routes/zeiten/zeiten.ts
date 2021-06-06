@@ -16,7 +16,7 @@ export const selectMax = (req, res, next) => {
       sum: qry.result[0].max,
     };
     res.okmsg(res, result);
-    conn.release();
+    await close();
   } catch (err) {
     next(err);
   }

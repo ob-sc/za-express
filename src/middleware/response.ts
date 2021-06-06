@@ -6,15 +6,15 @@ const response: RequestHandler = (req, res, next) => {
     const isString = notEmptyString(response);
     const isObject = checkObject(response);
 
-    return res.status(code).json({
-      message: isString ? response : 'Operation erfolgreich',
+    res.status(code).json({
+      message: isString ? response : 'Anfrage erfolgreich',
       code,
       result: isObject ? response : {},
     });
   };
 
   res.errmsg = (message = 'Fehler bei Operation', code = 500, error) => {
-    return res.status(code).json({ message, code, error });
+    res.status(code).json({ message, code, error });
   };
 
   next();

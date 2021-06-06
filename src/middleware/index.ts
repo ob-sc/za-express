@@ -1,6 +1,8 @@
+import auth from './auth';
+import catchError from './catchError';
+import database from './database';
 import errorHandler from './errorHandler';
 import notFound from './notFound';
 import response from './response';
-import database from './database';
 
-export default { errorHandler, notFound, response, database };
+export { auth, catchError, database, errorHandler, notFound, response };

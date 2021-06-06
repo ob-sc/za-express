@@ -1,12 +1,16 @@
+import { GetValue, InitialValue, IsRequested } from '../../types/onboarding.js';
 import { notEmptyString } from '../../util/helper.js';
 
-export const getValue = (value) =>
-  value === true || value === 1 ? true : notEmptyString(value) ? value : false;
+export const getValue: GetValue = (value) => {
+  if (value === 1) return true;
+  if (typeof value === 'string') return value !== '' ? value : false;
+  return false;
+};
 
-export const isRequested = (value) =>
+export const isRequested: IsRequested = (value) =>
   getValue(value) === true || notEmptyString(value);
 
-export const isDone = (value) => notEmptyString(value) || value === 1;
+export const isDone = (value) => getValue(value) === true;
 
 export const hardwareAnf = (anf) => {
   let required = false;
