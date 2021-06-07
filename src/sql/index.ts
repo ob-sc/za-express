@@ -65,5 +65,17 @@ export const onboarding = {
     'ORDER BY status,id DESC',
     'WHERE onb.id=?'
   ),
-  updateStatus: sql.update(t.onboarding, 'status=1', whereID),
+  insert: sql.insert(t.onboarding),
+  updStatus: sql.update(t.onboarding, 'status=1', whereID),
+  updDomain: sql.update(t.onboarding, 'domain=?', whereID),
+  updBitrix: sql.update(t.onboarding, 'bitrix=?', whereID),
+  updCrent: sql.update(t.onboarding, 'crent=?', whereID),
+  updDocuware: sql.update(t.onboarding, 'docuware=?', whereID),
+  updQlik: sql.update(t.onboarding, 'qlik=?', whereID),
+  updHardware: sql.update(t.onboarding, 'hardware=?', whereID),
+  updNetwork: sql.update(t.onboarding, 'network=?', whereID),
+};
+
+export const stationen = {
+  selectName: sql.select('name', t.onboarding, whereID),
 };

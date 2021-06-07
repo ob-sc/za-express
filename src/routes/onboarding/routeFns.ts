@@ -1,16 +1,29 @@
 import { RequestHandler } from 'express';
 import { OnboardingStation, StationName } from '../../types/results';
-import { onboarding } from '../../sql';
+import { onboarding, stationen } from '../../sql';
 import { notEmptyString } from '../../util/helper';
 import { onbNeuMail, onbFreigabeMail, statwMail, poswMail } from './mail';
 import status from './status';
+
+const {
+  selectWithStation,
+  insert,
+  updStatus,
+  updDomain,
+  updBitrix,
+  updCrent,
+  updDocuware,
+  updQlik,
+  updHardware,
+  updNetwork,
+} = onboarding;
+const { selectName } = stationen;
 
 export const alleMa: RequestHandler = async (req, res) => {
   const { query, close } = res.database();
 
   await res.catchError(async () => {
-    const qry = await query<OnboardingStation>(onboarding.selectWithStation);
-
+    const qry = await query<OnboardingStation>(selectWithStation);
     await close();
 
     // versteckte zeilen für nicht admin und nicht ersteller raus
@@ -33,13 +46,12 @@ export const neuerMa: RequestHandler = async (req, res) => {
 
   await res.catchError(async () => {
     const ersteller = req.session.user?.username;
+    // todo type von req.body (gibt es schon als requests?)
     const data = { ersteller, ...req.body };
 
-    const sql = 'INSERT INTO onboarding SET ?';
-    const qry = await query(sql, data);
+    const qry = await query(insert, data);
 
-    const sql2 = 'SELECT name FROM stationen WHERE id=?';
-    const qry2 = await query<StationName>(sql2, [data.ort]);
+    const qry2 = await query<StationName>(selectName, [data.station]);
     await close();
 
     await onbFreigabeMail({
@@ -56,165 +68,155 @@ export const freigabe: RequestHandler = async (req, res) => {
   const { id } = req.body;
 
   await res.catchError(async () => {
-    const sql = 'UPDATE onboarding SET anzeigen=1 WHERE id=?';
-    await query(sql, [id]);
+    await query(updStatus, [id]);
 
-    const qry2 = await query<OnboardingStation>(onboarding.selectWithStation, [
-      id,
-    ]);
+    const qry2 = await query<OnboardingStation>(selectWithStation, [id]);
     await close();
 
-    await onbNeuMail(qry2.results[0]);
+    const [onboardingStation] = qry2.results;
+
+    await onbNeuMail(onboardingStation);
     res.okmsg();
   }, close);
 };
 
 export const getMa: RequestHandler = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const conn = res.connectDB();
+  const { query, close } = res.database();
+  const { id } = req.params;
 
-    const st = await status(query, id);
-
+  res.catchError(async () => {
+    const maStatus = await status(query, id);
     await close();
 
-    if (st !== null) res.okmsg(res, status);
+    if (maStatus !== null) res.okmsg(maStatus);
     else res.errmsg('Status Query ist leer');
-  } catch (err) {
-    next(err);
-  }
+  }, close);
 };
 
-const updateDomain = (req, res, next) => {
-  try {
+const updateDomain: RequestHandler = async (req, res, next) => {
+  const { query, close } = res.database();
+
+  res.catchError(async () => {
     const { id, domain } = req.body;
     if (domain === undefined) return next();
 
-    const conn = res.connectDB();
-
-    const sql = 'UPDATE onboarding SET domain=? WHERE id=?';
-    const qry = res.query(conn, sql, [domain, id]);
-
-    await status(conn, id);
-
-    await close();
-
-    if (qry.isUpdated === true) res.okmsg(res, domain);
-    else res.errmsg();
-  } catch (err) {
-    next(err);
-  }
-};
-
-const updateBitrix = (req, res, next) => {
-  try {
-    const { id, bitrix } = req.body;
-    if (bitrix === undefined) return next();
-
-    const conn = res.connectDB();
-
-    const sql = 'UPDATE onboarding SET bitrix=? WHERE id=?';
-    const qry = res.query(conn, sql, [bitrix, id]);
+    const qry = await query(updDomain, [domain, id]);
 
     await status(query, id);
 
     await close();
 
-    if (qry.isUpdated === true) res.okmsg(res, bitrix);
+    if (qry.isUpdated === true) res.okmsg();
     else res.errmsg();
-  } catch (err) {
-    next(err);
-  }
+  }, close);
 };
 
-const updateCrent = (req, res, next) => {
-  try {
+const updateBitrix: RequestHandler = async (req, res, next) => {
+  const { query, close } = res.database();
+
+  res.catchError(async () => {
+    const { id, bitrix } = req.body;
+    if (bitrix === undefined) return next();
+
+    const qry = await query(updBitrix, [bitrix, id]);
+
+    await status(query, id);
+
+    await close();
+
+    if (qry.isUpdated === true) res.okmsg();
+    else res.errmsg();
+  }, close);
+};
+
+const updateCrent: RequestHandler = async (req, res, next) => {
+  const { query, close } = res.database();
+
+  res.catchError(async () => {
     const { id, crent } = req.body;
     if (crent === undefined) return next();
 
-    const conn = res.connectDB();
-    const sql = 'UPDATE onboarding SET crent=? WHERE id=?';
+    const qry = await query(updCrent, [crent, id]);
 
-    const qry = res.query(conn, sql, [crent, id]);
+    await status(query, id);
+
     await close();
 
-    if (qry.isUpdated === true) res.okmsg(res, crent);
+    if (qry.isUpdated === true) res.okmsg();
     else res.errmsg();
-  } catch (err) {
-    next(err);
-  }
+  }, close);
 };
 
-const updateDocuware = (req, res, next) => {
-  try {
+const updateDocuware: RequestHandler = async (req, res, next) => {
+  const { query, close } = res.database();
+
+  res.catchError(async () => {
     const { id, docuware } = req.body;
     if (docuware === undefined) return next();
 
-    const conn = res.connectDB();
-    const sql = 'UPDATE onboarding SET docuware=? WHERE id=?';
+    const qry = await query(updDocuware, [docuware, id]);
 
-    const qry = res.query(conn, sql, [docuware, id]);
+    await status(query, id);
+
     await close();
 
-    if (qry.isUpdated === true) res.okmsg(res, docuware);
+    if (qry.isUpdated === true) res.okmsg();
     else res.errmsg();
-  } catch (err) {
-    next(err);
-  }
+  }, close);
 };
 
-const updateQlik = (req, res, next) => {
-  try {
+const updateQlik: RequestHandler = async (req, res, next) => {
+  const { query, close } = res.database();
+
+  res.catchError(async () => {
     const { id, qlik } = req.body;
     if (qlik === undefined) return next();
 
-    const conn = res.connectDB();
-    const sql = 'UPDATE onboarding SET qlik=? WHERE id=?';
+    const qry = await query(updQlik, [qlik, id]);
 
-    const qry = res.query(conn, sql, [qlik, id]);
+    await status(query, id);
+
     await close();
 
-    if (qry.isUpdated === true) res.okmsg(res, qlik);
+    if (qry.isUpdated === true) res.okmsg();
     else res.errmsg();
-  } catch (err) {
-    next(err);
-  }
+  }, close);
 };
 
-const updateHardware = (req, res, next) => {
-  try {
+const updateHardware: RequestHandler = async (req, res, next) => {
+  const { query, close } = res.database();
+
+  res.catchError(async () => {
     const { id, hardware } = req.body;
     if (hardware === undefined) return next();
 
-    const conn = res.connectDB();
-    const sql = 'UPDATE onboarding SET hardware=? WHERE id=?';
+    const qry = await query(updHardware, [hardware, id]);
 
-    const qry = res.query(conn, sql, [hardware, id]);
+    await status(query, id);
+
     await close();
 
-    if (qry.isUpdated === true) res.okmsg(res, hardware);
+    if (qry.isUpdated === true) res.okmsg();
     else res.errmsg();
-  } catch (err) {
-    next(err);
-  }
+  }, close);
 };
 
-const updateNetwork = (req, res, next) => {
-  try {
+const updateNetwork: RequestHandler = async (req, res, next) => {
+  const { query, close } = res.database();
+
+  res.catchError(async () => {
     const { id, network } = req.body;
     if (network === undefined) return next();
 
-    const conn = res.connectDB();
-    const sql = 'UPDATE onboarding SET network=? WHERE id=?';
+    const qry = await query(updNetwork, [network, id]);
 
-    const qry = res.query(conn, sql, [network, id]);
+    await status(query, id);
+
     await close();
 
-    if (qry.isUpdated === true) res.okmsg(res, network);
+    if (qry.isUpdated === true) res.okmsg();
     else res.errmsg();
-  } catch (err) {
-    next(err);
-  }
+  }, close);
 };
 
 export const updateMitarbeiter = [
@@ -227,28 +229,24 @@ export const updateMitarbeiter = [
   updateNetwork,
 ];
 
-export const stationsWechsel = (req, res, next) => {
-  try {
+export const stationsWechsel: RequestHandler = async (req, res) => {
+  res.catchError(async () => {
     const { name, date, station, docuware } = req.body;
 
     const dw = notEmptyString(docuware) ? docuware : undefined;
 
     await statwMail(name, date, station, dw, req.session.user.username);
 
-    res.res.okmsg();
-  } catch (err) {
-    next(err);
-  }
+    res.okmsg();
+  });
 };
 
-export const positionsWechsel = (req, res, next) => {
-  try {
+export const positionsWechsel: RequestHandler = async (req, res) => {
+  res.catchError(async () => {
     const { name, date, position } = req.body;
 
     await poswMail(name, date, position, req.session.user.username);
 
-    res.res.okmsg();
-  } catch (err) {
-    next(err);
-  }
+    res.okmsg();
+  });
 };

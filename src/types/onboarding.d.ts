@@ -21,7 +21,7 @@ export type Suggestion = (
 
 export type StatusFunction = (
   query: ConnectionQuery,
-  id: number
+  id: string
 ) => Promise<StatusResult | null>;
 
 export interface StatusItem {
