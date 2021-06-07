@@ -1,22 +1,26 @@
-import { GetValue, InitialValue, IsRequested } from '../../types/onboarding.js';
-import { notEmptyString } from '../../util/helper.js';
+import {
+  GetValue,
+  IsRequested,
+  LabelValue,
+  PushAnf,
+  AnfFunction,
+  Suggestion,
+} from '../../types/onboarding';
+import { notEmptyString } from '../../util/helper';
 
 export const getValue: GetValue = (value) => {
-  if (value === 1) return true;
   if (typeof value === 'string') return value !== '' ? value : false;
-  return false;
+  return value === true;
 };
 
 export const isRequested: IsRequested = (value) =>
   getValue(value) === true || notEmptyString(value);
 
-export const isDone = (value) => getValue(value) === true;
-
-export const hardwareAnf = (anf) => {
+export const hardwareAnf: AnfFunction = (anf) => {
   let required = false;
-  const array = [];
+  const array: LabelValue[] = [];
 
-  const pushHardware = (label, value) => {
+  const pushHardware: PushAnf = (label, value) => {
     array.push({ label, value });
     required = true;
   };
@@ -38,11 +42,11 @@ export const hardwareAnf = (anf) => {
   };
 };
 
-export const networkAnf = (anf) => {
+export const networkAnf: AnfFunction = (anf) => {
   let required = false;
-  const array = [];
+  const array: LabelValue[] = [];
 
-  const pushNetwork = (label, value) => {
+  const pushNetwork: PushAnf = (label, value) => {
     array.push({ label, value });
     required = true;
   };
@@ -59,7 +63,7 @@ export const networkAnf = (anf) => {
   };
 };
 
-export const suggestion = (vorname, nachname) => {
+export const suggestion: Suggestion = (vorname, nachname) => {
   const vor = vorname.trim();
   const nach = nachname.trim();
 

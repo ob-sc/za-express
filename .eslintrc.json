@@ -24,7 +24,8 @@
     "prettier/prettier": "warn",
     "no-console": "warn",
     "no-else-return": "warn",
-    "no-throw-literal": "error"
+    "no-throw-literal": "error",
+    "security/detect-object-injection": "off"
   },
   "ignorePatterns": ["node_modules/", "dist/"]
 }

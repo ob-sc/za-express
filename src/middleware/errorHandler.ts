@@ -1,19 +1,6 @@
 import { ErrorRequestHandler } from 'express';
 
 const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
-  if (err.code !== undefined)
-    switch (err.code) {
-      case 'ENETUNREACH':
-        res.errmsg('Netzwerk nicht erreichbar', 500, err);
-        break;
-      case 'ECONNREFUSED':
-        res.errmsg('Verbindung verweigert', 500, err);
-        break;
-      default:
-        res.errmsg(err.message, 500, err);
-        break;
-    }
-
   // validation error
   if (err.isJoi === true)
     switch (err.details[0].context.label) {
@@ -31,6 +18,18 @@ const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
         break;
       default:
         res.errmsg('Fehler bei Überprüfung der Angaben', 400, err);
+        break;
+    }
+  else if (err.code !== undefined)
+    switch (err.code) {
+      case 'ENETUNREACH':
+        res.errmsg('Netzwerk nicht erreichbar', 500, err);
+        break;
+      case 'ECONNREFUSED':
+        res.errmsg('Verbindung verweigert', 500, err);
+        break;
+      default:
+        res.errmsg(err.message, 500, err);
         break;
     }
 

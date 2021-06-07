@@ -1,5 +1,5 @@
 import express from 'express';
-import auth from '../../middleware/auth.js';
+import auth from '../../middleware/auth';
 import {
   alleMa,
   freigabe,
@@ -8,7 +8,7 @@ import {
   positionsWechsel,
   stationsWechsel,
   updateMitarbeiter,
-} from './routeFns.js';
+} from './routeFns';
 
 const router = express.Router();
 

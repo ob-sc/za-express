@@ -1,8 +1,17 @@
+import { OnbFreigabeMail, WithStatusMail } from '../../types/mail';
 import { erstellerString, isDev, toLocalDate } from '../../util/helper';
 import { template, divider, onboardingMail } from '../../util/mail';
 
-export const onbFreigabeMail: (data) => Promise<void> = async (data) => {
-  const { id, ersteller, eintritt, vorname, nachname, position } = data;
+export const onbFreigabeMail: OnbFreigabeMail = async (data) => {
+  const {
+    id,
+    ersteller,
+    eintritt,
+    vorname,
+    nachname,
+    station_name,
+    position,
+  } = data;
   const creator = erstellerString(ersteller);
   const url = `https://onboarding.starcar.local/ma/${id}`;
 
@@ -11,7 +20,7 @@ export const onbFreigabeMail: (data) => Promise<void> = async (data) => {
   <h1 style="font-family:Helvetica, Verdana, sans-serif;margin:0px;font-size:1.3em;line-height:1.4em">${vorname} ${nachname}</h1>
   <ul style="margin-bottom:1.5em">
   <li>Eintritt: ${toLocalDate(eintritt)}</li>
-  <li>Arbeitsort: ${data.ort}</li>
+  <li>Arbeitsort: ${station_name}</li>
   <li>Position: ${position}</li></ul>
   <a href="${url}">Vorgang anzeigen</a>`;
 
@@ -51,12 +60,12 @@ export const onbNeuMail = async (data) => {
   );
 };
 
-export const onbDoneMail = async (data) => {
-  const { id, vorname, nachname, status } = data;
+export const onbDoneMail: WithStatusMail = async (data) => {
+  const { id, vorname, nachname, statusArray } = data;
   const url = `https://onboarding.starcar.local/ma/${id}`;
 
   let rows = '';
-  for (const item of status) {
+  for (const item of statusArray) {
     if (item.required === true)
       rows += `<tr><td style="padding:0px 1.2em;">${item.label}</td><td>${
         item.value === true ? '✓' : item.value
@@ -76,7 +85,8 @@ export const onbDoneMail = async (data) => {
   );
 };
 
-export const statwMail = async (name, date, station, docuware, creator) => {
+export const statwMail = async (data) => {
+  const { name, date, station, docuware, creator } = data;
   const ersteller = erstellerString(creator);
 
   const ort = `${station === '1' ? 'Verwaltung' : `Station ${station}`}`;
@@ -94,10 +104,11 @@ export const statwMail = async (name, date, station, docuware, creator) => {
   );
 };
 
-export const poswMail = async (name, date, position, creator) => {
+export const poswMail = async (data) => {
+  const { name, date, position, creator } = data;
   const ersteller = erstellerString(creator);
 
-  let content = `${ersteller} meldet einen Positionswechsel:<br/>${name} arbeitet ab ${toLocalDate(
+  const content = `${ersteller} meldet einen Positionswechsel:<br/>${name} arbeitet ab ${toLocalDate(
     date
   )} als ${position}`;
 

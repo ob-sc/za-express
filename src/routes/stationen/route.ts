@@ -1,5 +1,5 @@
 import express from 'express';
-import { selectOptions, signatur } from './stationen.js';
+import { selectOptions, signatur } from './stationen';
 
 const router = express.Router();
 

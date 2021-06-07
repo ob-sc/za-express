@@ -1,9 +1,9 @@
 import { RequestHandler } from 'express';
-import { OnboardingStation, StationName } from '../../types/database.js';
+import { OnboardingStation, StationName } from '../../types/results';
 import { onboarding } from '../../sql';
 import { notEmptyString } from '../../util/helper';
 import { onbNeuMail, onbFreigabeMail, statwMail, poswMail } from './mail';
-import status from './status.js';
+import status from './status';
 
 export const alleMa: RequestHandler = async (req, res) => {
   const { query, close } = res.database();
@@ -18,9 +18,7 @@ export const alleMa: RequestHandler = async (req, res) => {
     let i = qry.results.length;
     while (i--) {
       if (
-        // eslint-disable-next-line security/detect-object-injection
-        qry.results[i].anzeigen === 0 &&
-        // eslint-disable-next-line security/detect-object-injection
+        qry.results[i].anzeigen === false &&
         req.session.user?.username !== qry.results[i].ersteller &&
         req.session.user?.admin !== true
       )
@@ -44,7 +42,11 @@ export const neuerMa: RequestHandler = async (req, res) => {
     const qry2 = await query<StationName>(sql2, [data.ort]);
     await close();
 
-    await onbFreigabeMail({ ...data, id: qry.id, ort: qry2.results[0].name });
+    await onbFreigabeMail({
+      ...data,
+      id: qry.id,
+      station_name: qry2.results[0].name,
+    });
     res.okmsg();
   }, close);
 };
@@ -57,8 +59,6 @@ export const freigabe: RequestHandler = async (req, res) => {
     const sql = 'UPDATE onboarding SET anzeigen=1 WHERE id=?';
     await query(sql, [id]);
 
-    const sql2 =
-      'SELECT o.id,o.ersteller,o.vorname,o.nachname,o.eintritt,o.position,s.name AS ort FROM onboarding AS o JOIN stationen AS s ON s.id = o.ort ORDER BY status,id DESC';
     const qry2 = await query<OnboardingStation>(onboarding.selectWithStation, [
       id,
     ]);
@@ -74,12 +74,12 @@ export const getMa: RequestHandler = async (req, res) => {
     const { id } = req.params;
     const conn = res.connectDB();
 
-    const status = await status(query, id);
+    const st = await status(query, id);
 
     await close();
 
-    if (status !== null) res.okmsg(res, status);
-    else res.errmsg();
+    if (st !== null) res.okmsg(res, status);
+    else res.errmsg('Status Query ist leer');
   } catch (err) {
     next(err);
   }

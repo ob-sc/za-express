@@ -1,87 +1,28 @@
-import { DateStr, TimeStr, TinyIntNull, VarCharNull } from './values';
+import { ConnectionQuery } from './response';
+import { OnboardingStation } from './results';
+import { FormValue, TinyIntNull, VarCharNull } from './types';
 
-/**
- * Werte
- */
+export type StatusValue = string | boolean;
+export type DBStatusValue = TinyIntNull | VarCharNull;
+export type CrentStatusValue = string | false;
+export type LabelValue = { label: string; value: StatusValue };
 
-export type FormValue = boolean | string;
-export type StatusValue = FormValue;
-export type DBStatusVakue = TinyIntNull | VarCharNull;
-
-/**
- * Aus Form
- */
-
-export interface NeuerMAForm {
-  eintritt: string;
-  anrede: string;
-  vorname: string;
-  nachname: string;
-  ort: string;
-  position: string;
-  kasse: boolean;
-  crentstat: string;
-  docuware: boolean;
-  workflow: string;
-  qlik: boolean;
-  qlikapps: string;
-  qlikstat: string;
-  vpn: boolean;
-  freigabe: string;
-  handy: boolean;
-  laptop: boolean;
-  pc: boolean;
-  monitore: string;
-  ipad: boolean;
-  ipadspez: string;
-  drucker: boolean;
-  tanken: boolean;
-  sonstiges: string;
-  hardware: boolean;
-}
-
-export interface Anforderungen {
-  kasse: NeuerMaForm['kasse'];
-  crentstat: NeuerMaForm['crentstat'];
-  docuware: NeuerMaForm['docuware'];
-  workflow: NeuerMaForm['workflow'];
-  qlik: NeuerMaForm['qlik'];
-  qlikapps: NeuerMaForm['qlikapps'];
-  qlikstat: NeuerMaForm['qlikstat'];
-  vpn: NeuerMaForm['vpn'];
-  freigabe: NeuerMaForm['freigabe'];
-  handy: NeuerMaForm['handy'];
-  laptop: NeuerMaForm['laptop'];
-  pc: NeuerMaForm['pc'];
-  monitore: NeuerMaForm['monitore'];
-  ipad: NeuerMaForm['ipad'];
-  ipadspez: NeuerMaForm['ipadspez'];
-  drucker: NeuerMaForm['drucker'];
-  tanken: NeuerMaForm['tanken'];
-  sonstiges: NeuerMaForm['sonstiges'];
-  hardware: NeuerMaForm['hardware'];
-}
-
-export interface Hardware {
-  handy: NeuerMaForm['handy'];
-  laptop: NeuerMaForm['laptop'];
-  pc: NeuerMaForm['pc'];
-  monitore: NeuerMaForm['monitore'];
-  ipad: NeuerMaForm['ipad'];
-  ipadspez: NeuerMaForm['ipadspez'];
-  drucker: NeuerMaForm['drucker'];
-  tanken: NeuerMaForm['tanken'];
-  sonstiges: NeuerMaForm['sonstiges'];
-  hardware: NeuerMaForm['hardware'];
-}
-
-/**
- * Status
- */
-
-export type GetValue = (value: DBStatusVakue) => StatusValue;
+export type GetValue = (value: DBStatusValue | FormValue) => StatusValue;
 export type IsRequested = (value: FormValue) => boolean;
-export type IsDone = (value: FormValue) => boolean;
+
+export type AnfReturn = { required: boolean; array: LabelValue[] };
+export type PushAnf = (label: string, value: StatusValue) => void;
+export type AnfFunction = (anf: Anforderungen) => AnfReturn;
+
+export type Suggestion = (
+  vorname: string,
+  nachname: string
+) => { domain: string; crent: string };
+
+export type StatusFunction = (
+  query: ConnectionQuery,
+  id: number
+) => Promise<StatusResult | null>;
 
 export interface StatusItem {
   name: string;
@@ -96,13 +37,51 @@ export interface StatusItem {
   array?: Hardware[];
 }
 
-/**
- * Req body
- */
+export interface StatusResult extends OnboardingStation {
+  statusArray: statusItem[];
+}
 
-export interface AnmeldenBody {
-  ahid: number;
-  date: DateStr;
-  start: TimeStr;
-  station: number;
+/**
+ * Aus form /neu
+ */
+export type NeuerMAForm = MaDetails & Anforderungen;
+
+/**
+ * Erster Teil von NeuerMaForm
+ */
+export interface MaDetails {
+  eintritt: string;
+  anrede: string;
+  vorname: string;
+  nachname: string;
+  ort: string;
+  position: string;
+}
+
+/**
+ * Zweiter Teil von NeuerMaForm
+ */
+export interface Anforderungen {
+  kasse: boolean;
+  crentstat: string;
+  docuware: boolean;
+  workflow: string;
+  qlik: boolean;
+  qlikapps: string;
+  qlikstat: string;
+  vpn: boolean;
+  verteiler: string;
+  netzdrucker: string;
+  stddrucker: string;
+  freigabe: string;
+  handy: boolean;
+  laptop: boolean;
+  pc: boolean;
+  monitore: string;
+  ipad: boolean;
+  ipadspez: string;
+  drucker: boolean;
+  tanken: boolean;
+  sonstiges: string;
+  hardware: boolean;
 }

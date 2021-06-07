@@ -1,4 +1,9 @@
-export type TinyInt = 1 | 0;
+export type FormValue = boolean | string;
+
+// db
+
+// wird durch mysql typecast in options object von connection zu boolean
+export type TinyInt = boolean;
 export type TinyIntNull = TinyInt | null;
 
 export type Int = number;

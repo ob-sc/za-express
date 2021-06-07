@@ -10,11 +10,7 @@ import {
   TinyIntNull,
   VarChar,
   VarCharNull,
-} from './values';
-
-/**
- * Tabellen
- */
+} from './types';
 
 export interface Account {
   id: Int;
@@ -66,7 +62,7 @@ export interface Onboarding {
   vorname: VarChar;
   nachname: VarChar;
   eintritt: DateStr;
-  ort: VarChar;
+  station: Int;
   position: VarChar;
   anforderungen: VarChar;
   domain: VarChar;
@@ -121,25 +117,4 @@ export interface Zeiten {
   ahstation: Int;
   ahmax: VarChar;
   reg_date: Timestamp;
-}
-
-/**
- * SELECTs mit JOIN
- */
-
-export interface AngemeldetName extends Angemeldet {
-  vorname: Aushilfen['vorname'];
-  nachname: Aushilfen['nachname'];
-}
-
-export interface OnboardingStation extends Onboarding {
-  station_name: Stationen['name'];
-}
-
-/**
- * SELECT einzelnes
- */
-
-export interface StationName {
-  name: Stationen['name'];
 }

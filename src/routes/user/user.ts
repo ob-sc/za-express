@@ -1,8 +1,6 @@
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
-import connection from '../../util/connection.js';
-import query from '../../util/query.js';
-import userValidation from '../../validation/user.js';
+import userValidation from '../../validation/user';
 
 import { confirmMail, infoMail } from './mail';
 

@@ -1,10 +1,18 @@
 import { RequestHandler } from 'express';
 import mysql from 'mysql';
-import { db } from '../config.js';
+import { db } from '../config';
 
 const database: RequestHandler = (req, res, next) => {
   res.database = () => {
-    const connection = mysql.createConnection(db);
+    const connection = mysql.createConnection({
+      ...db,
+      typeCast: (field, next) => {
+        if (field.type === 'TINY' && field.length === 1) {
+          return field.string() === '1'; // 1 = true, 0 = false
+        }
+        return next();
+      },
+    });
     return {
       query(sql, args) {
         return new Promise((resolve, reject) => {
@@ -14,9 +22,11 @@ const database: RequestHandler = (req, res, next) => {
               const selectString = sql.substring(0, 5);
               const isSelect = selectString.toLowerCase() === 'select';
 
+              const array = Array.isArray(results) ? results : [];
+
               const data = {
-                results: Array.isArray(results) ? results : [],
-                isEmpty: results.length === 0,
+                results: array,
+                isEmpty: array.length === 0,
               };
 
               const queryResult = isSelect
@@ -24,7 +34,7 @@ const database: RequestHandler = (req, res, next) => {
                 : {
                     ...data,
                     id: results?.insertId,
-                    isUpdated: results?.affectedRows > 0,
+                    isUpdated: results?.changedRows > 0,
                   };
 
               resolve(queryResult);
@@ -32,7 +42,6 @@ const database: RequestHandler = (req, res, next) => {
           });
         });
       },
-      // await close() muss immer vor ok-/errmsg kommen
       close() {
         return new Promise((resolve, reject) => {
           connection.end((error) => {

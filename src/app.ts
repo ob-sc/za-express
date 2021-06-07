@@ -1,6 +1,8 @@
 import express from 'express';
+import logger from 'morgan';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
+import expressMySqlSession from 'express-mysql-session';
 import cors from 'cors';
 import { isDev } from './util/helper';
 import { sess, db } from './config';
@@ -21,10 +23,9 @@ import {
   stationen,
 } from './routes';
 
-// todo morgan = https://github.com/expressjs/morgan/issues/190
-// todo mysqlstore import?
-const logger = require('morgan');
-const MySQLStore = require('express-mysql-session')(session);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const MySQLStore = expressMySqlSession(session as any);
+const sessionStore = new MySQLStore({ ...db, expiration: sess.cookie.maxAge });
 
 const app = express();
 
@@ -48,7 +49,7 @@ app.use(catchError);
 app.use(
   session({
     ...sess,
-    store: new MySQLStore({ ...db, expiration: sess.cookie.maxAge }),
+    store: sessionStore,
   })
 );
 

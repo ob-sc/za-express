@@ -1,6 +1,8 @@
 import { RequestHandler } from 'express';
+import { Angemeldet } from '../../types/database';
+import { AngemeldetName } from '../../types/results';
 import { angemeldet } from '../../sql';
-import { Angemeldet, AngemeldetName } from '../../types/database';
+import { AnmeldenRequest } from '../../types/requests';
 
 const { selectID, insert, selectWithName, deleteID } = angemeldet;
 
@@ -9,11 +11,11 @@ export const anmelden: RequestHandler = async (req, res) => {
 
   const { ahid, date, start } = req.body;
 
-  const anmeldung = {
+  const anmeldung: AnmeldenRequest = {
     ahid,
     date,
     start,
-    station: req.session.user?.station,
+    station: req.session.user?.station ?? 0,
   };
 
   await res.catchError(async () => {

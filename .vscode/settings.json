@@ -5,6 +5,8 @@
   "editor.acceptSuggestionOnCommitCharacter": false,
   "prettier.requireConfig": true,
 
+  "javascript.preferences.importModuleSpecifierEnding": "minimal",
+
   "eslint.packageManager": "yarn",
   "eslint.validate": ["javascript", "typescript"],
   "eslint.lintTask.enable": true

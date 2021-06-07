@@ -1,31 +1,69 @@
-const S = 'SELECT ';
-const SEL = 'SELECT * FROM ';
-const INS = 'INSERT INTO ';
-const SET = ' SET ';
-const WHERE = ' WHERE ';
+import { SqlGenerator } from '../types/sql';
+import { spaces } from '../util/helper';
+import t from './tables';
 
-const angemeldet = {
-  selectID: 'SELECT * FROM angemeldet WHERE ahid = ?',
-  selectWithName:
-    'SELECT ang.*,ah.vorname,ah.nachname FROM angemeldet AS ang INNER JOIN aushilfen AS ah ON ang.ahid = ah.id WHERE ang.station = ?',
-  insert: 'INSERT INTO angemeldet SET ?',
-  deleteID: 'DELETE FROM angemeldet WHERE id = ?',
+const sql: SqlGenerator = {
+  select(columns, table, ...rest) {
+    const arr = Array.from(rest);
+    return spaces(['SELECT', columns, 'FROM', table, ...arr]);
+  },
+  selectAll(table, ...rest) {
+    const arr = Array.from(rest);
+    return spaces(['SELECT * FROM', table, ...arr]);
+  },
+  insert(table) {
+    return spaces(['INSERT INTO', table, 'SET ?']);
+  },
+  // update set ? möglich wie insert into set ?
+  // dann überall dort auch objekt passen
+  update(table, ...rest) {
+    const arr = Array.from(rest);
+    return spaces(['UPDATE', table, 'SET', ...arr]);
+  },
+  delete(table, ...rest) {
+    const arr = Array.from(rest);
+    return spaces(['DELETE FROM', table, ...arr]);
+  },
+};
+const whereID = 'WHERE id=?';
+
+export const angemeldet = {
+  selectID: sql.selectAll(t.angemeldet, whereID),
+  selectWithName: sql.select(
+    'ang.*,ah.vorname,ah.nachname',
+    t.ang,
+    `JOIN ${t.ah} ON ang.ahid = ah.id`,
+    'WHERE ang.station = ?'
+  ),
+  insert: sql.insert(t.angemeldet),
+  deleteID: sql.delete(t.angemeldet, whereID),
 };
 
-const aushilfen = {
-  selectNotPassive:
-    'SELECT * FROM aushilfen WHERE status <> "passiv" ORDER BY station, nachname',
+export const aushilfen = {
+  selectNotPassive: sql.selectAll(
+    t.aushilfen,
+    'WHERE status <> "passiv"',
+    'ORDER BY station,nachname'
+  ),
 };
 
-const benutzer = {
-  selectUser: 'SELECT * FROM benutzer WHERE username = ?',
+export const benutzer = {
+  selectUser: sql.selectAll(t.benutzer, 'WHERE username = ?'),
 };
 
-const onboarding = {
-  selectWithStation:
-    'SELECT o.*,s.name AS station_name FROM onboarding AS o JOIN stationen AS s ON s.id = o.ort ORDER BY status,id DESC',
-  selectwithStationID:
-    'SELECT o.*,s.name AS station_name FROM onboarding AS o JOIN stationen AS s ON s.id = o.ort ORDER BY status,id DESC',
+export const onboarding = {
+  selectWithStation: sql.select(
+    'onb.*,stat.name AS station_name',
+    t.onb,
+    `JOIN ${t.stat} ON s.id = onb.station`,
+    'ORDER BY status,id DESC'
+  ),
+  selectwithStationID: sql.select(
+    'onb.*,stat.name AS station_name',
+    t.onb,
+    `JOIN ${t.stat} ON s.id = onb.station`,
+    'ORDER BY status,id DESC',
+    'WHERE onb.id=?'
+  ),
+  updateStatus: sql.update(t.onboarding, 'status=1', whereID),
 };
-
-export { angemeldet, aushilfen, benutzer, onboarding };

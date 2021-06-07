@@ -1,6 +1,6 @@
 import express from 'express';
-import auth from '../../middleware/auth.js';
-import { getAushilfen } from './routeFns.js';
+import auth from '../../middleware/auth';
+import { getAushilfen } from './routeFns';
 
 const router = express.Router();
 

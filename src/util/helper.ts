@@ -1,9 +1,18 @@
+import {
+  CheckArray,
+  CheckObject,
+  NotEmptyString,
+  Prepend0,
+  Spaces,
+  StringFn,
+} from '../types/util';
+
 export const isDev = process.env.NODE_ENV === 'development';
 
-const capitalize: (str: string) => string = (str) =>
+export const capitalize: StringFn = (str) =>
   str[0].toUpperCase() + str.substring(1);
 
-export const erstellerString: (str: string) => string = (str) => {
+export const erstellerString: StringFn = (str) => {
   if (str.indexOf('.') === -1) return str;
 
   const creatorArray = str.split('.');
@@ -23,10 +32,9 @@ export const erstellerString: (str: string) => string = (str) => {
   return `${vorname} ${nachname}`;
 };
 
-const prepend0: (num: number) => string = (num) =>
-  num < 10 ? `0${num}` : String(num);
+export const prepend0: Prepend0 = (num) => num.toString().padStart(2, '0');
 
-export const toLocalDate: (str: string) => string = (str) => {
+export const toLocalDate: StringFn = (str) => {
   const date = new Date(str);
   const y = date.getFullYear();
   const m = date.getMonth();
@@ -36,9 +44,23 @@ export const toLocalDate: (str: string) => string = (str) => {
   return `${prepend0(d)}.${prepend0(m + 1)}.${y}`;
 };
 
-// nicht empty string
-export const notEmptyString: (value: unknown) => boolean = (value) =>
+export const notEmptyString: NotEmptyString = (value) =>
   typeof value === 'string' && value !== '';
 
-export const checkObject: (obj: unknown) => boolean = (obj) =>
+export const checkObject: CheckObject = (obj) =>
   typeof obj === 'object' && obj !== null;
+
+export const checkArray: CheckArray = (arr) => Array.isArray(arr);
+
+export const spaces: Spaces = (params) => {
+  let statement = '';
+
+  const len = params.length;
+  let i = 0;
+  while (i < len) {
+    statement += params[i] + ' ';
+    i++;
+  }
+
+  return statement.trim();
+};
