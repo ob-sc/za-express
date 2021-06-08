@@ -6,10 +6,10 @@
   },
   "scripts": {
     "start": "yarn prod",
-    "watch": "nodemon index.ts",
+    "watch": "nodemon -r dotenv/config src/index.ts",
     "lint": "eslint .",
     "clean": "rm -rf dist",
-    "prebuild": "git pull && yarn lint",
+    "prebuild": "git fetch && yarn lint",
     "build": "yarn clean && tsc",
     "reload": "pm2 reload http-api",
     "prod": "pm2 start ecosystem.config.js --env production",
