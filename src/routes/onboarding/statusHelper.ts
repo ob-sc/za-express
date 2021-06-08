@@ -5,7 +5,7 @@ import {
   PushAnf,
   AnfFunction,
   Suggestion,
-} from '../../types/onboarding';
+} from '../../../types/onboarding';
 import { notEmptyString } from '../../util/helper';
 
 export const getValue: GetValue = (value) => {

@@ -5,7 +5,7 @@ import {
   Prepend0,
   Spaces,
   StringFn,
-} from '../types/util';
+} from '../../types/util';
 
 export const isDev = process.env.NODE_ENV === 'development';
 

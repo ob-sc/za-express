@@ -1,4 +1,4 @@
-import { SqlGenerator } from '../types/sql';
+import { SqlGenerator } from '../../types/sql';
 import { spaces } from '../util/helper';
 import t from './tables';
 

@@ -2,7 +2,7 @@ import {
   AccountInfoMail,
   ConfirmMailData,
   MailFunction,
-} from '../../types/mail';
+} from '../../../types/mail';
 import { isDev } from '../../util/helper';
 import { template, onboardingMail } from '../../util/mail';
 

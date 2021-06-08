@@ -3,9 +3,9 @@ import {
   OnbFreigabeMailData,
   OnbPosWMailData,
   StatWMailData,
-} from '../../types/mail';
-import { StatusResult } from '../../types/onboarding';
-import { OnboardingStation } from '../../types/results';
+} from '../../../types/mail';
+import { StatusResult } from '../../../types/onboarding';
+import { OnboardingStation } from '../../../types/results';
 import { erstellerString, isDev, toLocalDate } from '../../util/helper';
 import { template, divider, onboardingMail } from '../../util/mail';
 
