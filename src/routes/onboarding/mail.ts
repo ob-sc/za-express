@@ -1,8 +1,20 @@
-import { OnbFreigabeMail, WithStatusMail } from '../../types/mail';
+import {
+  MailFunction,
+  OnbFreigabeMailData,
+  OnbPosWMailData,
+  StatWMailData,
+} from '../../types/mail';
+import { StatusResult } from '../../types/onboarding';
+import { OnboardingStation } from '../../types/results';
 import { erstellerString, isDev, toLocalDate } from '../../util/helper';
 import { template, divider, onboardingMail } from '../../util/mail';
 
-export const onbFreigabeMail: OnbFreigabeMail = async (data) => {
+// todo test ob await mail und dann ok klappt
+// todo am besten falsche ip bei mail und dann gucken ob okmsg gesendet wird
+
+export const onbFreigabeMail: MailFunction<OnbFreigabeMailData> = async (
+  data
+) => {
   const {
     id,
     ersteller,
@@ -31,7 +43,7 @@ export const onbFreigabeMail: OnbFreigabeMail = async (data) => {
   );
 };
 
-export const onbNeuMail = async (data) => {
+export const onbNeuMail: MailFunction<OnboardingStation> = async (data) => {
   const {
     id,
     ersteller,
@@ -60,7 +72,7 @@ export const onbNeuMail = async (data) => {
   );
 };
 
-export const onbDoneMail: WithStatusMail = async (data) => {
+export const onbDoneMail: MailFunction<StatusResult> = async (data) => {
   const { id, vorname, nachname, statusArray } = data;
   const url = `https://onboarding.starcar.local/ma/${id}`;
 
@@ -85,7 +97,7 @@ export const onbDoneMail: WithStatusMail = async (data) => {
   );
 };
 
-export const statwMail = async (data) => {
+export const statwMail: MailFunction<StatWMailData> = async (data) => {
   const { name, date, station, docuware, creator } = data;
   const ersteller = erstellerString(creator);
 
@@ -104,7 +116,7 @@ export const statwMail = async (data) => {
   );
 };
 
-export const poswMail = async (data) => {
+export const poswMail: MailFunction<OnbPosWMailData> = async (data) => {
   const { name, date, position, creator } = data;
   const ersteller = erstellerString(creator);
 

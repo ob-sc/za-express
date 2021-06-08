@@ -1,8 +1,10 @@
 import { StatusResult } from './onboarding';
 
+export type MailFunction<T> = (data: T) => Promise<void>;
+
 export type WithStatusMail = (data: StatusResult) => Promise<void>;
 
-export type OnbFreigabeMail = (data: {
+export interface OnbFreigabeMailData {
   id: number;
   ersteller: string;
   eintritt: string;
@@ -10,4 +12,19 @@ export type OnbFreigabeMail = (data: {
   nachname: string;
   station_name: string;
   position: string;
-}) => Promise<void>;
+}
+
+export interface OnbPosWMailData {
+  name: string;
+  date: string;
+  position: string;
+  creator: string;
+}
+
+export interface StatWMailData {
+  name: string;
+  date: string;
+  station: string;
+  docuware: string;
+  creator: string;
+}

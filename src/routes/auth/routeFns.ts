@@ -4,11 +4,11 @@ import sessionValidation from '../../validation/session';
 import { sess } from '../../config';
 import { Benutzer } from '../../types/database';
 import { EmptySession, UserSession } from '../../types/session';
-import { benutzer } from '../../sql/index';
+import { benutzerSql } from '../../sql/';
 
 const createSession: (user: Benutzer) => UserSession = (user) => ({
   username: user.username,
-  admin: user.admin === 1,
+  admin: user.admin,
   station: user.station,
   access: user.access,
   region: user.region,
@@ -35,14 +35,14 @@ export const login: RequestHandler = async (req, res) => {
 
     const isOnboarding = req.headers.host?.includes('onboarding');
 
-    const qry = await query<Benutzer>(benutzer.selectUser, [username]);
+    const qry = await query<Benutzer>(benutzerSql.selectUser, [username]);
     await close();
 
     const [user] = qry.results;
 
     if (qry.isEmpty === true) return res.errmsg('Benutzer nicht gefunden', 401);
 
-    if (isOnboarding && user.allow_onboarding !== 1)
+    if (isOnboarding && user.allow_onboarding !== true)
       return res.errmsg(
         'Benutzer ist nicht für das Onboarding freigegeben',
         401
@@ -51,7 +51,7 @@ export const login: RequestHandler = async (req, res) => {
     bcrypt.compare(password, user.password, (error, result) => {
       if (error) throw error;
       if (result !== true) return res.errmsg('Passwort falsch', 401);
-      else if (user.active !== 1)
+      else if (user.active !== true)
         return res.errmsg('Account nicht bestätigt', 400);
 
       req.session.user = createSession(user);

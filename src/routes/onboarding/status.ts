@@ -1,9 +1,10 @@
-import { onboarding } from '../../sql/';
+import { onboardingSql } from '../../sql/';
 import {
   Anforderungen,
   CrentStatusValue,
   StatusFunction,
   StatusItem,
+  StatusResult,
 } from '../../types/onboarding';
 import { OnboardingStation } from '../../types/results';
 import { onbDoneMail } from './mail';
@@ -15,7 +16,7 @@ import {
   suggestion,
 } from './statusHelper';
 
-const { selectwithStationID, updateStatus } = onboarding;
+const { selectwithStationID, updStatus } = onboardingSql;
 
 const status: StatusFunction = async (query, id) => {
   const qry = await query<OnboardingStation>(selectwithStationID, [id]);
@@ -120,7 +121,7 @@ const status: StatusFunction = async (query, id) => {
     },
   ];
 
-  const statusResult = { ...result, statusArray };
+  const statusResult: StatusResult = { ...result, statusArray };
 
   // wenn der MA in der DB noch status 0 hatte, jetzt also erst fertig ist
   if (result.status === false) {
@@ -135,7 +136,7 @@ const status: StatusFunction = async (query, id) => {
     // wenn alle .done === true
     if (isNotDone === false) {
       statusResult.status = true;
-      const qry2 = await query(updateStatus, [id]);
+      const qry2 = await query(updStatus, [id]);
       if (qry2.isUpdated === true) await onbDoneMail(statusResult);
     }
   }

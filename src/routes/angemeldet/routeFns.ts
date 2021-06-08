@@ -1,10 +1,10 @@
 import { RequestHandler } from 'express';
 import { Angemeldet } from '../../types/database';
 import { AngemeldetName } from '../../types/results';
-import { angemeldet } from '../../sql';
+import { angemeldetSql } from '../../sql';
 import { AnmeldenRequest } from '../../types/requests';
 
-const { selectID, insert, selectWithName, deleteID } = angemeldet;
+const { selectID, insert, selectWithName, deleteID } = angemeldetSql;
 
 export const anmelden: RequestHandler = async (req, res) => {
   const { query, close } = res.database();

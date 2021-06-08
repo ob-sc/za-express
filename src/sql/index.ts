@@ -27,7 +27,7 @@ const sql: SqlGenerator = {
 };
 const whereID = 'WHERE id=?';
 
-export const angemeldet = {
+export const angemeldetSql = {
   selectID: sql.selectAll(t.angemeldet, whereID),
   selectWithName: sql.select(
     'ang.*,ah.vorname,ah.nachname',
@@ -39,7 +39,7 @@ export const angemeldet = {
   deleteID: sql.delete(t.angemeldet, whereID),
 };
 
-export const aushilfen = {
+export const aushilfenSql = {
   selectNotPassive: sql.selectAll(
     t.aushilfen,
     'WHERE status <> "passiv"',
@@ -47,11 +47,11 @@ export const aushilfen = {
   ),
 };
 
-export const benutzer = {
+export const benutzerSql = {
   selectUser: sql.selectAll(t.benutzer, 'WHERE username = ?'),
 };
 
-export const onboarding = {
+export const onboardingSql = {
   selectWithStation: sql.select(
     'onb.*,stat.name AS station_name',
     t.onb,
@@ -76,6 +76,6 @@ export const onboarding = {
   updNetwork: sql.update(t.onboarding, 'network=?', whereID),
 };
 
-export const stationen = {
+export const stationenSql = {
   selectName: sql.select('name', t.onboarding, whereID),
 };

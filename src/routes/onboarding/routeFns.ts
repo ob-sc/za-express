@@ -1,6 +1,11 @@
 import { RequestHandler } from 'express';
 import { OnboardingStation, StationName } from '../../types/results';
-import { onboarding, stationen } from '../../sql';
+import {
+  OnbFreigabeMailData,
+  OnbPosWMailData,
+  StatWMailData,
+} from '../../types/mail';
+import { onboardingSql, stationenSql } from '../../sql';
 import { notEmptyString } from '../../util/helper';
 import { onbNeuMail, onbFreigabeMail, statwMail, poswMail } from './mail';
 import status from './status';
@@ -16,8 +21,7 @@ const {
   updQlik,
   updHardware,
   updNetwork,
-} = onboarding;
-const { selectName } = stationen;
+} = onboardingSql;
 
 export const alleMa: RequestHandler = async (req, res) => {
   const { query, close } = res.database();
@@ -51,14 +55,18 @@ export const neuerMa: RequestHandler = async (req, res) => {
 
     const qry = await query(insert, data);
 
-    const qry2 = await query<StationName>(selectName, [data.station]);
+    const qry2 = await query<StationName>(stationenSql.selectName, [
+      data.station,
+    ]);
     await close();
 
-    await onbFreigabeMail({
+    const mailData: OnbFreigabeMailData = {
       ...data,
       id: qry.id,
       station_name: qry2.results[0].name,
-    });
+    };
+
+    await onbFreigabeMail(mailData);
     res.okmsg();
   }, close);
 };
@@ -235,7 +243,14 @@ export const stationsWechsel: RequestHandler = async (req, res) => {
 
     const dw = notEmptyString(docuware) ? docuware : undefined;
 
-    await statwMail(name, date, station, dw, req.session.user.username);
+    const mailData: StatWMailData = {
+      name,
+      date,
+      station,
+      docuware: dw,
+      creator: req.session.user?.username ?? '',
+    };
+    await statwMail(mailData);
 
     res.okmsg();
   });
@@ -245,7 +260,14 @@ export const positionsWechsel: RequestHandler = async (req, res) => {
   res.catchError(async () => {
     const { name, date, position } = req.body;
 
-    await poswMail(name, date, position, req.session.user.username);
+    const mailData: OnbPosWMailData = {
+      name,
+      date,
+      position,
+      creator: req.session.user?.username ?? '',
+    };
+
+    await poswMail(mailData);
 
     res.okmsg();
   });
