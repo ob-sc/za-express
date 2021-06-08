@@ -46,7 +46,10 @@ declare global {
        * vor einem ```return``` geschlossen werden
        *
        * @example
-       * await catchError(async () => { await doSomething() }, close)
+       * await catchError(async () => {
+       *   await doSomething();
+       *   await close();
+       * }, close)
        */
       catchError: CatchError;
     }

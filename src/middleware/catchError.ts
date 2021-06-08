@@ -10,7 +10,7 @@ const catchError: RequestHandler = (req, res, next) => {
     } catch (err) {
       if (close !== undefined) {
         await close();
-        debug('Verbindung wegen Fehler geschlossen');
+        debug('DB Verbindung wegen Fehler geschlossen');
       }
       next(err);
     }

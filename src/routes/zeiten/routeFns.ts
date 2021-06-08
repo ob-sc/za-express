@@ -1,23 +1,25 @@
-export const selectMax = (req, res, next) => {
-  try {
+import { RequestHandler } from 'express';
+import { zeitenSql } from '../../sql';
+import { MaxResult, ZeitenMax } from '../../types/results';
+
+const { selectMaxID, selectMaxStudent } = zeitenSql;
+
+export const selectMax: RequestHandler = async (req, res) => {
+  const { query, close } = res.database();
+
+  await res.catchError(async () => {
     const { id, status, firstDayMonth } = req.body;
     const isStudent = status.toLowerCase() === 'student';
 
-    const conn = res.connectDB();
+    const sql = isStudent ? selectMaxStudent : selectMaxID;
+    const qry = await query<ZeitenMax>(sql, [id, firstDayMonth]);
 
-    const sql = isStudent
-      ? 'SELECT sum(arbeitszeit) as max FROM zeiten WHERE ahid = ? AND yearweek(DATE(datum), 1) = yearweek(CURDATE(), 1)'
-      : 'SELECT sum(gehalt) AS max FROM zeiten WHERE ahid = ? AND LOWER(ahmax) <> "student" AND datum BETWEEN ? AND CURDATE()';
-    const qry = res.query(conn, sql, [id, firstDayMonth]);
-
-    const result = {
+    const result: MaxResult = {
       id,
       status: status.toLowerCase(),
-      sum: qry.result[0].max,
+      sum: qry.results[0].max,
     };
-    res.okmsg(res, result);
+    res.okmsg(result);
     await close();
-  } catch (err) {
-    next(err);
-  }
+  }, close);
 };

@@ -9,7 +9,13 @@ import {
   Wochenende,
   Zeiten,
 } from './database';
-import { AngemeldetName, OnboardingStation } from './results';
+import {
+  AngemeldetName,
+  EmptyResult,
+  MaxResult,
+  OnboardingStation,
+  StationOptions,
+} from './results';
 import { EmptySession, UserSession } from './session';
 
 export type Session = UserSession | EmptySession;
@@ -29,9 +35,18 @@ export type DBWildcard =
   | Zeiten;
 
 /**
+ * Restliche SQL Ergebnisse
+ */
+export type DBOtherResults =
+  | AngemeldetName
+  | OnboardingStation
+  | StationOptions
+  | MaxResult;
+
+/**
  * Alle SQL Ergebnisse aus ```results``` und ```database```
  */
-export type DBResult = AngemeldetName | OnboardingStation | DBWildcard;
+export type DBResult = DBOtherResults | DBWildcard;
 export type JSONResponse = Session | DBResult | DBResult[];
 
 export interface QueryResult<T> {
@@ -53,7 +68,7 @@ export type ErrorMessage = (
   error?: Error
 ) => void;
 
-export type ConnectionQuery = <Result>(
+export type ConnectionQuery = <Result = EmptyResult>(
   sql: string,
   args?: unknown
 ) => Promise<QueryResult<Result>>;

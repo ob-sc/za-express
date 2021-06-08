@@ -1,29 +1,31 @@
-export const selectOptions = (req, res, next) => {
-  try {
-    const conn = res.connectDB();
-    const sql = 'SELECT id AS optval, name AS optlabel FROM stationen';
-    const qry = res.query(conn, sql);
+import { RequestHandler } from 'express';
+import { stationenSql } from '../../sql';
+import { Stationen } from '../../types/database';
+import { StationOptions } from '../../types/results';
+
+const { selectAsOptions, selectStationID } = stationenSql;
+
+export const selectOptions: RequestHandler = async (req, res) => {
+  const { query, close } = res.database();
+
+  await res.catchError(async () => {
+    const qry = await query<StationOptions>(selectAsOptions);
     await close();
 
-    if (!qry.isEmpty) res.okmsg(res, qry.result);
-    else res.errmsg();
-  } catch (err) {
-    next(err);
-  }
+    res.okmsg(qry.results);
+  }, close);
 };
 
-export const signatur = (req, res, next) => {
-  try {
-    const { id } = req.params;
+export const signatur: RequestHandler = async (req, res) => {
+  const { query, close } = res.database();
+  const { id } = req.params;
 
-    const conn = res.connectDB();
-    const sql = 'SELECT * FROM stationen WHERE id = ?';
-    const qry = res.query(conn, sql, [id]);
+  await res.catchError(async () => {
+    const qry = await query<Stationen>(selectStationID, [id]);
     await close();
 
-    if (!qry.isEmpty) res.okmsg(res, qry.result[0]);
-    else res.errmsg();
-  } catch (err) {
-    next(err);
-  }
+    const [stations] = qry.results;
+
+    res.okmsg(stations);
+  }, close);
 };

@@ -1,8 +1,12 @@
-import { Angemeldet, Onboarding, Stationen } from './database';
+import { Angemeldet, Onboarding, Stationen, Zeiten } from './database';
+import { QueryResult } from './response';
 
 /**
- * SELECTs mit JOIN
+ * Leer bei insert, update, delete
  */
+export type EmptyResult = QueryResult<never>;
+
+// SELECTs mit JOIN
 
 export interface AngemeldetName extends Angemeldet {
   vorname: Aushilfen['vorname'];
@@ -13,10 +17,24 @@ export interface OnboardingStation extends Onboarding {
   station_name: Stationen['name'];
 }
 
-/**
- * SELECT einzelnes
- */
+// SELECT einzelnes
 
 export interface StationName {
   name: Stationen['name'];
+}
+
+export interface StationOptions {
+  optval: Stationen['id'];
+  optlabel: Stationen['name'];
+}
+
+export interface ZeitenMax {
+  max: Zeiten['gehalt'];
+}
+
+export interface MaxResult {
+  // todo stimmen types?
+  id: string;
+  status: string;
+  sum: number;
 }

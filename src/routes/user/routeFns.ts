@@ -1,82 +1,80 @@
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
+import { RequestHandler } from 'express';
+import { accountSql, benutzerSql } from '../../sql';
+import { Account, Benutzer } from '../../types/database';
 import userValidation from '../../validation/user';
-
 import { confirmMail, infoMail } from './mail';
 
-export const signUp = (req, res, next) => {
-  try {
+const { selectUser, insert, updateActive } = benutzerSql;
+
+export const signUp: RequestHandler = async (req, res) => {
+  const { query, close } = res.database();
+
+  await res.catchError(async () => {
     const { error, value } = userValidation.validate(req.body);
     if (error) throw error;
     const { username, password, station } = value;
 
-    const conn = res.connectDB();
-    const sql = 'SELECT * FROM benutzer WHERE username = ?';
-    const qry = res.query(conn, sql, [username]);
+    const qry = await query<Benutzer>(selectUser, [username]);
 
-    if (!qry.isEmpty) res.errmsg('Benutzer bereits vorhanden', 409);
+    if (qry.isEmpty !== true) res.errmsg('Benutzer bereits vorhanden', 409);
     else
       bcrypt.hash(password, 10, async (err, hash) => {
         if (err) throw err;
-        const sql2 = 'INSERT INTO benutzer SET ?';
-        const qry2 = res.query(conn, sql2, {
+        const qry2 = await query(insert, {
           username,
           password: hash,
           station,
         });
-        if (qry2.isUpdated) {
+        if (qry2.isUpdated === true) {
           const token = crypto.randomBytes(20).toString('hex');
 
-          const sql3 = 'INSERT INTO account SET ?';
-          const qry3 = res.query(conn, sql3, {
+          const qry3 = await query(accountSql.insert, {
             id: qry2.id,
             token,
           });
 
-          if (qry3.isUpdated) res.res.okmsg();
-          else res.errmsg('Kein token eingetragen');
-
           const email = `${username}@starcar.de`;
-          confirmMail(token, email);
-          infoMail(username);
+          await confirmMail({ token, to: email });
+          await infoMail(username);
+
+          if (qry3.isUpdated) res.okmsg();
+          else res.errmsg('Kein token eingetragen');
         }
       });
 
     await close();
-  } catch (err) {
-    next(err);
-  }
+  }, close);
 };
 
-export const confirmAccount = (req, res, next) => {
-  try {
+export const confirmAccount: RequestHandler = async (req, res) => {
+  const { query, close } = res.database();
+
+  await res.catchError(async () => {
     const { token } = req.params;
-    const conn = res.connectDB();
 
     const sql = 'SELECT * FROM account WHERE token = ?';
-    const qry = res.query(conn, sql, [token]);
+    const qry = await query<Account>(sql, [token]);
 
     if (qry.isEmpty === true) res.errmsg('Token nicht gefunden');
     else {
-      const [tokenResult] = qry.result;
+      const [tokenResult] = qry.results;
 
       const sinceReg = Date.now() - new Date(tokenResult.reg_date).getTime();
 
       if (sinceReg / 1000 / 60 / 60 > 24) res.errmsg('Link abgelaufen', 410);
       else {
-        const sql2 = 'UPDATE benutzer SET active=1 WHERE id = ?';
-        const qry2 = res.query(conn, sql2, [tokenResult.id]);
+        const qry2 = await query(updateActive, [tokenResult.id]);
 
-        if (qry2.isUpdated) res.okmsg(res, 'Account erfolgreich bestätigt');
+        if (qry2.isUpdated) res.okmsg('Account erfolgreich bestätigt');
         else res.errmsg('Account nicht bestätigt');
       }
 
-      const sql3 = 'DELETE FROM account WHERE token = ?';
-      res.query(conn, sql3, [token]);
+      // in beiden fällen token löschen
+      await query(accountSql.deleteToken, [token]);
     }
 
     await close();
-  } catch (err) {
-    next(err);
-  }
+  }, close);
 };

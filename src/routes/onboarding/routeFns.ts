@@ -13,7 +13,7 @@ import status from './status';
 const {
   selectWithStation,
   insert,
-  updStatus,
+  updAnzeigen,
   updDomain,
   updBitrix,
   updCrent,
@@ -76,7 +76,7 @@ export const freigabe: RequestHandler = async (req, res) => {
   const { id } = req.body;
 
   await res.catchError(async () => {
-    await query(updStatus, [id]);
+    await query(updAnzeigen, [id]);
 
     const qry2 = await query<OnboardingStation>(selectWithStation, [id]);
     await close();
@@ -92,7 +92,7 @@ export const getMa: RequestHandler = async (req, res) => {
   const { query, close } = res.database();
   const { id } = req.params;
 
-  res.catchError(async () => {
+  await res.catchError(async () => {
     const maStatus = await status(query, id);
     await close();
 
@@ -104,7 +104,7 @@ export const getMa: RequestHandler = async (req, res) => {
 const updateDomain: RequestHandler = async (req, res, next) => {
   const { query, close } = res.database();
 
-  res.catchError(async () => {
+  await res.catchError(async () => {
     const { id, domain } = req.body;
     if (domain === undefined) return next();
 
@@ -122,7 +122,7 @@ const updateDomain: RequestHandler = async (req, res, next) => {
 const updateBitrix: RequestHandler = async (req, res, next) => {
   const { query, close } = res.database();
 
-  res.catchError(async () => {
+  await res.catchError(async () => {
     const { id, bitrix } = req.body;
     if (bitrix === undefined) return next();
 
@@ -140,7 +140,7 @@ const updateBitrix: RequestHandler = async (req, res, next) => {
 const updateCrent: RequestHandler = async (req, res, next) => {
   const { query, close } = res.database();
 
-  res.catchError(async () => {
+  await res.catchError(async () => {
     const { id, crent } = req.body;
     if (crent === undefined) return next();
 
@@ -158,7 +158,7 @@ const updateCrent: RequestHandler = async (req, res, next) => {
 const updateDocuware: RequestHandler = async (req, res, next) => {
   const { query, close } = res.database();
 
-  res.catchError(async () => {
+  await res.catchError(async () => {
     const { id, docuware } = req.body;
     if (docuware === undefined) return next();
 
@@ -176,7 +176,7 @@ const updateDocuware: RequestHandler = async (req, res, next) => {
 const updateQlik: RequestHandler = async (req, res, next) => {
   const { query, close } = res.database();
 
-  res.catchError(async () => {
+  await res.catchError(async () => {
     const { id, qlik } = req.body;
     if (qlik === undefined) return next();
 
@@ -194,7 +194,7 @@ const updateQlik: RequestHandler = async (req, res, next) => {
 const updateHardware: RequestHandler = async (req, res, next) => {
   const { query, close } = res.database();
 
-  res.catchError(async () => {
+  await res.catchError(async () => {
     const { id, hardware } = req.body;
     if (hardware === undefined) return next();
 
@@ -212,7 +212,7 @@ const updateHardware: RequestHandler = async (req, res, next) => {
 const updateNetwork: RequestHandler = async (req, res, next) => {
   const { query, close } = res.database();
 
-  res.catchError(async () => {
+  await res.catchError(async () => {
     const { id, network } = req.body;
     if (network === undefined) return next();
 
@@ -238,7 +238,7 @@ export const updateMitarbeiter = [
 ];
 
 export const stationsWechsel: RequestHandler = async (req, res) => {
-  res.catchError(async () => {
+  await res.catchError(async () => {
     const { name, date, station, docuware } = req.body;
 
     const dw = notEmptyString(docuware) ? docuware : undefined;
@@ -257,7 +257,7 @@ export const stationsWechsel: RequestHandler = async (req, res) => {
 };
 
 export const positionsWechsel: RequestHandler = async (req, res) => {
-  res.catchError(async () => {
+  await res.catchError(async () => {
     const { name, date, position } = req.body;
 
     const mailData: OnbPosWMailData = {

@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import { ContentTemplate, MailTemplate } from '../types/mail';
 
 const transporter = nodemailer.createTransport({
   host: '192.168.100.50',
@@ -15,7 +16,7 @@ const transporter = nodemailer.createTransport({
 //   });
 // };
 
-export const onboardingMail = async (to, subject, html) =>
+export const onboardingMail: MailTemplate = async (to, subject, html) =>
   await transporter.sendMail({
     from: 'STARCAR Onboarding <onboarding@starcar.local>',
     to,
@@ -23,7 +24,9 @@ export const onboardingMail = async (to, subject, html) =>
     html,
   });
 
-export const template = (content) => `<!DOCTYPE html><html><head>
+export const template: ContentTemplate = (
+  content
+) => `<!DOCTYPE html><html><head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"><style>
 a:link{color:#169;text-decoration:none;}
 a:visited{color:#169;text-decoration:none;}

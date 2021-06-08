@@ -1,4 +1,13 @@
+import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import { StatusResult } from './onboarding';
+
+export type MailTemplate = (
+  to: string | string[],
+  subject: string,
+  html: string
+) => Promise<SMTPTransport.SentMessageInfo>;
+
+export type ContentTemplate = (content: string) => string;
 
 export type MailFunction<T> = (data: T) => Promise<void>;
 
@@ -27,4 +36,13 @@ export interface StatWMailData {
   station: string;
   docuware: string;
   creator: string;
+}
+
+export interface ConfirmMailData {
+  token: string;
+  to: string;
+}
+
+export interface AccountInfoMail {
+  user: string;
 }

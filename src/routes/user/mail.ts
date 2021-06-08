@@ -1,7 +1,14 @@
+import {
+  AccountInfoMail,
+  ConfirmMailData,
+  MailFunction,
+} from '../../types/mail';
 import { isDev } from '../../util/helper';
 import { template, onboardingMail } from '../../util/mail';
 
-export const confirmMail = async (token, to) => {
+export const confirmMail: MailFunction<ConfirmMailData> = async (data) => {
+  const { token, to } = data;
+
   const url = `https://onboarding.starcar.local/confirm/${token}`;
 
   const content = `Dein Account wurde erfolgreich angelegt.<br/>
@@ -14,7 +21,7 @@ export const confirmMail = async (token, to) => {
   );
 };
 
-export const infoMail = async (user) => {
+export const infoMail: MailFunction<AccountInfoMail> = async ({ user }) => {
   const content = `Benutzer ${user} hat sich einen Account erstellt`;
 
   await onboardingMail(

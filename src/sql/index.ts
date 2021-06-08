@@ -27,6 +27,12 @@ const sql: SqlGenerator = {
 };
 const whereID = 'WHERE id=?';
 
+export const accountSql = {
+  selectAccount: sql.selectAll(t.account, 'WHERE token = ?'),
+  insert: sql.insert(t.account),
+  deleteToken: sql.delete(t.account, 'WHERE token = ?'),
+};
+
 export const angemeldetSql = {
   selectID: sql.selectAll(t.angemeldet, whereID),
   selectWithName: sql.select(
@@ -49,6 +55,8 @@ export const aushilfenSql = {
 
 export const benutzerSql = {
   selectUser: sql.selectAll(t.benutzer, 'WHERE username = ?'),
+  insert: sql.insert(t.benutzer),
+  updateActive: sql.update(t.benutzer, 'active=1', whereID),
 };
 
 export const onboardingSql = {
@@ -67,6 +75,7 @@ export const onboardingSql = {
   ),
   insert: sql.insert(t.onboarding),
   updStatus: sql.update(t.onboarding, 'status=1', whereID),
+  updAnzeigen: sql.update(t.onboarding, 'anzeigen=1', whereID),
   updDomain: sql.update(t.onboarding, 'domain=?', whereID),
   updBitrix: sql.update(t.onboarding, 'bitrix=?', whereID),
   updCrent: sql.update(t.onboarding, 'crent=?', whereID),
@@ -77,5 +86,23 @@ export const onboardingSql = {
 };
 
 export const stationenSql = {
-  selectName: sql.select('name', t.onboarding, whereID),
+  selectStationID: sql.selectAll(t.stationen, whereID),
+  selectAsOptions: sql.select('id AS optval, name AS optlabel', t.stationen),
+  selectName: sql.select('name', t.stationen, whereID),
+};
+
+export const zeitenSql = {
+  selectMaxID: sql.select(
+    'sum(gehalt) AS max',
+    t.zeiten,
+    whereID,
+    'AND LOWER(ahmax) <> "student"',
+    'AND datum BETWEEN ? AND CURDATE()'
+  ),
+  selectMaxStudent: sql.select(
+    'sum(arbeitszeit) as max',
+    t.zeiten,
+    whereID,
+    'AND yearweek(DATE(datum), 1) = yearweek(CURDATE(), 1)'
+  ),
 };
