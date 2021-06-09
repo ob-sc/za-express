@@ -1,0 +1,3 @@
+[submodule "za-types"]
+	path = za-types
+	url = https://github.com/ob-sc/za-types
