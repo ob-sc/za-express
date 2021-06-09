@@ -3,21 +3,14 @@
   "extends": "@tsconfig/node16/tsconfig.json",
   "compilerOptions": {
     "strict": true,
-    // node 16 tsconfig preset
-    // "lib": ["es2020"],
-    // "module": "commonjs",
-    // "target": "es2020",
-    // "esModuleInterop": true,
-    // "skipLibCheck": true,
-    // "forceConsistentCasingInFileNames": true,
     "removeComments": true,
     "outDir": "dist",
-    "typeRoots": ["./za-types", "./node_modules/@types"]
+    "typeRoots": ["./za-types"]
   },
-  "include": ["za-types/**/*", "src/**/*"],
+  "include": ["za-types", "src"],
   "exclude": ["node_modules", "dist", "**/*.spec.ts"],
   "ts-node": {
     "files": true
   },
-  "files": ["src/index.ts", "za-types/index.d.ts"]
+  "files": ["src/index.ts", "za-types/express/index.d.ts"]
 }
