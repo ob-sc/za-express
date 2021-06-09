@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import { RequestHandler } from 'express';
 import { accountSql, benutzerSql } from '../../sql';
-import { Account, Benutzer } from '../../../types/database';
+import { Account, Benutzer } from '../../../za-types/database';
 import userValidation from '../../validation/user';
 import { confirmMail, infoMail } from './mail';
 

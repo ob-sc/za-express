@@ -1,10 +1,10 @@
 import { RequestHandler } from 'express';
-import { OnboardingStation, StationName } from '../../../types/results';
+import { OnboardingStation, StationName } from '../../../za-types/results';
 import {
   OnbFreigabeMailData,
   OnbPosWMailData,
   StatWMailData,
-} from '../../../types/mail';
+} from '../../../za-types/mail';
 import { onboardingSql, stationenSql } from '../../sql';
 import { notEmptyString } from '../../util/helper';
 import { onbNeuMail, onbFreigabeMail, statwMail, poswMail } from './mail';
