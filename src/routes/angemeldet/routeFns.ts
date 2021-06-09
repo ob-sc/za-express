@@ -1,8 +1,8 @@
 import { RequestHandler } from 'express';
-import { Angemeldet } from '../../../za-types/database';
-import { AngemeldetName } from '../../../za-types/results';
+import { Angemeldet } from '../../../za-types/server/database';
+import { AngemeldetName } from '../../../za-types/server/results';
 import { angemeldetSql } from '../../sql';
-import { AnmeldenRequest } from '../../../za-types/requests';
+import { AnmeldenRequest } from '../../../za-types/server/requests';
 
 const { selectID, insert, selectWithName, deleteID } = angemeldetSql;
 

@@ -2,8 +2,8 @@ import bcrypt from 'bcryptjs';
 import { RequestHandler } from 'express';
 import sessionValidation from '../../validation/session';
 import { sess } from '../../config';
-import { Benutzer } from '../../../za-types/database';
-import { EmptySession, UserSession } from '../../../za-types/session';
+import { Benutzer } from '../../../za-types/server/database';
+import { EmptySession, UserSession } from '../../../za-types/server/session';
 import { benutzerSql } from '../../sql/';
 
 const createSession: (user: Benutzer) => UserSession = (user) => ({

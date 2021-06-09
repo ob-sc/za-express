@@ -5,7 +5,7 @@ import {
   PushAnf,
   AnfFunction,
   Suggestion,
-} from '../../../za-types/onboarding';
+} from '../../../za-types/server/onboarding';
 import { notEmptyString } from '../../util/helper';
 
 export const getValue: GetValue = (value) => {

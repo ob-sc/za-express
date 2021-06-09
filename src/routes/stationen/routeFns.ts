@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 import { stationenSql } from '../../sql';
-import { Stationen } from '../../../za-types/database';
-import { StationOptions } from '../../../za-types/results';
+import { Stationen } from '../../../za-types/server/database';
+import { StationOptions } from '../../../za-types/server/results';
 
 const { selectAsOptions, selectStationID } = stationenSql;
 

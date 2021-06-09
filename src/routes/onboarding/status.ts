@@ -5,8 +5,8 @@ import {
   StatusFunction,
   StatusItem,
   StatusResult,
-} from '../../../za-types/onboarding';
-import { OnboardingStation } from '../../../za-types/results';
+} from '../../../za-types/server/onboarding';
+import { OnboardingStation } from '../../../za-types/server/results';
 import { onbDoneMail } from './mail';
 import {
   getValue,

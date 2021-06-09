@@ -1,4 +1,4 @@
-import { SqlGenerator } from '../../za-types/sql';
+import { SqlGenerator } from '../../za-types/server/sql';
 import { spaces } from '../util/helper';
 import t from './tables';
 

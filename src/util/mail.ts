@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-import { ContentTemplate, MailTemplate } from '../../za-types/mail';
+import { ContentTemplate, MailTemplate } from '../../za-types/server/mail';
 
 const transporter = nodemailer.createTransport({
   host: '192.168.100.50',

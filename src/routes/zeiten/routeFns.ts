@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 import { zeitenSql } from '../../sql';
-import { MaxResult, ZeitenMax } from '../../../za-types/results';
+import { MaxResult, ZeitenMax } from '../../../za-types/server/results';
 
 const { selectMaxID, selectMaxStudent } = zeitenSql;
 
