@@ -3,10 +3,10 @@ import { RequestHandler } from 'express';
 import sessionValidation from '../../validation/session';
 import { sess } from '../../config';
 import { Benutzer } from '../../../za-types/server/database';
-import { EmptySession, UserSession } from '../../../za-types/server/session';
+import { EmptySession, Session } from '../../../za-types/server/session';
 import { benutzerSql } from '../../sql';
 
-const createSession: (user: Benutzer) => UserSession = (user) => ({
+const createSession: (user: Benutzer) => Session = (user) => ({
   username: user.username,
   admin: user.admin,
   station: user.station,
@@ -18,7 +18,12 @@ const createSession: (user: Benutzer) => UserSession = (user) => ({
   isLoggedIn: true,
 });
 
-const emptySession: EmptySession = { isLoggedIn: false };
+const emptySession: EmptySession = {
+  username: '',
+  admin: false,
+  isLoggedIn: false,
+  onboarding: [],
+};
 
 export const isLoggedIn: RequestHandler = (req, res) => {
   if (req.session.user?.isLoggedIn === true) res.okmsg(req.session.user);
