@@ -1,6 +1,6 @@
 import express from 'express';
 import auth from '../../middleware/auth';
-import { selectMax } from './routeFns';
+import { selectMax } from './controller';
 
 const router = express.Router();
 

@@ -4,7 +4,7 @@ import sessionValidation from '../../validation/session';
 import { sess } from '../../config';
 import { Benutzer } from '../../../za-types/server/database';
 import { EmptySession, UserSession } from '../../../za-types/server/session';
-import { benutzerSql } from '../../sql/';
+import { benutzerSql } from '../../sql';
 
 const createSession: (user: Benutzer) => UserSession = (user) => ({
   username: user.username,

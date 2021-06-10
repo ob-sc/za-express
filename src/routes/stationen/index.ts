@@ -1,5 +1,5 @@
 import express from 'express';
-import { selectOptions, signatur } from './routeFns';
+import { selectOptions, signatur } from './controller';
 
 const router = express.Router();
 

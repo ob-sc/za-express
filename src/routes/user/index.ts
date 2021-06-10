@@ -1,5 +1,5 @@
 import express from 'express';
-import { confirmAccount, signUp } from './routeFns';
+import { confirmAccount, signUp } from './controller';
 
 const router = express.Router();
 

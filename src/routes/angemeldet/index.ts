@@ -1,6 +1,6 @@
 import express from 'express';
 import auth from '../../middleware/auth';
-import { anmelden, deleteAnmeldung, getAnmeldungen } from './routeFns';
+import { anmelden, deleteAnmeldung, getAnmeldungen } from './controller';
 
 const router = express.Router();
 

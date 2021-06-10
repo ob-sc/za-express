@@ -8,7 +8,7 @@ import {
   positionsWechsel,
   stationsWechsel,
   updateMitarbeiter,
-} from './routeFns';
+} from './controller';
 
 const router = express.Router();
 
