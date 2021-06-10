@@ -7,23 +7,13 @@ import {
 import { StatusResult } from '../../../za-types/server/onboarding';
 import { OnboardingStation } from '../../../za-types/server/results';
 import { erstellerString, isDev, toLocalDate } from '../../util/helper';
-import { template, divider, onboardingMail } from '../../util/mail';
+import { divider, onboardingMail, template } from '../../util/mail';
 
 // todo test ob await mail und dann ok klappt
 // todo am besten falsche ip bei mail und dann gucken ob okmsg gesendet wird
 
-export const onbFreigabeMail: MailFunction<OnbFreigabeMailData> = async (
-  data
-) => {
-  const {
-    id,
-    ersteller,
-    eintritt,
-    vorname,
-    nachname,
-    station_name,
-    position,
-  } = data;
+export const onbFreigabeMail: MailFunction<OnbFreigabeMailData> = async (data) => {
+  const { id, ersteller, eintritt, vorname, nachname, station_name, position } = data;
   const creator = erstellerString(ersteller);
   const url = `https://onboarding.starcar.local/ma/${id}`;
 
@@ -44,15 +34,7 @@ export const onbFreigabeMail: MailFunction<OnbFreigabeMailData> = async (
 };
 
 export const onbNeuMail: MailFunction<OnboardingStation> = async (data) => {
-  const {
-    id,
-    ersteller,
-    eintritt,
-    vorname,
-    nachname,
-    position,
-    station_name,
-  } = data;
+  const { id, ersteller, eintritt, vorname, nachname, position, station_name } = data;
   const creator = erstellerString(ersteller);
   const url = `https://onboarding.starcar.local/ma/${id}`;
 
@@ -106,8 +88,7 @@ export const statwMail: MailFunction<StatWMailData> = async (data) => {
   let content = `${ersteller} meldet einen Stationswechsel:<br/>${name} wechselt am ${toLocalDate(
     date
   )} in die ${ort}`;
-  if (docuware !== undefined)
-    content += `<br/>Neue Docuware Workflow Gruppen: ${docuware}`;
+  if (docuware !== undefined) content += `<br/>Neue Docuware Workflow Gruppen: ${docuware}`;
 
   await onboardingMail(
     isDev ? 'ole.bergen@starcar.de' : 'sc-neue-ma@starcar.de',

@@ -43,16 +43,12 @@ export const login: RequestHandler = async (req, res) => {
     if (qry.isEmpty === true) return res.errmsg('Benutzer nicht gefunden', 401);
 
     if (isOnboarding && user.allow_onboarding !== true)
-      return res.errmsg(
-        'Benutzer ist nicht für das Onboarding freigegeben',
-        401
-      );
+      return res.errmsg('Benutzer ist nicht für das Onboarding freigegeben', 401);
 
-    bcrypt.compare(password, user.password, (error, result) => {
-      if (error) throw error;
+    bcrypt.compare(password, user.password, (err, result) => {
+      if (err) throw error;
       if (result !== true) return res.errmsg('Passwort falsch', 401);
-      else if (user.active !== true)
-        return res.errmsg('Account nicht bestätigt', 400);
+      if (user.active !== true) return res.errmsg('Account nicht bestätigt', 400);
 
       req.session.user = createSession(user);
       res.okmsg(req.session.user);

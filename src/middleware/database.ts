@@ -6,11 +6,12 @@ const database: RequestHandler = (req, res, next) => {
   res.database = () => {
     const connection = mysql.createConnection({
       ...db,
-      typeCast: (field, next) => {
+      // nxt() wegen shadow next von express
+      typeCast: (field, nxt) => {
         if (field.type === 'TINY' && field.length === 1) {
           return field.string() === '1'; // 1 = true, 0 = false
         }
-        return next();
+        return nxt();
       },
     });
     return {

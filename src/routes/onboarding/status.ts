@@ -8,13 +8,7 @@ import {
 } from '../../../za-types/server/onboarding';
 import { OnboardingStation } from '../../../za-types/server/results';
 import { onbDoneMail } from './mail';
-import {
-  getValue,
-  isRequested,
-  hardwareAnf,
-  networkAnf,
-  suggestion,
-} from './statusHelper';
+import { getValue, hardwareAnf, isRequested, networkAnf, suggestion } from './statusHelper';
 
 const { selectwithStationID, updStatus } = onboardingSql;
 

@@ -17,16 +17,14 @@ const transporter = nodemailer.createTransport({
 // };
 
 export const onboardingMail: MailTemplate = async (to, subject, html) =>
-  await transporter.sendMail({
+  transporter.sendMail({
     from: 'STARCAR Onboarding <onboarding@starcar.local>',
     to,
     subject,
     html,
   });
 
-export const template: ContentTemplate = (
-  content
-) => `<!DOCTYPE html><html><head>
+export const template: ContentTemplate = (content) => `<!DOCTYPE html><html><head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"><style>
 a:link{color:#169;text-decoration:none;}
 a:visited{color:#169;text-decoration:none;}

@@ -1,9 +1,9 @@
 import {
+  AnfFunction,
   GetValue,
   IsRequested,
   LabelValue,
   PushAnf,
-  AnfFunction,
   Suggestion,
 } from '../../../za-types/server/onboarding';
 import { notEmptyString } from '../../util/helper';
@@ -54,8 +54,7 @@ export const networkAnf: AnfFunction = (anf) => {
   if (anf.vpn === true) pushNetwork('VPN', anf.vpn);
   if (notEmptyString(anf.verteiler)) pushNetwork('Verteiler', anf.verteiler);
   if (notEmptyString(anf.netzdrucker)) pushNetwork('Drucker', anf.netzdrucker);
-  if (notEmptyString(anf.stddrucker))
-    pushNetwork('Standard Drucker', anf.stddrucker);
+  if (notEmptyString(anf.stddrucker)) pushNetwork('Standard Drucker', anf.stddrucker);
 
   return {
     required,

@@ -9,6 +9,7 @@
     "sourceType": "module"
   },
   "extends": [
+    "eslint-config-scza",
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
     "prettier",
@@ -22,9 +23,6 @@
   },
   "rules": {
     "prettier/prettier": "warn",
-    "no-console": "warn",
-    "no-else-return": "warn",
-    "no-throw-literal": "error",
     "security/detect-object-injection": "off"
   },
   "ignorePatterns": ["node_modules/", "dist/"]

@@ -37,9 +37,7 @@ export const getAnmeldungen: RequestHandler = async (req, res) => {
   const { query, close } = res.database();
 
   await res.catchError(async () => {
-    const qry = await query<AngemeldetName>(selectWithName, [
-      req.session.user?.currentStation,
-    ]);
+    const qry = await query<AngemeldetName>(selectWithName, [req.session.user?.currentStation]);
     await close();
 
     res.okmsg(qry.results);

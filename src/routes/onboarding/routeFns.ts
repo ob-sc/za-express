@@ -1,16 +1,9 @@
 import { RequestHandler } from 'express';
-import {
-  OnboardingStation,
-  StationName,
-} from '../../../za-types/server/results';
-import {
-  OnbFreigabeMailData,
-  OnbPosWMailData,
-  StatWMailData,
-} from '../../../za-types/server/mail';
+import { OnboardingStation, StationName } from '../../../za-types/server/results';
+import { OnbFreigabeMailData, OnbPosWMailData, StatWMailData } from '../../../za-types/server/mail';
 import { onboardingSql, stationenSql } from '../../sql';
 import { notEmptyString } from '../../util/helper';
-import { onbNeuMail, onbFreigabeMail, statwMail, poswMail } from './mail';
+import { onbFreigabeMail, onbNeuMail, poswMail, statwMail } from './mail';
 import status from './status';
 
 const {
@@ -58,9 +51,7 @@ export const neuerMa: RequestHandler = async (req, res) => {
 
     const qry = await query(insert, data);
 
-    const qry2 = await query<StationName>(stationenSql.selectName, [
-      data.station,
-    ]);
+    const qry2 = await query<StationName>(stationenSql.selectName, [data.station]);
     await close();
 
     const mailData: OnbFreigabeMailData = {

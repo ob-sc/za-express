@@ -2,13 +2,13 @@ import { RequestHandler } from 'express';
 import { notEmptyString } from '../util/helper';
 
 const response: RequestHandler = (req, res, next) => {
-  res.okmsg = (response, code = 200) => {
-    const isString = notEmptyString(response);
+  res.okmsg = (data, code = 200) => {
+    const isString = notEmptyString(data);
 
     res.status(code).json({
-      message: isString ? response : 'Anfrage erfolgreich',
+      message: isString ? data : 'Anfrage erfolgreich',
       code,
-      result: isString ? {} : response,
+      result: isString ? {} : data,
     });
   };
 

@@ -5,23 +5,9 @@ import session from 'express-session';
 import expressMySqlSession from 'express-mysql-session';
 import cors from 'cors';
 import { isDev } from './util/helper';
-import { sess, db } from './config';
-import {
-  response,
-  database,
-  catchError,
-  errorHandler,
-  notFound,
-} from './middleware/';
-import {
-  auth,
-  user,
-  aushilfen,
-  angemeldet,
-  zeiten,
-  onboarding,
-  stationen,
-} from './routes';
+import { db, sess } from './config';
+import { catchError, database, errorHandler, notFound, response } from './middleware/';
+import { angemeldet, aushilfen, auth, onboarding, stationen, user, zeiten } from './routes';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const MySQLStore = expressMySqlSession(session as any);

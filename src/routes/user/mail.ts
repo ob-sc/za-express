@@ -1,10 +1,6 @@
-import {
-  AccountInfoMail,
-  ConfirmMailData,
-  MailFunction,
-} from '../../../za-types/server/mail';
+import { AccountInfoMail, ConfirmMailData, MailFunction } from '../../../za-types/server/mail';
 import { isDev } from '../../util/helper';
-import { template, onboardingMail } from '../../util/mail';
+import { onboardingMail, template } from '../../util/mail';
 
 export const confirmMail: MailFunction<ConfirmMailData> = async (data) => {
   const { token, to } = data;

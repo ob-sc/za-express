@@ -1,10 +1,6 @@
 import Joi from 'joi';
 
-const username = Joi.string()
-  .required()
-  .trim()
-  .lowercase()
-  .pattern(new RegExp('^[a-z.-]{1,}$'));
+const username = Joi.string().required().trim().lowercase().pattern(new RegExp('^[a-z.-]{1,}$'));
 const password = Joi.string()
   .required()
   // > 6, 1 klein, 1 groß & 1 zahl
