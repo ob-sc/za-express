@@ -3,22 +3,22 @@ import { RequestHandler } from 'express';
 import sessionValidation from '../../validation/session';
 import { sess } from '../../config';
 import { Benutzer } from '../../../za-types/server/database';
-import { EmptySession, Session } from '../../../za-types/server/session';
+import { UserSession } from '../../../za-types/server/session';
 import { benutzerSql } from '../../sql';
 
-const createSession: (user: Benutzer) => Session = (user) => ({
+const createSession: (user: Benutzer) => UserSession = (user) => ({
   username: user.username,
   admin: user.admin,
   station: user.station,
   access: user.access,
   region: user.region,
-  extstat: user.extstat,
+  extstat: user.extstat?.split(',') ?? [],
   currentStation: user.station,
-  onboarding: user.onboarding,
+  onboarding: user.onboarding?.split(',') ?? [],
   isLoggedIn: true,
 });
 
-const emptySession: EmptySession = {
+const emptySession: UserSession = {
   username: '',
   admin: false,
   isLoggedIn: false,

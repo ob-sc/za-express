@@ -1,13 +1,7 @@
 {
-  "editor.tabSize": 2,
-  "editor.formatOnSave": true,
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.acceptSuggestionOnCommitCharacter": false,
   "prettier.requireConfig": true,
-
-  "javascript.preferences.importModuleSpecifierEnding": "minimal",
-
-  "eslint.packageManager": "yarn",
-  "eslint.validate": ["javascript", "typescript"],
-  "eslint.lintTask.enable": true
+  "search.exclude": {
+    "**/dist": true,
+    "yarn.lock": true
+  }
 }
