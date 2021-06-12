@@ -13,6 +13,7 @@
     "watch": "nodemon -r dotenv/config src/index.ts",
     "prettier": "prettier --write src",
     "lint": "eslint .",
+    "subinit": "git submodule init && git submodule update --remote",
     "sync": "git pull && git submodule update --remote",
     "clean": "rm -rf dist",
     "prebuild": "yarn sync && yarn install && yarn lint",
