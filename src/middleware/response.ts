@@ -12,7 +12,7 @@ const response: RequestHandler = (req, res, next) => {
     res.status(code).json(r);
   };
 
-  res.errmsg = (message = 'Fehler bei Operation', code = 500, error) => {
+  res.errmsg = (message = 'Es ist ein Fehler aufgetreten', code = 500, error) => {
     const r: JSONResponse = { message, code, error };
     res.status(code).json(r);
   };
