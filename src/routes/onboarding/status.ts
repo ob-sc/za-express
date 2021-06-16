@@ -1,4 +1,4 @@
-import { onboardingSql } from '../../sql/';
+import sqlStrings from '../../sql/';
 import {
   Anforderungen,
   CrentStatusValue,
@@ -10,10 +10,8 @@ import { OnboardingStation } from '../../../za-types/server/results';
 import { onbDoneMail } from './mail';
 import { getValue, hardwareAnf, isRequested, networkAnf, suggestion } from './statusHelper';
 
-const { selectwithStationID, updStatus } = onboardingSql;
-
 const status: StatusFunction = async (query, id) => {
-  const qry = await query<OnboardingStation>(selectwithStationID, [id]);
+  const qry = await query<OnboardingStation>(sqlStrings.onboarding.selJoinStationID, [id]);
 
   const [result] = qry.results;
   if (qry.isEmpty === true) return null;
@@ -130,7 +128,7 @@ const status: StatusFunction = async (query, id) => {
     // wenn alle .done === true
     if (isNotDone === false) {
       statusResult.status = true;
-      const qry2 = await query(updStatus, [id]);
+      const qry2 = await query(sqlStrings.onboarding.updStatus, [id]);
       if (qry2.isUpdated === true) await onbDoneMail(statusResult);
     }
   }

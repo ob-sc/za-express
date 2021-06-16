@@ -33,7 +33,7 @@ const sql = {
     selJoinStation: spaces([
       'SELECT onb.*, stat.name AS station_name',
       'FROM onboarding as onb',
-      `JOIN stationen as stat ON s.id = onb.station`,
+      `JOIN stationen as stat ON stat.id = onb.station`,
       'ORDER BY status, id DESC',
     ]),
     selJoinStationID: spaces([

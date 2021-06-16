@@ -32,6 +32,7 @@ export const signUp: RequestHandler = async (req, res) => {
             id: qry2.id,
             token,
           });
+          await close();
 
           const email = `${username}@starcar.de`;
           await confirmMail({ token, to: email });
@@ -39,10 +40,10 @@ export const signUp: RequestHandler = async (req, res) => {
 
           if (qry3.isUpdated) res.okmsg();
           else res.errmsg('Kein token eingetragen');
-        }
+        } else await close();
       });
 
-    await close();
+    //
   }, close);
 };
 
