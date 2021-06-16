@@ -4,7 +4,7 @@ import sessionValidation from '../../validation/session';
 import { sess } from '../../config';
 import { Benutzer } from '../../../za-types/server/database';
 import { UserSession } from '../../../za-types/server/session';
-import { benutzerSql } from '../../sql';
+import sqlStrings from '../../sql';
 
 const createSession: (user: Benutzer) => UserSession = (user) => ({
   username: user.username,
@@ -40,7 +40,7 @@ export const login: RequestHandler = async (req, res) => {
 
     const isOnboarding = req.headers.host?.includes('onboarding');
 
-    const qry = await query<Benutzer>(benutzerSql.selectUser, [username]);
+    const qry = await query<Benutzer>(sqlStrings.benutzer.sel, [username]);
     await close();
 
     const [user] = qry.results;

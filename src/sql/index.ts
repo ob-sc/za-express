@@ -1,108 +1,79 @@
-import { SqlGenerator } from '../../za-types/server/sql';
 import { spaces } from '../util/helper';
-import t from './tables';
 
-const sql: SqlGenerator = {
-  select(columns, table, ...rest) {
-    const arr = Array.from(rest);
-    return spaces(['SELECT', columns, 'FROM', table, ...arr]);
+const sql = {
+  account: {
+    selToken: 'SELECT * FROM account WHERE token = ?',
+    ins: 'INSERT INTO account SET ?',
+    del: 'DELETE FROM account WHERE token = ?',
   },
-  selectAll(table, ...rest) {
-    const arr = Array.from(rest);
-    return spaces(['SELECT * FROM', table, ...arr]);
+  angemeldet: {
+    selId: 'SELECT * FROM angemeldet WHERE id = ?',
+    selJoinAh: spaces([
+      'SELECT ang.*,ah.vorname,ah.nachname',
+      'FROM angemeldet as ang',
+      `JOIN aushilfen as ah ON ang.ahid = ah.id`,
+      'WHERE ang.station = ?',
+    ]),
+    ins: 'INSERT INTO angemeldet SET ?',
+    del: 'DELETE FROM angemeldet WHERE id = ?',
   },
-  insert(table) {
-    return spaces(['INSERT INTO', table, 'SET ?']);
+  aushilfen: {
+    sel: spaces([
+      'SELECT * FROM aushilfen',
+      'WHERE status <> "passiv"',
+      'ORDER BY station, nachname',
+    ]),
   },
-  // update set ? möglich wie insert into set ?
-  // dann überall dort auch objekt passen
-  update(table, ...rest) {
-    const arr = Array.from(rest);
-    return spaces(['UPDATE', table, 'SET', ...arr]);
+  benutzer: {
+    sel: 'SELECT * FROM benutzer WHERE username = ?',
+    ins: 'INSERT INTO benutzer SET ?',
+    updActive: 'UPDATE benutzer SET active = 1 WHERE id = ?',
   },
-  delete(table, ...rest) {
-    const arr = Array.from(rest);
-    return spaces(['DELETE FROM', table, ...arr]);
+  onboarding: {
+    selJoinStation: spaces([
+      'SELECT onb.*, stat.name AS station_name',
+      'FROM onboarding as onb',
+      `JOIN stationen as stat ON s.id = onb.station`,
+      'ORDER BY status, id DESC',
+    ]),
+    selJoinStationID: spaces([
+      'SELECT onb.*, stat.name AS station_name',
+      'FROM onboarding as onb',
+      `JOIN stationen as stat ON stat.id = onb.station`,
+      'ORDER BY status, id DESC',
+      'WHERE onb.id = ?',
+    ]),
+    ins: 'INSERT INTO onboarding SET ?',
+    updStatus: 'UPDATE onboarding SET status = 1 WHERE id = ?',
+    updAnzeigen: 'UPDATE onboarding SET anzeigen = 1 WHERE id = ?',
+    updDomain: 'UPDATE onboarding SET domain = ? WHERE id = ?',
+    updBitrix: 'UPDATE onboarding SET bitrix = ? WHERE id = ?',
+    updCrent: 'UPDATE onboarding SET crent = ? WHERE id = ?',
+    updDocuware: 'UPDATE onboarding SET docuware = ? WHERE id = ?',
+    updQlik: 'UPDATE onboarding SET qlik = ? WHERE id = ?',
+    updHardware: 'UPDATE onboarding SET hardware = ? WHERE id = ?',
+    updNetwork: 'UPDATE onboarding SET network = ? WHERE id = ?',
+  },
+  stationen: {
+    selID: 'SELECT * FROM stationen WHERE id = ?',
+    selOptions: 'SELECT id AS optval, name AS optlabel FROM stationen',
+    selName: 'SELECT name FROM stationen WHERE id = ?',
+  },
+  zeiten: {
+    selMaxID: spaces([
+      'SELECT sum(gehalt) AS max',
+      'FROM zeiten',
+      'WHERE id = ?',
+      'AND LOWER(ahmax) <> "student"',
+      'AND datum BETWEEN ? AND CURDATE()',
+    ]),
+    selMaxStudentID: spaces([
+      'SELECT sum(arbeitszeit) as max',
+      'FROM zeiten',
+      'WHERE id = ?',
+      'AND yearweek(DATE(datum), 1) = yearweek(CURDATE(), 1)',
+    ]),
   },
 };
-const whereID = 'WHERE id=?';
 
-export const accountSql = {
-  selectAccount: sql.selectAll(t.account, 'WHERE token = ?'),
-  insert: sql.insert(t.account),
-  deleteToken: sql.delete(t.account, 'WHERE token = ?'),
-};
-
-export const angemeldetSql = {
-  selectID: sql.selectAll(t.angemeldet, whereID),
-  selectWithName: sql.select(
-    'ang.*,ah.vorname,ah.nachname',
-    t.ang,
-    `JOIN ${t.ah} ON ang.ahid = ah.id`,
-    'WHERE ang.station = ?'
-  ),
-  insert: sql.insert(t.angemeldet),
-  deleteID: sql.delete(t.angemeldet, whereID),
-};
-
-export const aushilfenSql = {
-  selectNotPassive: sql.selectAll(
-    t.aushilfen,
-    'WHERE status <> "passiv"',
-    'ORDER BY station,nachname'
-  ),
-};
-
-export const benutzerSql = {
-  selectUser: sql.selectAll(t.benutzer, 'WHERE username = ?'),
-  insert: sql.insert(t.benutzer),
-  updateActive: sql.update(t.benutzer, 'active=1', whereID),
-};
-
-export const onboardingSql = {
-  selectWithStation: sql.select(
-    'onb.*,stat.name AS station_name',
-    t.onb,
-    `JOIN ${t.stat} ON s.id = onb.station`,
-    'ORDER BY status,id DESC'
-  ),
-  selectwithStationID: sql.select(
-    'onb.*,stat.name AS station_name',
-    t.onb,
-    `JOIN ${t.stat} ON s.id = onb.station`,
-    'ORDER BY status,id DESC',
-    'WHERE onb.id=?'
-  ),
-  insert: sql.insert(t.onboarding),
-  updStatus: sql.update(t.onboarding, 'status=1', whereID),
-  updAnzeigen: sql.update(t.onboarding, 'anzeigen=1', whereID),
-  updDomain: sql.update(t.onboarding, 'domain=?', whereID),
-  updBitrix: sql.update(t.onboarding, 'bitrix=?', whereID),
-  updCrent: sql.update(t.onboarding, 'crent=?', whereID),
-  updDocuware: sql.update(t.onboarding, 'docuware=?', whereID),
-  updQlik: sql.update(t.onboarding, 'qlik=?', whereID),
-  updHardware: sql.update(t.onboarding, 'hardware=?', whereID),
-  updNetwork: sql.update(t.onboarding, 'network=?', whereID),
-};
-
-export const stationenSql = {
-  selectStationID: sql.selectAll(t.stationen, whereID),
-  selectAsOptions: sql.select('id AS optval, name AS optlabel', t.stationen),
-  selectName: sql.select('name', t.stationen, whereID),
-};
-
-export const zeitenSql = {
-  selectMaxID: sql.select(
-    'sum(gehalt) AS max',
-    t.zeiten,
-    whereID,
-    'AND LOWER(ahmax) <> "student"',
-    'AND datum BETWEEN ? AND CURDATE()'
-  ),
-  selectMaxStudent: sql.select(
-    'sum(arbeitszeit) as max',
-    t.zeiten,
-    whereID,
-    'AND yearweek(DATE(datum), 1) = yearweek(CURDATE(), 1)'
-  ),
-};
+export default sql;

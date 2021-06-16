@@ -1,10 +1,8 @@
 import { RequestHandler } from 'express';
 import { Angemeldet } from '../../../za-types/server/database';
 import { AngemeldetName } from '../../../za-types/server/results';
-import { angemeldetSql } from '../../sql';
+import sqlStrings from '../../sql';
 import { AnmeldenRequest } from '../../../za-types/server/requests';
-
-const { selectID, insert, selectWithName, deleteID } = angemeldetSql;
 
 export const anmelden: RequestHandler = async (req, res) => {
   const { query, close } = res.database();
@@ -19,14 +17,14 @@ export const anmelden: RequestHandler = async (req, res) => {
   };
 
   await res.catchError(async () => {
-    const qry = await query<Angemeldet>(selectID, [ahid]);
+    const qry = await query<Angemeldet>(sqlStrings.angemeldet.selId, [ahid]);
 
     if (qry.isEmpty === false) {
       await close();
       return res.errmsg('Aushilfe ist bereits angemeldet', 409);
     }
 
-    await query(insert, anmeldung);
+    await query(sqlStrings.angemeldet.ins, anmeldung);
     await close();
 
     res.okmsg();
@@ -37,7 +35,9 @@ export const getAnmeldungen: RequestHandler = async (req, res) => {
   const { query, close } = res.database();
 
   await res.catchError(async () => {
-    const qry = await query<AngemeldetName>(selectWithName, [req.session.user?.currentStation]);
+    const qry = await query<AngemeldetName>(sqlStrings.angemeldet.selJoinAh, [
+      req.session.user?.currentStation,
+    ]);
     await close();
 
     res.okmsg(qry.results);
@@ -49,7 +49,7 @@ export const deleteAnmeldung: RequestHandler = async (req, res) => {
   const { id } = req.body;
 
   await res.catchError(async () => {
-    await query(deleteID, [id]);
+    await query(sqlStrings.angemeldet.del, [id]);
     await close();
 
     res.okmsg();

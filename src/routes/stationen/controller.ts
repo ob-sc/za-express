@@ -1,15 +1,13 @@
 import { RequestHandler } from 'express';
-import { stationenSql } from '../../sql';
+import sqlStrings from '../../sql';
 import { Stationen } from '../../../za-types/server/database';
 import { StationOptions } from '../../../za-types/server/results';
-
-const { selectAsOptions, selectStationID } = stationenSql;
 
 export const selectOptions: RequestHandler = async (req, res) => {
   const { query, close } = res.database();
 
   await res.catchError(async () => {
-    const qry = await query<StationOptions>(selectAsOptions);
+    const qry = await query<StationOptions>(sqlStrings.stationen.selOptions);
     await close();
 
     res.okmsg(qry.results);
@@ -21,7 +19,7 @@ export const signatur: RequestHandler = async (req, res) => {
   const { id } = req.params;
 
   await res.catchError(async () => {
-    const qry = await query<Stationen>(selectStationID, [id]);
+    const qry = await query<Stationen>(sqlStrings.stationen.selID, [id]);
     await close();
 
     const [stations] = qry.results;

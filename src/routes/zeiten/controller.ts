@@ -1,8 +1,6 @@
 import { RequestHandler } from 'express';
-import { zeitenSql } from '../../sql';
+import sqlStrings from '../../sql';
 import { MaxResult, ZeitenMax } from '../../../za-types/server/results';
-
-const { selectMaxID, selectMaxStudent } = zeitenSql;
 
 export const selectMax: RequestHandler = async (req, res) => {
   const { query, close } = res.database();
@@ -11,7 +9,7 @@ export const selectMax: RequestHandler = async (req, res) => {
     const { id, status, firstDayMonth } = req.body;
     const isStudent = status.toLowerCase() === 'student';
 
-    const sql = isStudent ? selectMaxStudent : selectMaxID;
+    const sql = isStudent ? sqlStrings.zeiten.selMaxStudentID : sqlStrings.zeiten.selMaxID;
     const qry = await query<ZeitenMax>(sql, [id, firstDayMonth]);
 
     const result: MaxResult = {

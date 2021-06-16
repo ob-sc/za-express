@@ -1,29 +1,16 @@
 import { RequestHandler } from 'express';
 import { OnboardingStation, StationName } from '../../../za-types/server/results';
 import { OnbFreigabeMailData, OnbPosWMailData, StatWMailData } from '../../../za-types/server/mail';
-import { onboardingSql, stationenSql } from '../../sql';
+import sqlStrings from '../../sql';
 import { notEmptyString } from '../../util/helper';
 import { onbFreigabeMail, onbNeuMail, poswMail, statwMail } from './mail';
 import status from './status';
-
-const {
-  selectWithStation,
-  insert,
-  updAnzeigen,
-  updDomain,
-  updBitrix,
-  updCrent,
-  updDocuware,
-  updQlik,
-  updHardware,
-  updNetwork,
-} = onboardingSql;
 
 export const alleMa: RequestHandler = async (req, res) => {
   const { query, close } = res.database();
 
   await res.catchError(async () => {
-    const qry = await query<OnboardingStation>(selectWithStation);
+    const qry = await query<OnboardingStation>(sqlStrings.onboarding.selJoinStation);
     await close();
 
     // versteckte zeilen für nicht admin und nicht ersteller raus
@@ -49,9 +36,9 @@ export const neuerMa: RequestHandler = async (req, res) => {
     // todo type von req.body (gibt es schon als requests?)
     const data = { ersteller, ...req.body };
 
-    const qry = await query(insert, data);
+    const qry = await query(sqlStrings.onboarding.ins, data);
 
-    const qry2 = await query<StationName>(stationenSql.selectName, [data.station]);
+    const qry2 = await query<StationName>(sqlStrings.stationen.selName, [data.station]);
     await close();
 
     const mailData: OnbFreigabeMailData = {
@@ -70,9 +57,9 @@ export const freigabe: RequestHandler = async (req, res) => {
   const { id } = req.body;
 
   await res.catchError(async () => {
-    await query(updAnzeigen, [id]);
+    await query(sqlStrings.onboarding.updAnzeigen, [id]);
 
-    const qry2 = await query<OnboardingStation>(selectWithStation, [id]);
+    const qry2 = await query<OnboardingStation>(sqlStrings.onboarding.selJoinStation, [id]);
     await close();
 
     const [onboardingStation] = qry2.results;
@@ -102,7 +89,7 @@ const updateDomain: RequestHandler = async (req, res, next) => {
     const { id, domain } = req.body;
     if (domain === undefined) return next();
 
-    const qry = await query(updDomain, [domain, id]);
+    const qry = await query(sqlStrings.onboarding.updDomain, [domain, id]);
 
     await status(query, id);
 
@@ -120,7 +107,7 @@ const updateBitrix: RequestHandler = async (req, res, next) => {
     const { id, bitrix } = req.body;
     if (bitrix === undefined) return next();
 
-    const qry = await query(updBitrix, [bitrix, id]);
+    const qry = await query(sqlStrings.onboarding.updBitrix, [bitrix, id]);
 
     await status(query, id);
 
@@ -138,7 +125,7 @@ const updateCrent: RequestHandler = async (req, res, next) => {
     const { id, crent } = req.body;
     if (crent === undefined) return next();
 
-    const qry = await query(updCrent, [crent, id]);
+    const qry = await query(sqlStrings.onboarding.updCrent, [crent, id]);
 
     await status(query, id);
 
@@ -156,7 +143,7 @@ const updateDocuware: RequestHandler = async (req, res, next) => {
     const { id, docuware } = req.body;
     if (docuware === undefined) return next();
 
-    const qry = await query(updDocuware, [docuware, id]);
+    const qry = await query(sqlStrings.onboarding.updDocuware, [docuware, id]);
 
     await status(query, id);
 
@@ -174,7 +161,7 @@ const updateQlik: RequestHandler = async (req, res, next) => {
     const { id, qlik } = req.body;
     if (qlik === undefined) return next();
 
-    const qry = await query(updQlik, [qlik, id]);
+    const qry = await query(sqlStrings.onboarding.updQlik, [qlik, id]);
 
     await status(query, id);
 
@@ -192,7 +179,7 @@ const updateHardware: RequestHandler = async (req, res, next) => {
     const { id, hardware } = req.body;
     if (hardware === undefined) return next();
 
-    const qry = await query(updHardware, [hardware, id]);
+    const qry = await query(sqlStrings.onboarding.updHardware, [hardware, id]);
 
     await status(query, id);
 
@@ -210,7 +197,7 @@ const updateNetwork: RequestHandler = async (req, res, next) => {
     const { id, network } = req.body;
     if (network === undefined) return next();
 
-    const qry = await query(updNetwork, [network, id]);
+    const qry = await query(sqlStrings.onboarding.updNetwork, [network, id]);
 
     await status(query, id);
 

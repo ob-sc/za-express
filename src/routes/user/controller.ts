@@ -1,12 +1,10 @@
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import { RequestHandler } from 'express';
-import { accountSql, benutzerSql } from '../../sql';
+import sqlStrings from '../../sql';
 import { Account, Benutzer } from '../../../za-types/server/database';
 import userValidation from '../../validation/user';
 import { confirmMail, infoMail } from './mail';
-
-const { selectUser, insert, updateActive } = benutzerSql;
 
 export const signUp: RequestHandler = async (req, res) => {
   const { query, close } = res.database();
@@ -16,13 +14,13 @@ export const signUp: RequestHandler = async (req, res) => {
     if (error) throw error;
     const { username, password, station } = value;
 
-    const qry = await query<Benutzer>(selectUser, [username]);
+    const qry = await query<Benutzer>(sqlStrings.benutzer.sel, [username]);
 
     if (qry.isEmpty !== true) res.errmsg('Benutzer bereits vorhanden', 409);
     else
       bcrypt.hash(password, 10, async (err, hash) => {
         if (err) throw err;
-        const qry2 = await query(insert, {
+        const qry2 = await query(sqlStrings.benutzer.ins, {
           username,
           password: hash,
           station,
@@ -30,7 +28,7 @@ export const signUp: RequestHandler = async (req, res) => {
         if (qry2.isUpdated === true) {
           const token = crypto.randomBytes(20).toString('hex');
 
-          const qry3 = await query(accountSql.insert, {
+          const qry3 = await query(sqlStrings.account.ins, {
             id: qry2.id,
             token,
           });
@@ -65,14 +63,14 @@ export const confirmAccount: RequestHandler = async (req, res) => {
 
       if (sinceReg / 1000 / 60 / 60 > 24) res.errmsg('Link abgelaufen', 410);
       else {
-        const qry2 = await query(updateActive, [tokenResult.id]);
+        const qry2 = await query(sqlStrings.benutzer.updActive, [tokenResult.id]);
 
         if (qry2.isUpdated) res.okmsg('Account erfolgreich bestätigt');
         else res.errmsg('Account nicht bestätigt');
       }
 
       // in beiden fällen token löschen
-      await query(accountSql.deleteToken, [token]);
+      await query(sqlStrings.account.del, [token]);
     }
 
     await close();
