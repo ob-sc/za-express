@@ -5,7 +5,6 @@ const response: RequestHandler = (req, res, next) => {
   res.okmsg = (data, code = 200) => {
     const r: JSONResponse = {
       message: typeof data === 'string' ? data : 'Anfrage erfolgreich',
-      code,
       result: typeof data === 'object' ? data : {},
     };
 
@@ -13,7 +12,7 @@ const response: RequestHandler = (req, res, next) => {
   };
 
   res.errmsg = (message = 'Es ist ein Fehler aufgetreten', code = 500, error) => {
-    const r: JSONResponse = { message, code, error };
+    const r: JSONResponse = { message, error };
     res.status(code).json(r);
   };
 
