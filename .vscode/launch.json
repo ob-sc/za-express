@@ -1,0 +1,31 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "TS debug",
+      "type": "pwa-node",
+      "request": "launch",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["--nolazy", "-r", "ts-node/register/transpile-only"],
+
+      "args": ["src/index.ts"],
+
+      "cwd": "${workspaceRoot}",
+      "internalConsoleOptions": "openOnSessionStart",
+      "skipFiles": ["<node_internals>/**", "node_modules/**"],
+
+      "env": {
+        "NODE_ENV": "development",
+        "PORT": "8000",
+        "DEBUG": "za-express:*",
+        "DB_HOST": "192.168.100.39",
+        "DB_USER": "starcar",
+        "DB_PASS": "S22LuwG2WMqaYyvSwbX6qKgT",
+        "DB_NAME": "starcar_dev",
+        "SESS_NAME": "testcookie",
+        "SESS_SECRET": "jHf75jshZGFKds957sHGF2h5",
+        "SESS_LIFETIME": "600000"
+      }
+    }
+  ]
+}
