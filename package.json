@@ -19,7 +19,11 @@
     "prebuild": "yarn sync && yarn install && yarn lint",
     "build": "yarn clean && tsc",
     "preversion": "yarn sync && yarn prettier && yarn lint",
+    "version": "yarn build && git add -A",
     "postversion": "git push && git push --tags",
+    "patch": "yarn version --patch",
+    "minor": "yarn version --minor",
+    "major": "yarn version --major",
     "dcup": "docker-compose up -d",
     "dcdown": "docker-compose down"
   },

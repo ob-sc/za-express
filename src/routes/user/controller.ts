@@ -16,32 +16,37 @@ export const signUp: RequestHandler = async (req, res) => {
 
     const qry = await query<Benutzer>(sqlStrings.benutzer.sel, [username]);
 
-    if (qry.isEmpty !== true) res.errmsg('Benutzer bereits vorhanden', 409);
-    else
-      bcrypt.hash(password, 10, async (err, hash) => {
-        if (err) throw err;
-        const qry2 = await query(sqlStrings.benutzer.ins, {
-          username,
-          password: hash,
-          station,
-        });
-        if (qry2.isUpdated === true) {
-          const token = crypto.randomBytes(20).toString('hex');
+    if (qry.isEmpty !== true) {
+      await close();
+      return res.errmsg('Benutzer bereits vorhanden', 409);
+    }
 
-          const qry3 = await query(sqlStrings.account.ins, {
-            id: qry2.id,
-            token,
-          });
-          await close();
-
-          const email = `${username}@starcar.de`;
-          await confirmMail({ token, to: email });
-          await infoMail(username);
-
-          if (qry3.isUpdated) res.okmsg();
-          else res.errmsg('Kein token eingetragen');
-        } else await close();
+    bcrypt.hash(password, 10, async (err, hash) => {
+      if (err) throw err;
+      const qry2 = await query(sqlStrings.benutzer.ins, {
+        username,
+        password: hash,
+        station,
       });
+      if (qry2.isUpdated === true) {
+        const token = crypto.randomBytes(20).toString('hex');
+
+        const qry3 = await query(sqlStrings.account.ins, {
+          id: qry2.id,
+          token,
+        });
+        await close();
+
+        const email = `${username}@starcar.de`;
+        await confirmMail({ token, to: email });
+        await infoMail(username);
+
+        if (qry3.isUpdated) return res.okmsg();
+        return res.errmsg('Kein token eingetragen');
+      }
+      await close();
+      res.errmsg('Kein Benutzer eingetragen');
+    });
 
     //
   }, close);

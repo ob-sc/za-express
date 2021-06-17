@@ -35,7 +35,7 @@ const database: RequestHandler = (req, res, next) => {
                 : {
                     ...data,
                     id: results?.insertId,
-                    isUpdated: results?.changedRows > 0,
+                    isUpdated: results?.affectedRows > 0,
                   };
 
               resolve(queryResult);

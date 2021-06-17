@@ -13,6 +13,7 @@
       "cwd": "${workspaceRoot}",
       "internalConsoleOptions": "openOnSessionStart",
       "skipFiles": ["<node_internals>/**", "node_modules/**"],
+      "outputCapture": "std",
 
       "env": {
         "NODE_ENV": "development",
