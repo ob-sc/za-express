@@ -9,9 +9,6 @@ import { OnboardingStation } from '../../../za-types/server/results';
 import { erstellerString, isDev, toLocalDate } from '../../util/helper';
 import { divider, onboardingMail, template } from '../../util/mail';
 
-// todo test ob await mail und dann ok klappt
-// todo am besten falsche ip bei mail und dann gucken ob okmsg gesendet wird
-
 export const onbFreigabeMail: MailFunction<OnbFreigabeMailData> = async (data) => {
   const { id, ersteller, eintritt, vorname, nachname, station_name, position } = data;
   const creator = erstellerString(ersteller);
