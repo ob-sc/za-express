@@ -23,9 +23,22 @@
         "DB_USER": "starcar",
         "DB_PASS": "S22LuwG2WMqaYyvSwbX6qKgT",
         "DB_NAME": "starcar_dev",
-        "SESS_NAME": "testcookie",
+        "SESS_NAME": "test",
         "SESS_SECRET": "jHf75jshZGFKds957sHGF2h5",
-        "SESS_LIFETIME": "600000"
+        "SESS_LIFETIME": "600000000"
+      }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Compiled TS",
+      "runtimeArgs": ["-r", "dotenv/config"],
+      "args": ["dist/index.js"],
+      "skipFiles": ["<node_internals>/**", "node_modules/**"],
+      "outputCapture": "std",
+
+      "env": {
+        "NODE_ENV": "development"
       }
     }
   ]

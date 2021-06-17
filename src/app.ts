@@ -18,6 +18,7 @@ const app = express();
 app.set('trust proxy', 1);
 
 app.use(cors({ origin: /starcar\.local$/, credentials: true }));
+app.use(cookieParser());
 app.use(
   session({
     ...sess,
@@ -27,7 +28,6 @@ app.use(
 app.use(logger(isDev ? 'dev' : 'short'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
 
 // res.okmsg & res.errmsg
 app.use(response);

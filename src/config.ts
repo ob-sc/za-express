@@ -1,5 +1,3 @@
-import debug from './util/debug';
-
 const parseEnv: (value: string | undefined) => number | undefined = (val) =>
   val === undefined ? undefined : Number(val);
 
@@ -14,8 +12,6 @@ const {
   SESS_SECRET,
   SESS_LIFETIME,
 } = process.env;
-
-debug(SESS_NAME, SESS_SECRET, SESS_LIFETIME);
 
 const node_env = NODE_ENV;
 const port = parseEnv(PORT) ?? 3000;

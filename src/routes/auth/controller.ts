@@ -81,6 +81,7 @@ export const logout: RequestHandler = async (req, res) => {
     else
       session.destroy((err) => {
         if (err) throw err;
+        debug('session weg');
         res.clearCookie(sess.name);
         res.okmsg('Logout erfolgreich');
       });

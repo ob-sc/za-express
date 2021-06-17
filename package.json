@@ -12,6 +12,7 @@
     "reload": "pm2 reload http-api",
     "prewatch": "yarn sync",
     "watch": "nodemon -r dotenv/config src/index.ts",
+    "compiled": "NODE_ENV=development node -r dotenv/config dist/index.js",
     "prettier": "prettier --write src",
     "lint": "eslint .",
     "subinit": "git submodule init && git submodule update --remote --merge",

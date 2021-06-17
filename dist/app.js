@@ -18,6 +18,7 @@ const sessionStore = new MySQLStore({ ...config_1.db, expiration: config_1.sess.
 const app = express_1.default();
 app.set('trust proxy', 1);
 app.use(cors_1.default({ origin: /starcar\.local$/, credentials: true }));
+app.use(cookie_parser_1.default());
 app.use(express_session_1.default({
     ...config_1.sess,
     store: sessionStore,
@@ -25,7 +26,6 @@ app.use(express_session_1.default({
 app.use(morgan_1.default(helper_1.isDev ? 'dev' : 'short'));
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: false }));
-app.use(cookie_parser_1.default());
 app.use(middleware_1.response);
 app.use(middleware_1.database);
 app.use(middleware_1.catchError);

@@ -1,13 +1,8 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.db = exports.sess = exports.port = exports.node_env = void 0;
-const debug_1 = __importDefault(require("./util/debug"));
 const parseEnv = (val) => val === undefined ? undefined : Number(val);
 const { NODE_ENV, PORT, DB_HOST, DB_USER, DB_PASS, DB_NAME, SESS_NAME, SESS_SECRET, SESS_LIFETIME, } = process.env;
-debug_1.default(SESS_NAME, SESS_SECRET, SESS_LIFETIME);
 const node_env = NODE_ENV;
 exports.node_env = node_env;
 const port = parseEnv(PORT) ?? 3000;
