@@ -9,7 +9,7 @@
     "resolveJsonModule": true
   },
   "include": ["za-types", "src"],
-  "exclude": ["node_modules", "dist", "**/*.spec.ts"],
+  "exclude": ["node_modules", "dist", "**/*.spec.ts", "package.json"],
   "ts-node": {
     "files": true
   },

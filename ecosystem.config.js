@@ -5,7 +5,6 @@ module.exports = {
       script: './dist/index.js',
       node_args: '-r dotenv/config',
       autorestart: true,
-      // todo gehen logs?
       error_file: 'logs/http-error.log',
       out_file: 'logs/http-out.log',
       env_development: {
