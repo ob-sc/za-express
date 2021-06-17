@@ -28,7 +28,7 @@ const emptySession: UserSession = {
 };
 
 export const isLoggedIn: RequestHandler = (req, res) => {
-  debug(req.session);
+  debug(req.session.user);
   if (req.session.user?.isLoggedIn === true) res.okmsg(req.session.user);
   else res.okmsg(emptySession);
 };
