@@ -57,9 +57,8 @@ export const login: RequestHandler = async (req, res) => {
       if (result !== true) return res.errmsg('Passwort falsch', 401);
       if (user.active !== true) return res.errmsg('Account nicht bestätigt', 400);
 
-      debug(user);
-
       req.session.user = createSession(user);
+      debug(req.session.user);
       res.okmsg(req.session.user);
     });
   }, close);
