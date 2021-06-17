@@ -36,8 +36,8 @@ const status = async (query, id) => {
         },
         {
             name: 'crentuser',
-            value: statusHelper_1.getValue(result.domain),
-            done: !!statusHelper_1.getValue(result.domain),
+            value: statusHelper_1.getValue(crent.user),
+            done: !!statusHelper_1.getValue(crent.user),
             label: 'C-Rent Benutzer',
             required: true,
             stations: anforderungen.crentstat,

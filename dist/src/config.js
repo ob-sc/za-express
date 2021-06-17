@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.db = exports.sess = exports.port = exports.node_env = void 0;
-const parseEnv = (val) => val === undefined ? undefined : parseInt(val);
+const parseEnv = (val) => val === undefined ? undefined : Number(val);
 const { NODE_ENV, PORT, DB_HOST, DB_USER, DB_PASS, DB_NAME, SESS_NAME, SESS_SECRET, SESS_LIFETIME, } = process.env;
 const node_env = NODE_ENV;
 exports.node_env = node_env;

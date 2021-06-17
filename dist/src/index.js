@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const package_json_1 = require("../package.json");
 const fs_1 = __importDefault(require("fs"));
 const http_1 = __importDefault(require("http"));
 const https_1 = __importDefault(require("https"));
@@ -23,10 +24,12 @@ function onError(error) {
     }
 }
 function onListening() {
-    debug_1.default(`Server hört auf port ${config_1.port}`);
+    debug_1.default(`port ${config_1.port}`);
 }
 if (helper_1.isDev)
     debug_1.default('devmode');
+debug_1.default('node', process.version);
+debug_1.default('server', package_json_1.version);
 app_1.default.set('port', config_1.port);
 const server = helper_1.isDev
     ? http_1.default.createServer(app_1.default)

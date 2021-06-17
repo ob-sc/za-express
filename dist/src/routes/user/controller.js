@@ -38,7 +38,7 @@ const signUp = async (req, res) => {
                 await close();
                 const email = `${username}@starcar.de`;
                 await mail_1.confirmMail({ token, to: email });
-                await mail_1.infoMail(username);
+                await mail_1.infoMail({ user: username });
                 if (qry3.isUpdated)
                     return res.okmsg();
                 return res.errmsg('Kein token eingetragen');

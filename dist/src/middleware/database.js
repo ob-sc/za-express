@@ -44,12 +44,15 @@ const database = (req, res, next) => {
             },
             close() {
                 return new Promise((resolve, reject) => {
-                    connection.end((error) => {
-                        if (error)
-                            reject(error);
-                        else
-                            resolve();
-                    });
+                    if (connection.state !== 'disconnected')
+                        connection.end((error) => {
+                            if (error)
+                                reject(error);
+                            else
+                                resolve();
+                        });
+                    else
+                        reject();
                 });
             },
         };

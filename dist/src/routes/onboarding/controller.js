@@ -27,15 +27,17 @@ exports.alleMa = alleMa;
 const neuerMa = async (req, res) => {
     const { query, close } = res.database();
     await res.catchError(async () => {
-        const ersteller = req.session.user?.username;
-        const data = { ersteller, ...req.body };
+        const ersteller = req.session.user?.username ?? '';
+        const values = req.body;
+        const data = { ersteller, ...values };
         const qry = await query(sql_1.default.onboarding.ins, data);
         const qry2 = await query(sql_1.default.stationen.selName, [data.station]);
         await close();
+        const [statname] = qry2.results;
         const mailData = {
             ...data,
-            id: qry.id,
-            station_name: qry2.results[0].name,
+            id: qry.id ?? 0,
+            station_name: statname.name,
         };
         await mail_1.onbFreigabeMail(mailData);
         res.okmsg();
@@ -57,7 +59,7 @@ const freigabe = async (req, res) => {
 exports.freigabe = freigabe;
 const getMa = async (req, res) => {
     const { query, close } = res.database();
-    const { id } = req.params;
+    const id = Number(req.params.id);
     await res.catchError(async () => {
         const maStatus = await status_1.default(query, id);
         await close();
