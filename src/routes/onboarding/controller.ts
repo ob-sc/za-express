@@ -46,7 +46,7 @@ export const neuerMa: RequestHandler = async (req, res) => {
 
     const mailData: OnbFreigabeMailData = {
       ...data,
-      id: qry.id,
+      id: qry.id ?? 0,
       station_name: statname.name,
     };
 

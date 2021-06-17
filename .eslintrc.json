@@ -16,7 +16,7 @@
     "plugin:@typescript-eslint/recommended"
   ],
 
-  "plugins": ["@typescript-eslint", "prettier", "security"],
+  "plugins": ["prettier", "security", "@typescript-eslint"],
   "globals": {
     "Atomics": "readonly",
     "SharedArrayBuffer": "readonly"
