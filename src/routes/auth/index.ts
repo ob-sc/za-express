@@ -3,8 +3,8 @@ import { isLoggedIn, login, logout, updateStation } from './controller';
 
 const router = express.Router();
 
-router.get('', isLoggedIn);
 router.post('', login);
+router.get('', isLoggedIn);
 router.put('', updateStation);
 router.delete('', logout);
 
