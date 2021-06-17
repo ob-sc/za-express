@@ -27,7 +27,7 @@ const emptySession = {
     onboarding: [],
 };
 const isLoggedIn = (req, res) => {
-    debug_1.default(req.session.user);
+    debug_1.default(req.session);
     if (req.session.user?.isLoggedIn === true)
         res.okmsg(req.session.user);
     else

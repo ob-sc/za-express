@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-syntax */
+
 import fs from 'fs';
 import http from 'http';
 import https from 'https';
@@ -20,17 +22,12 @@ function onError(error: NodeJS.ErrnoException) {
 }
 
 function onListening() {
-  // eslint-disable-next-line
   debug(`port ${port}`);
 }
 
-// eslint-disable-next-line
+debug('Starte Server');
 if (isDev) debug('devmode');
-
-// eslint-disable-next-line
 debug('node', process.version);
-
-// eslint-disable-next-line
 debug('package', process.env.npm_package_version);
 
 app.set('port', port);

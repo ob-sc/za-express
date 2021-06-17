@@ -25,6 +25,7 @@ function onError(error) {
 function onListening() {
     debug_1.default(`port ${config_1.port}`);
 }
+debug_1.default('Starte Server');
 if (helper_1.isDev)
     debug_1.default('devmode');
 debug_1.default('node', process.version);
