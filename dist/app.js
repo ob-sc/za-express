@@ -17,7 +17,7 @@ const MySQLStore = express_mysql_session_1.default(express_session_1.default);
 const sessionStore = new MySQLStore({ ...config_1.db, expiration: config_1.sess.cookie.maxAge });
 const app = express_1.default();
 app.set('trust proxy', 1);
-app.use(morgan_1.default(helper_1.isDev ? 'dev' : 'combined'));
+app.use(morgan_1.default(helper_1.isDev ? 'dev' : 'short'));
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: false }));
 app.use(cookie_parser_1.default());

@@ -17,7 +17,7 @@ const app = express();
 
 app.set('trust proxy', 1);
 
-app.use(logger(isDev ? 'dev' : 'combined'));
+app.use(logger(isDev ? 'dev' : 'short'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());

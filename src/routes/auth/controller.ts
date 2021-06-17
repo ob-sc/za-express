@@ -6,6 +6,7 @@ import { Benutzer } from '../../../za-types/server/database';
 import { UserSession } from '../../../za-types/server/session';
 import sqlStrings from '../../sql';
 import { LoginRequest } from '../../../za-types/server/requests';
+import debug from '../../util/debug';
 
 const createSession: (user: Benutzer) => UserSession = (user) => ({
   username: user.username,
@@ -27,6 +28,7 @@ const emptySession: UserSession = {
 };
 
 export const isLoggedIn: RequestHandler = (req, res) => {
+  debug(req.session);
   if (req.session.user?.isLoggedIn === true) res.okmsg(req.session.user);
   else res.okmsg(emptySession);
 };

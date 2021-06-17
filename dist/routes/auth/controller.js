@@ -8,6 +8,7 @@ const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const session_1 = __importDefault(require("../../validation/session"));
 const config_1 = require("../../config");
 const sql_1 = __importDefault(require("../../sql"));
+const debug_1 = __importDefault(require("../../util/debug"));
 const createSession = (user) => ({
     username: user.username,
     admin: user.admin,
@@ -26,6 +27,7 @@ const emptySession = {
     onboarding: [],
 };
 const isLoggedIn = (req, res) => {
+    debug_1.default(req.session);
     if (req.session.user?.isLoggedIn === true)
         res.okmsg(req.session.user);
     else
