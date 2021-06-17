@@ -1,4 +1,3 @@
-import { version } from '../package.json';
 import fs from 'fs';
 import http from 'http';
 import https from 'https';
@@ -32,7 +31,7 @@ if (isDev) debug('devmode');
 debug('node', process.version);
 
 // eslint-disable-next-line
-debug('server', version);
+debug('package', process.env.npm_package_version);
 
 app.set('port', port);
 
