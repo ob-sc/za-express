@@ -27,7 +27,6 @@ const emptySession = {
     onboarding: [],
 };
 const isLoggedIn = (req, res) => {
-    debug_1.default(req.session.user);
     if (req.session.user?.isLoggedIn === true)
         res.okmsg(req.session.user);
     else
@@ -56,6 +55,7 @@ const login = async (req, res) => {
                 return res.errmsg('Passwort falsch', 401);
             if (user.active !== true)
                 return res.errmsg('Account nicht bestätigt', 400);
+            debug_1.default(user);
             req.session.user = createSession(user);
             res.okmsg(req.session.user);
         });

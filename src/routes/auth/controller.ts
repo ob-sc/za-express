@@ -28,7 +28,6 @@ const emptySession: UserSession = {
 };
 
 export const isLoggedIn: RequestHandler = (req, res) => {
-  debug(req.session.user);
   if (req.session.user?.isLoggedIn === true) res.okmsg(req.session.user);
   else res.okmsg(emptySession);
 };
@@ -57,6 +56,8 @@ export const login: RequestHandler = async (req, res) => {
       if (err) throw error;
       if (result !== true) return res.errmsg('Passwort falsch', 401);
       if (user.active !== true) return res.errmsg('Account nicht bestätigt', 400);
+
+      debug(user);
 
       req.session.user = createSession(user);
       res.okmsg(req.session.user);
