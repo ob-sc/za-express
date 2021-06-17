@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "private": true,
   "scripts": {
-    "prestart": "yarn sync",
+    "prestart": "yarn sync && yarn install",
     "start": "pm2 start ecosystem.config.js --env production",
     "reload": "pm2 reload http-api",
     "prewatch": "yarn sync",

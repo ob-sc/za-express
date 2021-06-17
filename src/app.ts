@@ -17,11 +17,17 @@ const app = express();
 
 app.set('trust proxy', 1);
 
+app.use(cors({ origin: /starcar\.local$/, credentials: true }));
+app.use(
+  session({
+    ...sess,
+    store: sessionStore,
+  })
+);
 app.use(logger(isDev ? 'dev' : 'short'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(cors({ origin: /starcar\.local$/, credentials: true }));
 
 // res.okmsg & res.errmsg
 app.use(response);
@@ -31,13 +37,6 @@ app.use(database);
 
 // try / catch block der die Verbindung schließt
 app.use(catchError);
-
-app.use(
-  session({
-    ...sess,
-    store: sessionStore,
-  })
-);
 
 const apiRouter = express.Router();
 app.use('/api', apiRouter);
