@@ -1,3 +1,4 @@
+import { version } from '../package.json';
 import fs from 'fs';
 import http from 'http';
 import https from 'https';
@@ -20,10 +21,18 @@ function onError(error: NodeJS.ErrnoException) {
 }
 
 function onListening() {
-  debug(`Server hört auf port ${port}`);
+  // eslint-disable-next-line
+  debug(`port ${port}`);
 }
 
+// eslint-disable-next-line
 if (isDev) debug('devmode');
+
+// eslint-disable-next-line
+debug('node', process.version);
+
+// eslint-disable-next-line
+debug('server', version);
 
 app.set('port', port);
 

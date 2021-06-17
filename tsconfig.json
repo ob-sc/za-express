@@ -5,7 +5,8 @@
     "strict": true,
     "removeComments": true,
     "outDir": "dist",
-    "typeRoots": ["./za-types/server"]
+    "typeRoots": ["./za-types/server"],
+    "resolveJsonModule": true
   },
   "include": ["za-types", "src"],
   "exclude": ["node_modules", "dist", "**/*.spec.ts"],

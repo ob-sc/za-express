@@ -50,8 +50,8 @@ const status: StatusFunction = async (query, id) => {
     },
     {
       name: 'crentuser',
-      value: getValue(result.domain),
-      done: !!getValue(result.domain),
+      value: getValue(crent.user),
+      done: !!getValue(crent.user),
       label: 'C-Rent Benutzer',
       required: true,
       stations: anforderungen.crentstat,

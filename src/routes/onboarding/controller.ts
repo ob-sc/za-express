@@ -5,6 +5,7 @@ import sqlStrings from '../../sql';
 import { notEmptyString } from '../../util/helper';
 import { onbFreigabeMail, onbNeuMail, poswMail, statwMail } from './mail';
 import status from './status';
+import { NeuerMaForm } from '../../../za-types/server/onboarding';
 
 export const alleMa: RequestHandler = async (req, res) => {
   const { query, close } = res.database();
@@ -32,19 +33,21 @@ export const neuerMa: RequestHandler = async (req, res) => {
   const { query, close } = res.database();
 
   await res.catchError(async () => {
-    const ersteller = req.session.user?.username;
-    // todo type von req.body (gibt es schon als requests?)
-    const data = { ersteller, ...req.body };
+    const ersteller = req.session.user?.username ?? '';
+    const values: NeuerMaForm = req.body;
+    const data = { ersteller, ...values };
 
     const qry = await query(sqlStrings.onboarding.ins, data);
 
     const qry2 = await query<StationName>(sqlStrings.stationen.selName, [data.station]);
     await close();
 
+    const [statname] = qry2.results;
+
     const mailData: OnbFreigabeMailData = {
       ...data,
       id: qry.id,
-      station_name: qry2.results[0].name,
+      station_name: statname.name,
     };
 
     await onbFreigabeMail(mailData);
@@ -71,7 +74,7 @@ export const freigabe: RequestHandler = async (req, res) => {
 
 export const getMa: RequestHandler = async (req, res) => {
   const { query, close } = res.database();
-  const { id } = req.params;
+  const id = Number(req.params.id);
 
   await res.catchError(async () => {
     const maStatus = await status(query, id);

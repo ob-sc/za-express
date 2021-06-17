@@ -5,6 +5,7 @@ import { sess } from '../../config';
 import { Benutzer } from '../../../za-types/server/database';
 import { UserSession } from '../../../za-types/server/session';
 import sqlStrings from '../../sql';
+import { LoginRequest } from '../../../za-types/server/requests';
 
 const createSession: (user: Benutzer) => UserSession = (user) => ({
   username: user.username,
@@ -36,7 +37,7 @@ export const login: RequestHandler = async (req, res) => {
   await res.catchError(async () => {
     const { error, value } = sessionValidation.validate(req.body);
     if (error) throw error;
-    const { username, password } = value;
+    const { username, password }: LoginRequest = value;
 
     const isOnboarding = req.headers.host?.includes('onboarding');
 

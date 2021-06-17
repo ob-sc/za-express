@@ -1,8 +1,9 @@
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import { RequestHandler } from 'express';
-import sqlStrings from '../../sql';
 import { Account, Benutzer } from '../../../za-types/server/database';
+import { SignUpRequest } from '../../../za-types/server/requests';
+import sqlStrings from '../../sql';
 import userValidation from '../../validation/user';
 import { confirmMail, infoMail } from './mail';
 
@@ -12,7 +13,7 @@ export const signUp: RequestHandler = async (req, res) => {
   await res.catchError(async () => {
     const { error, value } = userValidation.validate(req.body);
     if (error) throw error;
-    const { username, password, station } = value;
+    const { username, password, station }: SignUpRequest = value;
 
     const qry = await query<Benutzer>(sqlStrings.benutzer.sel, [username]);
 
@@ -39,7 +40,7 @@ export const signUp: RequestHandler = async (req, res) => {
 
         const email = `${username}@starcar.de`;
         await confirmMail({ token, to: email });
-        await infoMail(username);
+        await infoMail({ user: username });
 
         if (qry3.isUpdated) return res.okmsg();
         return res.errmsg('Kein token eingetragen');
@@ -47,8 +48,6 @@ export const signUp: RequestHandler = async (req, res) => {
       await close();
       res.errmsg('Kein Benutzer eingetragen');
     });
-
-    //
   }, close);
 };
 

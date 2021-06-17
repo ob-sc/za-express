@@ -1,5 +1,5 @@
 const parseEnv: (value: string | undefined) => number | undefined = (val) =>
-  val === undefined ? undefined : parseInt(val);
+  val === undefined ? undefined : Number(val);
 
 const {
   NODE_ENV,
