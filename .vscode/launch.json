@@ -2,7 +2,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "TS debug",
+      "name": "TS runtime",
       "type": "pwa-node",
       "request": "launch",
       "runtimeExecutable": "node",
