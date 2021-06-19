@@ -14,11 +14,14 @@ const config_1 = require("./config");
 const middleware_1 = require("./middleware/");
 const routes_1 = require("./routes");
 const testcfg_1 = require("./util/testcfg");
+const debug_1 = __importDefault(require("./util/debug"));
 const MySQLStore = express_mysql_session_1.default(express_session_1.default);
 const sessionStore = new MySQLStore({ ...config_1.db, expiration: config_1.sess.cookie.maxAge });
 const cfg = testcfg_1.testConfig(process.env);
 if (cfg.errors !== 0)
-    throw new Error(`Keine cfg: ${cfg.string}`);
+    debug_1.default(`Keine cfg: ${cfg.string}`);
+else
+    debug_1.default('Config geladen');
 const app = express_1.default();
 app.set('trust proxy', 1);
 app.use(cors_1.default({ origin: /starcar\.local$/, credentials: true }));

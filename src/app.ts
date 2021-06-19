@@ -9,13 +9,15 @@ import { db, sess } from './config';
 import { catchError, database, errorHandler, notFound, response } from './middleware/';
 import { angemeldet, aushilfen, auth, onboarding, stationen, user, zeiten } from './routes';
 import { testConfig } from './util/testcfg';
+import debug from './util/debug';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const MySQLStore = expressMySqlSession(session as any);
 const sessionStore = new MySQLStore({ ...db, expiration: sess.cookie.maxAge });
 
 const cfg = testConfig(process.env);
-if (cfg.errors !== 0) throw new Error(`Keine cfg: ${cfg.string}`);
+if (cfg.errors !== 0) debug(`Keine cfg: ${cfg.string}`);
+else debug('Config geladen');
 
 const app = express();
 
