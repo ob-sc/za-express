@@ -41,11 +41,10 @@ const server = isDev
   ? http.createServer(app)
   : https.createServer(
       {
-        key: fs.readFileSync('/etc/nginx/ssl/localhost-key.pem'),
-        cert: fs.readFileSync('/etc/nginx/ssl/localhost.pem'),
-        // todo bug
-        // key: fs.readFileSync('/etc/nginx/ssl/key.pem'),
-        // cert: fs.readFileSync('/etc/nginx/ssl/certificate.pem'),
+        // key: fs.readFileSync('/etc/nginx/ssl/localhost-key.pem'),
+        // cert: fs.readFileSync('/etc/nginx/ssl/localhost.pem'),
+        key: fs.readFileSync('/etc/nginx/ssl/key.pem'),
+        cert: fs.readFileSync('/etc/nginx/ssl/certificate.pem'),
       },
       app
     );

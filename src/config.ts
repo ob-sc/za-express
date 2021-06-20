@@ -42,7 +42,7 @@ const sess = {
   name: sess_name,
   resave: false,
   rolling: true,
-  saveUninitialized: true,
+  saveUninitialized: false,
   secret: sess_secret,
 };
 

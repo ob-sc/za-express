@@ -17,7 +17,7 @@ const MySQLStore = express_mysql_session_1.default(express_session_1.default);
 const sessionStore = new MySQLStore({ ...config_1.db, expiration: config_1.sess.cookie.maxAge });
 const app = express_1.default();
 app.set('trust proxy', 1);
-app.use(cors_1.default({ origin: /localhost$/, credentials: true }));
+app.use(cors_1.default({ origin: /starcar\.local$/, credentials: true }));
 app.use(cookie_parser_1.default());
 app.use(express_session_1.default({
     ...config_1.sess,

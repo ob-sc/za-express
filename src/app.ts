@@ -17,9 +17,8 @@ const app = express();
 
 app.set('trust proxy', 1);
 
-// todo bug
-// app.use(cors({ origin: /starcar\.local$/, credentials: true }));
-app.use(cors({ origin: /localhost$/, credentials: true }));
+app.use(cors({ origin: /starcar\.local$/, credentials: true }));
+// app.use(cors({ origin: /localhost$/, credentials: true }));
 app.use(cookieParser());
 app.use(
   session({

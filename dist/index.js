@@ -40,8 +40,8 @@ app_1.default.set('port', config_1.port);
 const server = helper_1.isDev
     ? http_1.default.createServer(app_1.default)
     : https_1.default.createServer({
-        key: fs_1.default.readFileSync('/etc/nginx/ssl/localhost-key.pem'),
-        cert: fs_1.default.readFileSync('/etc/nginx/ssl/localhost.pem'),
+        key: fs_1.default.readFileSync('/etc/nginx/ssl/key.pem'),
+        cert: fs_1.default.readFileSync('/etc/nginx/ssl/certificate.pem'),
     }, app_1.default);
 server.listen(config_1.port);
 server.on('error', onError);
