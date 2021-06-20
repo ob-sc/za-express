@@ -8,22 +8,18 @@ import { isDev } from './util/helper';
 import { db, sess } from './config';
 import { catchError, database, errorHandler, notFound, response } from './middleware/';
 import { angemeldet, aushilfen, auth, onboarding, stationen, user, zeiten } from './routes';
-import { testConfig } from './util/testcfg';
-import debug from './util/debug';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const MySQLStore = expressMySqlSession(session as any);
 const sessionStore = new MySQLStore({ ...db, expiration: sess.cookie.maxAge });
 
-const cfg = testConfig(process.env);
-if (cfg.errors !== 0) debug(`Keine cfg: ${cfg.string}`);
-else debug('Config geladen');
-
 const app = express();
 
 app.set('trust proxy', 1);
 
-app.use(cors({ origin: /starcar\.local$/, credentials: true }));
+// todo bug
+// app.use(cors({ origin: /starcar\.local$/, credentials: true }));
+app.use(cors({ origin: /localhost$/, credentials: true }));
 app.use(cookieParser());
 app.use(
   session({
@@ -41,7 +37,7 @@ app.use(response);
 // res.connection & res.query
 app.use(database);
 
-// try / catch block der die Verbindung schließt
+// try / catch block der die bei Fehler Verbindung schließt
 app.use(catchError);
 
 const apiRouter = express.Router();

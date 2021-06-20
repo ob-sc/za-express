@@ -10,6 +10,7 @@ const config_1 = require("./config");
 const app_1 = __importDefault(require("./app"));
 const helper_1 = require("./util/helper");
 const debug_1 = __importDefault(require("./util/debug"));
+const testcfg_1 = require("./util/testcfg");
 function onError(error) {
     if (error.syscall !== 'listen')
         throw error;
@@ -25,6 +26,11 @@ function onError(error) {
 function onListening() {
     debug_1.default(`port ${config_1.port}`);
 }
+const cfg = testcfg_1.testConfig(process.env);
+if (cfg.errors !== 0)
+    debug_1.default(`Keine cfg: ${cfg.string}`);
+else
+    debug_1.default('Config geladen');
 debug_1.default('Starte Server');
 if (helper_1.isDev)
     debug_1.default('devmode');
@@ -34,8 +40,8 @@ app_1.default.set('port', config_1.port);
 const server = helper_1.isDev
     ? http_1.default.createServer(app_1.default)
     : https_1.default.createServer({
-        key: fs_1.default.readFileSync('/etc/nginx/ssl/key.pem'),
-        cert: fs_1.default.readFileSync('/etc/nginx/ssl/certificate.pem'),
+        key: fs_1.default.readFileSync('/etc/nginx/ssl/localhost-key.pem'),
+        cert: fs_1.default.readFileSync('/etc/nginx/ssl/localhost.pem'),
     }, app_1.default);
 server.listen(config_1.port);
 server.on('error', onError);

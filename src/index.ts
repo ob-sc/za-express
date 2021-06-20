@@ -7,6 +7,7 @@ import { port } from './config';
 import app from './app';
 import { isDev } from './util/helper';
 import debug from './util/debug';
+import { testConfig } from './util/testcfg';
 
 function onError(error: NodeJS.ErrnoException) {
   if (error.syscall !== 'listen') throw error;
@@ -25,6 +26,10 @@ function onListening() {
   debug(`port ${port}`);
 }
 
+const cfg = testConfig(process.env);
+if (cfg.errors !== 0) debug(`Keine cfg: ${cfg.string}`);
+else debug('Config geladen');
+
 debug('Starte Server');
 if (isDev) debug('devmode');
 debug('node', process.version);
@@ -36,8 +41,11 @@ const server = isDev
   ? http.createServer(app)
   : https.createServer(
       {
-        key: fs.readFileSync('/etc/nginx/ssl/key.pem'),
-        cert: fs.readFileSync('/etc/nginx/ssl/certificate.pem'),
+        key: fs.readFileSync('/etc/nginx/ssl/localhost-key.pem'),
+        cert: fs.readFileSync('/etc/nginx/ssl/localhost.pem'),
+        // todo bug
+        // key: fs.readFileSync('/etc/nginx/ssl/key.pem'),
+        // cert: fs.readFileSync('/etc/nginx/ssl/certificate.pem'),
       },
       app
     );
