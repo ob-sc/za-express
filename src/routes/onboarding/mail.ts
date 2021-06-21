@@ -45,7 +45,7 @@ export const onbNeuMail: MailFunction<OnboardingStation> = async (data) => {
   <a href="${url}">Vorgang anzeigen</a>`;
 
   await onboardingMail(
-    isDev ? 'ole.bergen@starcar.de' : 'sc-neue-ma@starcar.de',
+    isDev ? 'ole.bergen@starcar.de' : 'onboarding@starcar.de',
     'Neuer Mitarbeiter',
     template(content)
   );
@@ -70,7 +70,7 @@ export const onbDoneMail: MailFunction<StatusResult> = async (data) => {
   <div style="margin:1.3em 0px;"><a href="${url}">Vorgang anzeigen</a></div>`;
 
   await onboardingMail(
-    isDev ? 'ole.bergen@starcar.de' : 'sc-neue-ma@starcar.de',
+    isDev ? 'ole.bergen@starcar.de' : 'onboarding@starcar.de',
     'Mitarbeiter fertig bearbeitet',
     template(content)
   );
@@ -103,7 +103,7 @@ export const poswMail: MailFunction<OnbPosWMailData> = async (data) => {
   )} als ${position}`;
 
   await onboardingMail(
-    isDev ? 'ole.bergen@starcar.de' : 'sc-neue-ma@starcar.de',
+    isDev ? 'ole.bergen@starcar.de' : 'onboarding@starcar.de',
     'Positionswechsel',
     template(content)
   );

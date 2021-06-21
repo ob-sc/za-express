@@ -18,10 +18,10 @@ export const confirmMail: MailFunction<ConfirmMailData> = async (data) => {
 };
 
 export const infoMail: MailFunction<AccountInfoMail> = async ({ user }) => {
-  const content = `Benutzer ${user} hat sich einen Account erstellt`;
+  const content = `Benutzer ${user} hat sich einen Account für das Onboarding erstellt`;
 
   await onboardingMail(
-    isDev ? 'ole.bergen@starcar.de' : 'onboarding@starcar.de',
+    isDev ? 'ole.bergen@starcar.de' : 'personalabteilung@starcar.de',
     'Neuer Benutzer',
     template(content)
   );
