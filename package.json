@@ -10,7 +10,7 @@
     "prestart": "yarn sync && yarn install",
     "start": "pm2 start ecosystem.config.js --env production",
     "reload": "pm2 reload http-api",
-    "restart": "pm2 delete http-api && yarn start",
+    "restart": "pm2 delete http-api && yarn start && pm2 update",
     "prewatch": "yarn sync",
     "watch": "nodemon -r dotenv/config src/index.ts",
     "compiled": "NODE_ENV=development node -r dotenv/config dist/index.js",
