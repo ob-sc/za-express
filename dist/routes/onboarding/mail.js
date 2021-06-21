@@ -30,7 +30,7 @@ const onbNeuMail = async (data) => {
   <li>Arbeitsort: ${station_name}</li>
   <li>Position: ${position}</li></ul>
   <a href="${url}">Vorgang anzeigen</a>`;
-    await mail_1.onboardingMail(helper_1.isDev ? 'ole.bergen@starcar.de' : 'sc-neue-ma@starcar.de', 'Neuer Mitarbeiter', mail_1.template(content));
+    await mail_1.onboardingMail(helper_1.isDev ? 'ole.bergen@starcar.de' : 'onboarding@starcar.de', 'Neuer Mitarbeiter', mail_1.template(content));
 };
 exports.onbNeuMail = onbNeuMail;
 const onbDoneMail = async (data) => {
@@ -46,7 +46,7 @@ const onbDoneMail = async (data) => {
   <h1 style="font-family:Helvetica, Verdana, sans-serif;margin:0px;margin-bottom:1.3em;font-size:1.3em;line-height:1.4em">${vorname} ${nachname}</h1>
   <table style="font-family:Helvetica, sans-serif;margin:0px;"><tbody>${rows}</tbody></table>
   <div style="margin:1.3em 0px;"><a href="${url}">Vorgang anzeigen</a></div>`;
-    await mail_1.onboardingMail(helper_1.isDev ? 'ole.bergen@starcar.de' : 'sc-neue-ma@starcar.de', 'Mitarbeiter fertig bearbeitet', mail_1.template(content));
+    await mail_1.onboardingMail(helper_1.isDev ? 'ole.bergen@starcar.de' : 'onboarding@starcar.de', 'Mitarbeiter fertig bearbeitet', mail_1.template(content));
 };
 exports.onbDoneMail = onbDoneMail;
 const statwMail = async (data) => {
@@ -63,6 +63,6 @@ const poswMail = async (data) => {
     const { name, date, position, creator } = data;
     const ersteller = helper_1.erstellerString(creator);
     const content = `${ersteller} meldet einen Positionswechsel:<br/>${name} arbeitet ab ${helper_1.toLocalDate(date)} als ${position}`;
-    await mail_1.onboardingMail(helper_1.isDev ? 'ole.bergen@starcar.de' : 'sc-neue-ma@starcar.de', 'Positionswechsel', mail_1.template(content));
+    await mail_1.onboardingMail(helper_1.isDev ? 'ole.bergen@starcar.de' : 'onboarding@starcar.de', 'Positionswechsel', mail_1.template(content));
 };
 exports.poswMail = poswMail;

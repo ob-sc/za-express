@@ -12,7 +12,7 @@ const confirmMail = async (data) => {
 };
 exports.confirmMail = confirmMail;
 const infoMail = async ({ user }) => {
-    const content = `Benutzer ${user} hat sich einen Account erstellt`;
-    await mail_1.onboardingMail(helper_1.isDev ? 'ole.bergen@starcar.de' : 'onboarding@starcar.de', 'Neuer Benutzer', mail_1.template(content));
+    const content = `Benutzer ${user} hat sich einen Account für das Onboarding erstellt`;
+    await mail_1.onboardingMail(helper_1.isDev ? 'ole.bergen@starcar.de' : 'personalabteilung@starcar.de', 'Neuer Benutzer', mail_1.template(content));
 };
 exports.infoMail = infoMail;
