@@ -56,7 +56,7 @@ const statwMail = async (data) => {
     let content = `${ersteller} meldet einen Stationswechsel:<br/>${name} wechselt am ${helper_1.toLocalDate(date)} in die ${ort}`;
     if (docuware !== undefined)
         content += `<br/>Neue Docuware Workflow Gruppen: ${docuware}`;
-    await mail_1.onboardingMail(helper_1.isDev ? 'ole.bergen@starcar.de' : 'sc-neue-ma@starcar.de', 'Stationswechsel', mail_1.template(content));
+    await mail_1.onboardingMail(helper_1.isDev ? 'ole.bergen@starcar.de' : 'onboarding@starcar.de', 'Stationswechsel', mail_1.template(content));
 };
 exports.statwMail = statwMail;
 const poswMail = async (data) => {

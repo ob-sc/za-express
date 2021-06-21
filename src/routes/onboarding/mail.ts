@@ -88,7 +88,7 @@ export const statwMail: MailFunction<StatWMailData> = async (data) => {
   if (docuware !== undefined) content += `<br/>Neue Docuware Workflow Gruppen: ${docuware}`;
 
   await onboardingMail(
-    isDev ? 'ole.bergen@starcar.de' : 'sc-neue-ma@starcar.de',
+    isDev ? 'ole.bergen@starcar.de' : 'onboarding@starcar.de',
     'Stationswechsel',
     template(content)
   );
