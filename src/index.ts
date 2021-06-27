@@ -27,13 +27,12 @@ function onListening() {
 }
 
 const cfg = testConfig(process.env);
-if (cfg.errors !== 0) debug(`Keine cfg: ${cfg.string}`);
-else debug('Config geladen');
 
-debug('Starte Server');
-if (isDev) debug('devmode');
+debug('server version', process.env.npm_package_version);
+if (cfg.errors !== 0) debug(`keine cfg: ${cfg.string}`);
+else debug('config geladen');
 debug('node', process.version);
-debug('package', process.env.npm_package_version);
+if (isDev) debug('devmode');
 
 app.set('port', port);
 
