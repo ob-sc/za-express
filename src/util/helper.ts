@@ -60,3 +60,5 @@ export const spaces: Spaces = (params) => {
 
   return statement.trim();
 };
+
+export const scEmail: StringFn = (creator) => `${creator}@starcar.de`;

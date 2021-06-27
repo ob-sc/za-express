@@ -6,14 +6,18 @@
       "type": "pwa-node",
       "request": "launch",
       "runtimeExecutable": "node",
-      "runtimeArgs": ["--nolazy", "-r", "ts-node/register/transpile-only"],
+      "runtimeArgs": ["--nolazy", "-r", "ts-node/register/transpile-only", "-r", "dotenv/config"],
 
       "args": ["src/index.ts"],
 
       "cwd": "${workspaceRoot}",
       "internalConsoleOptions": "openOnSessionStart",
-      "skipFiles": ["<node_internals>/**", "node_modules/**"],
-      "outputCapture": "std"
+      "skipFiles": ["<node_internals>/**", "node_modules/**", "dist/**"],
+      "outputCapture": "std",
+
+      "env": {
+        "NODE_ENV": "development"
+      }
     },
     {
       "type": "node",
@@ -21,7 +25,7 @@
       "name": "Compiled TS",
       "runtimeArgs": ["-r", "dotenv/config"],
       "args": ["dist/index.js"],
-      "skipFiles": ["<node_internals>/**", "node_modules/**"],
+      "skipFiles": ["<node_internals>/**", "node_modules/**", "src/**"],
       "outputCapture": "std",
 
       "env": {

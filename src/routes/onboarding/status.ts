@@ -7,7 +7,7 @@ import {
   StatusResult,
 } from '../../../za-types/server/onboarding';
 import { OnboardingStation } from '../../../za-types/server/results';
-import { onbDoneMail } from './mail';
+import { onbDoneMail, onbErstellerMail } from './mail';
 import { getValue, hardwareAnf, isRequested, networkAnf, suggestion } from './statusHelper';
 
 const status: StatusFunction = async (query, id) => {
@@ -40,13 +40,6 @@ const status: StatusFunction = async (query, id) => {
       label: 'Citrix',
       required: true,
       suggestion: suggestions.domain,
-    },
-    {
-      name: 'mail',
-      value: getValue(result.domain) ? `${result.domain}@starcar.de` : false,
-      done: !!getValue(result.domain),
-      label: 'E-Mail',
-      required: true,
     },
     {
       name: 'crentuser',
@@ -129,7 +122,10 @@ const status: StatusFunction = async (query, id) => {
     if (isNotDone === false) {
       statusResult.status = true;
       const qry2 = await query(sqlStrings.onboarding.updStatus, [id]);
-      if (qry2.isUpdated === true) await onbDoneMail(statusResult);
+      if (qry2.isUpdated === true) {
+        await onbDoneMail(statusResult);
+        await onbErstellerMail(statusResult);
+      }
     }
   }
 

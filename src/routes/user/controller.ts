@@ -4,6 +4,7 @@ import { RequestHandler } from 'express';
 import { Account, Benutzer } from '../../../za-types/server/database';
 import { SignUpRequest } from '../../../za-types/server/requests';
 import sqlStrings from '../../sql';
+import { scEmail } from '../../util/helper';
 import userValidation from '../../validation/user';
 import { confirmMail, infoMail } from './mail';
 
@@ -38,7 +39,7 @@ export const signUp: RequestHandler = async (req, res) => {
         });
         await close();
 
-        const email = `${username}@starcar.de`;
+        const email = scEmail(username);
         await confirmMail({ token, to: email });
         await infoMail({ user: username });
 
