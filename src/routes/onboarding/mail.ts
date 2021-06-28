@@ -31,7 +31,7 @@ export const onbFreigabeMail: MailFunction<OnbFreigabeMailData> = async (data) =
   const url = `https://onboarding.starcar.local/ma/${id}`;
   const vl = vorgangList(data, url, true);
 
-  const content = `Mitarbeiter <a href="${url}">#${id}</a> wurde angelegt von ${creator} und wartet auf die Freigabe.
+  const content = `Mitarbeiter <a href="${url}">#${id}</a> wurde angelegt von ${creator} und kann freigegeben werden.
   ${divider}
   ${vl}`;
 

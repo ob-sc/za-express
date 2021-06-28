@@ -175,24 +175,6 @@ const updateQlik: RequestHandler = async (req, res, next) => {
   }, close);
 };
 
-const updateHardware: RequestHandler = async (req, res, next) => {
-  const { query, close } = res.database();
-
-  await res.catchError(async () => {
-    const { id, hardware } = req.body;
-    if (hardware === undefined) return next();
-
-    const qry = await query(sqlStrings.onboarding.updHardware, [hardware, id]);
-
-    await status(query, id);
-
-    await close();
-
-    if (qry.isUpdated === true) res.okmsg();
-    else res.errmsg();
-  }, close);
-};
-
 const updateNetwork: RequestHandler = async (req, res, next) => {
   const { query, close } = res.database();
 
@@ -217,7 +199,6 @@ export const updateMitarbeiter = [
   updateCrent,
   updateDocuware,
   updateQlik,
-  updateHardware,
   updateNetwork,
 ];
 

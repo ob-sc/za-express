@@ -89,14 +89,6 @@ const status: StatusFunction = async (query, id) => {
       apps: anforderungen.qlikapps,
     },
     {
-      name: 'hardware',
-      value: getValue(result.hardware),
-      done: !!getValue(result.hardware),
-      label: 'Hardware',
-      required: hardware.required,
-      array: hardware.array,
-    },
-    {
       name: 'network',
       value: getValue(result.network),
       done: !!getValue(result.network),
@@ -106,7 +98,7 @@ const status: StatusFunction = async (query, id) => {
     },
   ];
 
-  const statusResult: StatusResult = { ...result, statusArray };
+  const statusResult: StatusResult = { ...result, statusArray, hardware };
 
   // wenn der MA in der DB noch status 0 hatte, jetzt also erst fertig ist
   if (result.status === false) {
