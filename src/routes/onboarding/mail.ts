@@ -65,7 +65,7 @@ export const onbHardwareMail: MailFunction<OnboardingStation> = async (data) => 
   const url = `https://onboarding.starcar.local/ma/${id}`;
   const vl = vorgangList(data, url, true);
 
-  const content = `TODO Hardware text <a href="${url}">#${id}</a>  ${creator}.
+  const content = `Es wurde Hardware für den neuen Mitarbeiter <a href="${url}">#${vorname} ${nachname}</a> von ${creator} angefordert.
   ${divider}
   ${vl}`;
 
@@ -100,7 +100,7 @@ export const onbErstellerMail: MailFunction<StatusResult> = async (data) => {
   const url = `https://onboarding.starcar.local/ma/${id}`;
   const vl = vorgangList(data, url);
 
-  const content = `<p>Hallo ${creatorNames[0]},</p>,
+  const content = `<p>Hallo ${creatorNames[0]},</p>
   <p><a href="${url}">${vorname} ${nachname}</a> hat jetzt alle Zugänge.</p>
   ${vl}
 
