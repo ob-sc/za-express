@@ -12,15 +12,20 @@ const helper_1 = require("./util/helper");
 const debug_1 = __importDefault(require("./util/debug"));
 const testcfg_1 = require("./util/testcfg");
 function onError(error) {
-    if (error.syscall !== 'listen')
-        throw error;
-    switch (error.code) {
-        case 'EACCES':
-            throw new Error(`Port ${config_1.port} braucht höheren Zugriff`);
-        case 'EADDRINUSE':
-            throw new Error(`Port ${config_1.port} wird bereits verwendet`);
-        default:
+    try {
+        if (error.syscall !== 'listen')
             throw error;
+        switch (error.code) {
+            case 'EACCES':
+                throw new Error(`Port ${config_1.port} benötigt root`);
+            case 'EADDRINUSE':
+                throw new Error(`Port ${config_1.port} wird bereits verwendet`);
+            default:
+                throw error;
+        }
+    }
+    catch (err) {
+        debug_1.default(err);
     }
 }
 function onListening() {

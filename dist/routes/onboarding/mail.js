@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.poswMail = exports.statwMail = exports.onbErstellerMail = exports.onbDoneMail = exports.onbHardwareMail = exports.onbNeuMail = exports.onbFreigabeMail = void 0;
 const helper_1 = require("../../util/helper");
 const mail_1 = require("../../util/mail");
+const statusHelper_1 = require("./statusHelper");
 const vorgangList = (data, url, hName = false) => {
     const { eintritt, station_name, position, vorname, nachname } = data;
     const header = hName === true
@@ -42,7 +43,19 @@ const onbHardwareMail = async (data) => {
     const creator = helper_1.erstellerString(ersteller);
     const url = `https://onboarding.starcar.local/ma/${id}`;
     const vl = vorgangList(data, url, true);
+    const anforderungen = JSON.parse(data.anforderungen);
+    const { array } = statusHelper_1.hardwareAnf(anforderungen);
+    let tableBody = '';
+    for (const item of array) {
+        tableBody += `<tr><td>${item.label}</td><td>${typeof item.value === 'boolean' ? '✓' : item.value}</td></tr>`;
+    }
     const content = `Es wurde Hardware für den neuen Mitarbeiter <a href="${url}">#${vorname} ${nachname}</a> von ${creator} angefordert.
+  <table>
+    <tbody>
+      ${tableBody}
+    </tbody>
+  </table>
+
   ${mail_1.divider}
   ${vl}`;
     await mail_1.onboardingMail(helper_1.isDev ? 'ole.bergen@starcar.de' : 'onboarding@starcar.de', `Hardware für ${vorname[0]}. ${nachname} / ${eintritt} / ${station_name}`, mail_1.template(content));

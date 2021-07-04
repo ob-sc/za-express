@@ -10,15 +10,19 @@ import debug from './util/debug';
 import { testConfig } from './util/testcfg';
 
 function onError(error: NodeJS.ErrnoException) {
-  if (error.syscall !== 'listen') throw error;
+  try {
+    if (error.syscall !== 'listen') throw error;
 
-  switch (error.code) {
-    case 'EACCES':
-      throw new Error(`Port ${port} braucht höheren Zugriff`);
-    case 'EADDRINUSE':
-      throw new Error(`Port ${port} wird bereits verwendet`);
-    default:
-      throw error;
+    switch (error.code) {
+      case 'EACCES':
+        throw new Error(`Port ${port} benötigt root`);
+      case 'EADDRINUSE':
+        throw new Error(`Port ${port} wird bereits verwendet`);
+      default:
+        throw error;
+    }
+  } catch (err) {
+    debug(err);
   }
 }
 

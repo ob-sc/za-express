@@ -52,7 +52,7 @@ const database = (req, res, next) => {
                                 resolve();
                         });
                     else
-                        reject();
+                        resolve();
                 });
             },
         };

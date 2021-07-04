@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.scEmail = exports.spaces = exports.checkArray = exports.checkObject = exports.notEmptyString = exports.toLocalDate = exports.prepend0 = exports.erstellerString = exports.capitalize = exports.isDev = void 0;
+exports.onboardingAuthResult = exports.parseStringArray = exports.scEmail = exports.spaces = exports.checkArray = exports.checkObject = exports.notEmptyString = exports.toLocalDate = exports.prepend0 = exports.erstellerString = exports.capitalize = exports.isDev = void 0;
 exports.isDev = process.env.NODE_ENV === 'development';
 const capitalize = (str) => str[0].toUpperCase() + str.substring(1);
 exports.capitalize = capitalize;
@@ -53,3 +53,28 @@ const spaces = (params) => {
 exports.spaces = spaces;
 const scEmail = (creator) => `${creator}@starcar.de`;
 exports.scEmail = scEmail;
+const parseStringArray = (string) => {
+    if (!string)
+        return [];
+    const array = string.split('');
+    const result = [];
+    for (let index = 0; index < array.length; index++) {
+        const str = array[index];
+        result.push(str !== '*' ? Number(str) : str);
+    }
+    return result;
+};
+exports.parseStringArray = parseStringArray;
+const onboardingAuthResult = (user, results, authFn) => {
+    const authed = [];
+    for (const r of results) {
+        const isAdmin = user?.admin === true;
+        const isReleased = r.anzeigen === true;
+        const isOwn = user?.username === r.ersteller;
+        const hasStation = authFn(r.station);
+        if (isAdmin || (isReleased && (isOwn || hasStation)))
+            authed.push(r);
+    }
+    return authed;
+};
+exports.onboardingAuthResult = onboardingAuthResult;

@@ -8,13 +8,14 @@ const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const session_1 = __importDefault(require("../../validation/session"));
 const config_1 = require("../../config");
 const sql_1 = __importDefault(require("../../sql"));
+const helper_1 = require("../../util/helper");
 const createSession = (user) => ({
     username: user.username,
     admin: user.admin,
     station: user.station,
     access: user.access,
     region: user.region,
-    extstat: user.extstat?.split(',') ?? [],
+    extstat: helper_1.parseStringArray(user.extstat),
     currentStation: user.station,
     onboarding: user.onboarding?.split(',') ?? [],
     isLoggedIn: true,
@@ -39,13 +40,15 @@ const login = async (req, res) => {
         if (error)
             throw error;
         const { username, password } = value;
-        const isOnboarding = req.headers.host?.includes('onboarding');
         const qry = await query(sql_1.default.benutzer.sel, [username]);
         await close();
         const [user] = qry.results;
         if (qry.isEmpty === true)
             return res.errmsg('Benutzer nicht gefunden', 401);
-        if (isOnboarding && user.allow_onboarding !== true)
+        const isOnboarding = req.headers.host?.includes('onboarding');
+        const allowOnboarding = user.allow_onboarding === true;
+        const isDisponent = user?.access === 0;
+        if (isOnboarding && (isDisponent || !allowOnboarding))
             return res.errmsg('Benutzer ist nicht für das Onboarding freigegeben', 401);
         bcryptjs_1.default.compare(password, user.password, (err, result) => {
             if (err)

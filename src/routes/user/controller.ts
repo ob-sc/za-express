@@ -6,7 +6,7 @@ import { SignUpRequest } from '../../../za-types/server/requests';
 import sqlStrings from '../../sql';
 import { scEmail } from '../../util/helper';
 import userValidation from '../../validation/user';
-import { confirmMail, infoMail } from './mail';
+import { confirmMail } from './mail';
 
 export const signUp: RequestHandler = async (req, res) => {
   const { query, close } = res.database();
@@ -41,7 +41,6 @@ export const signUp: RequestHandler = async (req, res) => {
 
         const email = scEmail(username);
         await confirmMail({ token, to: email });
-        await infoMail({ user: username });
 
         if (qry3.isUpdated) return res.okmsg();
         return res.errmsg('Kein token eingetragen');

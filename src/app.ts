@@ -8,6 +8,7 @@ import { isDev } from './util/helper';
 import { db, sess } from './config';
 import { catchError, database, errorHandler, notFound, response } from './middleware/';
 import { angemeldet, aushilfen, auth, onboarding, stationen, user, zeiten } from './routes';
+import authStation from './middleware/authStation';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const MySQLStore = expressMySqlSession(session as any);
@@ -37,6 +38,9 @@ app.use(database);
 
 // try / catch block der die bei Fehler Verbindung schließt
 app.use(catchError);
+
+// check ob station berechtigt ist
+app.use(authStation);
 
 const apiRouter = express.Router();
 app.use('/api', apiRouter);

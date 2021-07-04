@@ -57,6 +57,7 @@ const sql = {
   stationen: {
     selID: 'SELECT * FROM stationen WHERE id = ?',
     selOptions: 'SELECT id AS optval, name AS optlabel FROM stationen',
+    selRegion: 'SELECT id FROM stationen WHERE LOWER(region) = ? OR LOWER(region2) = ?',
     selName: 'SELECT name FROM stationen WHERE id = ?',
   },
   zeiten: {

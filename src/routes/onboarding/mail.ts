@@ -9,6 +9,7 @@ import { StatusResult } from '../../../za-types/server/onboarding';
 import { OnboardingStation } from '../../../za-types/server/results';
 import { erstellerString, isDev, scEmail, toLocalDate } from '../../util/helper';
 import { divider, onboardingMail, template } from '../../util/mail';
+import { hardwareAnf } from './statusHelper';
 
 const vorgangList = (data: VorgangList, url: string, hName = false) => {
   const { eintritt, station_name, position, vorname, nachname } = data;
@@ -65,7 +66,25 @@ export const onbHardwareMail: MailFunction<OnboardingStation> = async (data) => 
   const url = `https://onboarding.starcar.local/ma/${id}`;
   const vl = vorgangList(data, url, true);
 
+  const anforderungen = JSON.parse(data.anforderungen);
+  const { array } = hardwareAnf(anforderungen);
+
+  let tableBody = '';
+
+  for (const item of array) {
+    tableBody += `<tr><td>${item.label}</td><td>${
+      // kann nur true sein, weil hardwareAnf nur true gibt
+      typeof item.value === 'boolean' ? '✓' : item.value
+    }</td></tr>`;
+  }
+
   const content = `Es wurde Hardware für den neuen Mitarbeiter <a href="${url}">#${vorname} ${nachname}</a> von ${creator} angefordert.
+  <table>
+    <tbody>
+      ${tableBody}
+    </tbody>
+  </table>
+
   ${divider}
   ${vl}`;
 

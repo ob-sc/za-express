@@ -10,17 +10,12 @@ const mail_1 = require("./mail");
 const status_1 = __importDefault(require("./status"));
 const alleMa = async (req, res) => {
     const { query, close } = res.database();
+    const { user } = req.session;
     await res.catchError(async () => {
         const qry = await query(sql_1.default.onboarding.selJoinStation);
         await close();
-        let i = qry.results.length;
-        while (i--) {
-            if (qry.results[i].anzeigen === false &&
-                req.session.user?.username !== qry.results[i].ersteller &&
-                req.session.user?.admin !== true)
-                qry.results.splice(i, 1);
-        }
-        res.okmsg(qry.results);
+        const authedMa = helper_1.onboardingAuthResult(user, qry.results, res.authStation);
+        res.okmsg(authedMa);
     }, close);
 };
 exports.alleMa = alleMa;
@@ -52,7 +47,10 @@ const freigabe = async (req, res) => {
         const qry2 = await query(sql_1.default.onboarding.selJoinStation, [id]);
         await close();
         const [onboardingStation] = qry2.results;
+        if (onboardingStation.anzeigen === true)
+            return res.errmsg('Mitarbeiter ist schon freigegeben', 400);
         await mail_1.onbNeuMail(onboardingStation);
+        await mail_1.onbHardwareMail(onboardingStation);
         res.okmsg();
     }, close);
 };

@@ -50,7 +50,7 @@ const database: RequestHandler = (req, res, next) => {
               if (error) reject(error);
               else resolve();
             });
-          else reject();
+          else resolve();
         });
       },
     };

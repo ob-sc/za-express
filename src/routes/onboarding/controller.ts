@@ -2,30 +2,22 @@ import { RequestHandler } from 'express';
 import { OnboardingStation, StationName } from '../../../za-types/server/results';
 import { OnbFreigabeMailData, OnbPosWMailData, StatWMailData } from '../../../za-types/server/mail';
 import sqlStrings from '../../sql';
-import { notEmptyString } from '../../util/helper';
-import { onbFreigabeMail, onbNeuMail, poswMail, statwMail } from './mail';
+import { notEmptyString, onboardingAuthResult } from '../../util/helper';
+import { onbFreigabeMail, onbHardwareMail, onbNeuMail, poswMail, statwMail } from './mail';
 import status from './status';
 import { NeuerMaForm } from '../../../za-types/server/onboarding';
 
 export const alleMa: RequestHandler = async (req, res) => {
   const { query, close } = res.database();
+  const { user } = req.session;
 
   await res.catchError(async () => {
     const qry = await query<OnboardingStation>(sqlStrings.onboarding.selJoinStation);
     await close();
 
-    // versteckte zeilen für nicht admin und nicht ersteller raus
-    // rückwärts damit index richtig bleibt
-    let i = qry.results.length;
-    while (i--) {
-      if (
-        qry.results[i].anzeigen === false &&
-        req.session.user?.username !== qry.results[i].ersteller &&
-        req.session.user?.admin !== true
-      )
-        qry.results.splice(i, 1);
-    }
-    res.okmsg(qry.results);
+    const authedMa = onboardingAuthResult(user, qry.results, res.authStation);
+
+    res.okmsg(authedMa);
   }, close);
 };
 
@@ -67,7 +59,11 @@ export const freigabe: RequestHandler = async (req, res) => {
 
     const [onboardingStation] = qry2.results;
 
+    if (onboardingStation.anzeigen === true)
+      return res.errmsg('Mitarbeiter ist schon freigegeben', 400);
+
     await onbNeuMail(onboardingStation);
+    await onbHardwareMail(onboardingStation);
     res.okmsg();
   }, close);
 };

@@ -6,14 +6,16 @@ import { Benutzer } from '../../../za-types/server/database';
 import { UserSession } from '../../../za-types/server/session';
 import sqlStrings from '../../sql';
 import { LoginRequest } from '../../../za-types/server/requests';
+import { parseStringArray } from '../../util/helper';
+import { CreateSession } from '../../../za-types/server/onboarding';
 
-const createSession: (user: Benutzer) => UserSession = (user) => ({
+const createSession: CreateSession = (user) => ({
   username: user.username,
   admin: user.admin,
   station: user.station,
   access: user.access,
   region: user.region,
-  extstat: user.extstat?.split(',') ?? [],
+  extstat: parseStringArray(user.extstat),
   currentStation: user.station,
   onboarding: user.onboarding?.split(',') ?? [],
   isLoggedIn: true,
@@ -39,8 +41,6 @@ export const login: RequestHandler = async (req, res) => {
     if (error) throw error;
     const { username, password }: LoginRequest = value;
 
-    const isOnboarding = req.headers.host?.includes('onboarding');
-
     const qry = await query<Benutzer>(sqlStrings.benutzer.sel, [username]);
     await close();
 
@@ -48,7 +48,11 @@ export const login: RequestHandler = async (req, res) => {
 
     if (qry.isEmpty === true) return res.errmsg('Benutzer nicht gefunden', 401);
 
-    if (isOnboarding && user.allow_onboarding !== true)
+    const isOnboarding = req.headers.host?.includes('onboarding');
+    const allowOnboarding = user.allow_onboarding === true;
+    const isDisponent = user?.access === 0;
+
+    if (isOnboarding && (isDisponent || !allowOnboarding))
       return res.errmsg('Benutzer ist nicht für das Onboarding freigegeben', 401);
 
     bcrypt.compare(password, user.password, (err, result) => {

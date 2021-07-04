@@ -1,11 +1,15 @@
+import { NumOrWildcard } from '../../za-types/server/types';
 import {
   CheckArray,
   CheckObject,
   NotEmptyString,
+  OnboardingAuthResult,
+  ParseStringArray,
   Prepend0,
   Spaces,
   StringFn,
 } from '../../za-types/server/util';
+import debug from './debug';
 
 export const isDev = process.env.NODE_ENV === 'development';
 
@@ -62,3 +66,34 @@ export const spaces: Spaces = (params) => {
 };
 
 export const scEmail: StringFn = (creator) => `${creator}@starcar.de`;
+
+export const parseStringArray: ParseStringArray = (string) => {
+  if (!string) return [];
+
+  const array = string.split(',');
+  const result: NumOrWildcard[] = [];
+
+  for (let index = 0; index < array.length; index++) {
+    const str = array[index];
+    result.push(str !== '*' ? Number(str) : str);
+  }
+
+  return result;
+};
+
+export const onboardingAuthResult: OnboardingAuthResult = (user, results, authFn) => {
+  const authed = [];
+
+  for (const r of results) {
+    const isAdmin = user?.admin === true;
+    const isReleased = r.anzeigen === true;
+    const isOwn = user?.username === r.ersteller;
+    const hasStation = authFn(r.station);
+
+    debug(isAdmin, isReleased, isOwn, hasStation);
+
+    if (isAdmin || (isReleased && (isOwn || hasStation))) authed.push(r);
+  }
+
+  return authed;
+};
