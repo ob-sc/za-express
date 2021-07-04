@@ -56,7 +56,7 @@ exports.scEmail = scEmail;
 const parseStringArray = (string) => {
     if (!string)
         return [];
-    const array = string.split('');
+    const array = string.split(',');
     const result = [];
     for (let index = 0; index < array.length; index++) {
         const str = array[index];

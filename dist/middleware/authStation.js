@@ -16,6 +16,7 @@ const authStation = (req, res, next) => {
             const userRegion = user?.region?.toLowerCase();
             query(sql_1.default.stationen.selRegion, [userRegion, userRegion])
                 .then((data) => {
+                close();
                 for (const item of data.results) {
                     allowedStations.push(item.id);
                 }
@@ -23,10 +24,9 @@ const authStation = (req, res, next) => {
                 .catch(() => {
                 close();
             });
-            close();
         }
-        allowedStations.filter((astat) => astat === station);
-        return allowedStations.length > 0;
+        const authStations = allowedStations.filter((astat) => astat === station);
+        return authStations.length > 0;
     };
     next();
 };

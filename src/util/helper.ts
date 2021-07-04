@@ -9,7 +9,6 @@ import {
   Spaces,
   StringFn,
 } from '../../za-types/server/util';
-import debug from './debug';
 
 export const isDev = process.env.NODE_ENV === 'development';
 
@@ -89,8 +88,6 @@ export const onboardingAuthResult: OnboardingAuthResult = (user, results, authFn
     const isReleased = r.anzeigen === true;
     const isOwn = user?.username === r.ersteller;
     const hasStation = authFn(r.station);
-
-    debug(isAdmin, isReleased, isOwn, hasStation);
 
     if (isAdmin || (isReleased && (isOwn || hasStation))) authed.push(r);
   }
