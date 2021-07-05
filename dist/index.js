@@ -10,7 +10,7 @@ const config_1 = require("./config");
 const app_1 = __importDefault(require("./app"));
 const helper_1 = require("./util/helper");
 const debug_1 = __importDefault(require("./util/debug"));
-const testcfg_1 = require("./util/testcfg");
+const validateCfg_1 = require("./util/validateCfg");
 function onError(error) {
     try {
         if (error.syscall !== 'listen')
@@ -31,7 +31,7 @@ function onError(error) {
 function onListening() {
     debug_1.default(`port ${config_1.port}`);
 }
-const cfg = testcfg_1.testConfig(process.env);
+const cfg = validateCfg_1.validateCfg(process.env);
 debug_1.default('server version', process.env.npm_package_version);
 if (cfg.errors !== 0)
     debug_1.default(`keine cfg: ${cfg.string}`);

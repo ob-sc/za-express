@@ -52,15 +52,14 @@ export const freigabe: RequestHandler = async (req, res) => {
   const { id } = req.body;
 
   await res.catchError(async () => {
-    await query(sqlStrings.onboarding.updAnzeigen, [id]);
-
-    const qry2 = await query<OnboardingStation>(sqlStrings.onboarding.selJoinStation, [id]);
-    await close();
-
+    const qry2 = await query<OnboardingStation>(sqlStrings.onboarding.selJoinStationID, [id]);
     const [onboardingStation] = qry2.results;
-
     if (onboardingStation.anzeigen === true)
       return res.errmsg('Mitarbeiter ist schon freigegeben', 400);
+
+    await query(sqlStrings.onboarding.updAnzeigen, [id]);
+
+    await close();
 
     await onbNeuMail(onboardingStation);
     await onbHardwareMail(onboardingStation);

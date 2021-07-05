@@ -64,7 +64,7 @@ export const spaces: Spaces = (params) => {
   return statement.trim();
 };
 
-export const scEmail: StringFn = (creator) => `${creator}@starcar.de`;
+export const scEmail: StringFn = (user) => `${user}@starcar.de`;
 
 export const parseStringArray: ParseStringArray = (string) => {
   if (!string) return [];

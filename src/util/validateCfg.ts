@@ -1,6 +1,6 @@
 import { spaces } from './helper';
 
-export const testConfig = (env: NodeJS.ProcessEnv): { errors: number; string: string } => {
+export const validateCfg = (env: NodeJS.ProcessEnv): { errors: number; string: string } => {
   const errors = [];
 
   const hasNODE_ENV = env.NODE_ENV !== undefined;

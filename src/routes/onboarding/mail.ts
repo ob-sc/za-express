@@ -38,7 +38,7 @@ export const onbFreigabeMail: MailFunction<OnbFreigabeMailData> = async (data) =
 
   await onboardingMail(
     isDev ? 'ole.bergen@starcar.de' : 'personalabteilung@starcar.de',
-    `Freigabe ${vorname[0]}. ${nachname} / ${eintritt} / ${station_name}`,
+    `Freigabe ${vorname[0]}. ${nachname} / ${toLocalDate(eintritt)} / ${station_name}`,
     template(content)
   );
 };
@@ -55,7 +55,7 @@ export const onbNeuMail: MailFunction<OnboardingStation> = async (data) => {
 
   await onboardingMail(
     isDev ? 'ole.bergen@starcar.de' : 'onboarding@starcar.de',
-    `Eintritt ${vorname[0]}. ${nachname} / ${eintritt} / ${station_name}`,
+    `Eintritt ${vorname[0]}. ${nachname} / ${toLocalDate(eintritt)} /  ${station_name}`,
     template(content)
   );
 };
@@ -78,7 +78,7 @@ export const onbHardwareMail: MailFunction<OnboardingStation> = async (data) => 
     }</td></tr>`;
   }
 
-  const content = `Es wurde Hardware für den neuen Mitarbeiter <a href="${url}">#${vorname} ${nachname}</a> von ${creator} angefordert.
+  const content = `Es wurde Hardware für <a href="${url}">${vorname} ${nachname}</a> von ${creator} angefordert.
   <table>
     <tbody>
       ${tableBody}
@@ -90,7 +90,7 @@ export const onbHardwareMail: MailFunction<OnboardingStation> = async (data) => 
 
   await onboardingMail(
     isDev ? 'ole.bergen@starcar.de' : 'onboarding@starcar.de',
-    `Hardware für ${vorname[0]}. ${nachname} / ${eintritt} / ${station_name}`,
+    `Hardware für ${vorname[0]}. ${nachname} / ${toLocalDate(eintritt)} /  ${station_name}`,
     template(content)
   );
 };

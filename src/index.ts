@@ -7,7 +7,7 @@ import { port } from './config';
 import app from './app';
 import { isDev } from './util/helper';
 import debug from './util/debug';
-import { testConfig } from './util/testcfg';
+import { validateCfg } from './util/validateCfg';
 
 function onError(error: NodeJS.ErrnoException) {
   try {
@@ -30,7 +30,7 @@ function onListening() {
   debug(`port ${port}`);
 }
 
-const cfg = testConfig(process.env);
+const cfg = validateCfg(process.env);
 
 debug('server version', process.env.npm_package_version);
 if (cfg.errors !== 0) debug(`keine cfg: ${cfg.string}`);

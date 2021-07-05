@@ -43,12 +43,12 @@ const freigabe = async (req, res) => {
     const { query, close } = res.database();
     const { id } = req.body;
     await res.catchError(async () => {
-        await query(sql_1.default.onboarding.updAnzeigen, [id]);
-        const qry2 = await query(sql_1.default.onboarding.selJoinStation, [id]);
-        await close();
+        const qry2 = await query(sql_1.default.onboarding.selJoinStationID, [id]);
         const [onboardingStation] = qry2.results;
         if (onboardingStation.anzeigen === true)
             return res.errmsg('Mitarbeiter ist schon freigegeben', 400);
+        await query(sql_1.default.onboarding.updAnzeigen, [id]);
+        await close();
         await mail_1.onbNeuMail(onboardingStation);
         await mail_1.onbHardwareMail(onboardingStation);
         res.okmsg();

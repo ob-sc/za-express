@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.testConfig = void 0;
+exports.validateCfg = void 0;
 const helper_1 = require("./helper");
-const testConfig = (env) => {
+const validateCfg = (env) => {
     const errors = [];
     const hasNODE_ENV = env.NODE_ENV !== undefined;
     if (hasNODE_ENV === false)
@@ -36,4 +36,4 @@ const testConfig = (env) => {
         string: helper_1.spaces(errors),
     };
 };
-exports.testConfig = testConfig;
+exports.validateCfg = validateCfg;

@@ -51,7 +51,7 @@ const spaces = (params) => {
     return statement.trim();
 };
 exports.spaces = spaces;
-const scEmail = (creator) => `${creator}@starcar.de`;
+const scEmail = (user) => `${user}@starcar.de`;
 exports.scEmail = scEmail;
 const parseStringArray = (string) => {
     if (!string)
