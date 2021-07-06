@@ -1,5 +1,19 @@
 import nodemailer from 'nodemailer';
-import { ContentTemplate, MailTemplate } from '../../za-types/server/mail';
+import { ContentTemplate, MailTemplate, SendMail } from '../../za-types/server/mail';
+
+/**
+ * Mail-Empfänger
+ */
+export const mailTo = {
+  dev: 'ole.bergen@starcar.de',
+  onboarding: 'onboarding@starcar.de',
+  perso: 'personalabteilung@starcar.de',
+  hardware: 'hardware@starcar.de',
+};
+
+const mailFrom = {
+  onboarding: 'STARCAR Onboarding <onboarding@starcar.de>',
+};
 
 const transporter = nodemailer.createTransport({
   host: '192.168.100.50',
@@ -7,22 +21,20 @@ const transporter = nodemailer.createTransport({
   secure: false,
 });
 
-// const aushilfenMail = async (to, subject, text, html) => {
-//   await transporter.sendMail({
-//     from: 'STARCAR Aushilfen <aushilfen@starcar.local>',
-//     to,
-//     subject,
-//     html,
-//   });
-// };
-
-export const onboardingMail: MailTemplate = async (to, subject, html) =>
+const sendMail: SendMail = async (from, to, subject, html) =>
   transporter.sendMail({
-    from: 'STARCAR Onboarding <onboarding@starcar.local>',
+    from,
     to,
     subject,
     html,
   });
+
+// export const zaMail: MailTemplate = async (to, subject, html) => {
+//   sendMail(mailFrom.uuuh, to, subject, html);
+// };
+
+export const onboardingMail: MailTemplate = async (to, subject, html) =>
+  sendMail(mailFrom.onboarding, to, subject, html);
 
 export const template: ContentTemplate = (content) => `<!DOCTYPE html><html><head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"><style>

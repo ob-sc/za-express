@@ -8,6 +8,6 @@ const confirmMail = async (data) => {
     const url = `https://onboarding.starcar.local/confirm/${token}`;
     const content = `Dein Account wurde erfolgreich angelegt.<br/>
   <a href="${url}">Account bestätigen</a>`;
-    await mail_1.onboardingMail(helper_1.isDev ? 'ole.bergen@starcar.de' : to, 'Account bestätigen', mail_1.template(content));
+    await mail_1.onboardingMail(helper_1.isDev ? mail_1.mailTo.dev : to, 'Account bestätigen', mail_1.template(content));
 };
 exports.confirmMail = confirmMail;

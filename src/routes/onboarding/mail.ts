@@ -8,7 +8,7 @@ import {
 import { StatusResult } from '../../../za-types/server/onboarding';
 import { OnboardingStation } from '../../../za-types/server/results';
 import { erstellerString, isDev, scEmail, toLocalDate } from '../../util/helper';
-import { divider, onboardingMail, template } from '../../util/mail';
+import { divider, mailTo, onboardingMail, template } from '../../util/mail';
 import { hardwareAnf } from './statusHelper';
 
 const vorgangList = (data: VorgangList, url: string, hName = false) => {
@@ -37,7 +37,7 @@ export const onbFreigabeMail: MailFunction<OnbFreigabeMailData> = async (data) =
   ${vl}`;
 
   await onboardingMail(
-    isDev ? 'ole.bergen@starcar.de' : 'personalabteilung@starcar.de',
+    isDev ? mailTo.dev : mailTo.perso,
     `Freigabe ${vorname[0]}. ${nachname} / ${toLocalDate(eintritt)} / ${station_name}`,
     template(content)
   );
@@ -54,7 +54,7 @@ export const onbNeuMail: MailFunction<OnboardingStation> = async (data) => {
   ${vl}`;
 
   await onboardingMail(
-    isDev ? 'ole.bergen@starcar.de' : 'onboarding@starcar.de',
+    isDev ? mailTo.dev : mailTo.onboarding,
     `Eintritt ${vorname[0]}. ${nachname} / ${toLocalDate(eintritt)} /  ${station_name}`,
     template(content)
   );
@@ -72,7 +72,9 @@ export const onbHardwareMail: MailFunction<OnboardingStation> = async (data) => 
   let tableBody = '';
 
   for (const item of array) {
-    tableBody += `<tr><td>${item.label}</td><td>${
+    tableBody += `<tr><td style="font-family:Helvetica, sans-serif;font-size:14px;line-height:1.4em;">${
+      item.label
+    }</td><td>${
       // kann nur true sein, weil hardwareAnf nur true gibt
       typeof item.value === 'boolean' ? '✓' : item.value
     }</td></tr>`;
@@ -89,7 +91,7 @@ export const onbHardwareMail: MailFunction<OnboardingStation> = async (data) => 
   ${vl}`;
 
   await onboardingMail(
-    isDev ? 'ole.bergen@starcar.de' : 'onboarding@starcar.de',
+    isDev ? mailTo.dev : mailTo.hardware,
     `Hardware für ${vorname[0]}. ${nachname} / ${toLocalDate(eintritt)} /  ${station_name}`,
     template(content)
   );
@@ -105,7 +107,7 @@ export const onbDoneMail: MailFunction<StatusResult> = async (data) => {
   ${vl}`;
 
   await onboardingMail(
-    isDev ? 'ole.bergen@starcar.de' : 'onboarding@starcar.de',
+    isDev ? mailTo.dev : mailTo.onboarding,
     `Zugänge ${vorname[0]}. ${nachname} fertig`,
     template(content)
   );
@@ -127,7 +129,7 @@ export const onbErstellerMail: MailFunction<StatusResult> = async (data) => {
   deine Personalabteilung</p>`;
 
   await onboardingMail(
-    isDev ? 'ole.bergen@starcar.de' : creatorMail,
+    isDev ? mailTo.dev : creatorMail,
     `${vorname} ${nachname} fertig bearbeitet`,
     template(content)
   );
@@ -138,13 +140,13 @@ export const statwMail: MailFunction<StatWMailData> = async (data) => {
   const ersteller = erstellerString(creator);
   const datum = toLocalDate(date);
 
-  const ort = `${station === '1' ? 'Verwaltung' : `Station ${station}`}`;
+  const ort = station === '1' ? 'Verwaltung' : `Station ${station}`;
+  const dw = docuware !== undefined ? `<br/>Neue Docuware Workflow Gruppen: ${docuware}` : '';
 
-  let content = `${ersteller} meldet einen Stationswechsel:<br/>${name} wechselt am ${datum} in die ${ort}`;
-  if (docuware !== undefined) content += `<br/>Neue Docuware Workflow Gruppen: ${docuware}`;
+  const content = `${ersteller} meldet einen Stationswechsel:<br/>${name} wechselt am ${datum} in die ${ort}.${dw}`;
 
   await onboardingMail(
-    isDev ? 'ole.bergen@starcar.de' : 'onboarding@starcar.de',
+    isDev ? mailTo.dev : mailTo.onboarding,
     `Stationswechsel ${name} / ${datum} / ${ort}`,
     template(content)
   );
@@ -158,7 +160,7 @@ export const poswMail: MailFunction<OnbPosWMailData> = async (data) => {
   const content = `${ersteller} meldet einen Positionswechsel:<br/>${name} arbeitet ab ${datum} als ${position}`;
 
   await onboardingMail(
-    isDev ? 'ole.bergen@starcar.de' : 'onboarding@starcar.de',
+    isDev ? mailTo.dev : mailTo.onboarding,
     `Positionswechsel ${name} / ${datum} / ${position}`,
     template(content)
   );

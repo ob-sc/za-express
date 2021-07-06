@@ -1,11 +1,12 @@
 import { RequestHandler } from 'express';
 import { OnboardingStation, StationName } from '../../../za-types/server/results';
+import { NeuerMaForm } from '../../../za-types/server/onboarding';
 import { OnbFreigabeMailData, OnbPosWMailData, StatWMailData } from '../../../za-types/server/mail';
 import sqlStrings from '../../sql';
 import { notEmptyString, onboardingAuthResult } from '../../util/helper';
 import { onbFreigabeMail, onbHardwareMail, onbNeuMail, poswMail, statwMail } from './mail';
 import status from './status';
-import { NeuerMaForm } from '../../../za-types/server/onboarding';
+import { hardwareAnf } from './statusHelper';
 
 export const alleMa: RequestHandler = async (req, res) => {
   const { query, close } = res.database();
@@ -62,7 +63,13 @@ export const freigabe: RequestHandler = async (req, res) => {
     await close();
 
     await onbNeuMail(onboardingStation);
-    // await onbHardwareMail(onboardingStation);
+
+    const anf = JSON.parse(onboardingStation.anforderungen);
+    const { array } = hardwareAnf(anf);
+
+    if (array.length !== 0) {
+      await onbHardwareMail(onboardingStation);
+    }
     res.okmsg();
   }, close);
 };

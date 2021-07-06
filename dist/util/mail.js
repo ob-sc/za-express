@@ -3,19 +3,29 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.divider = exports.template = exports.onboardingMail = void 0;
+exports.divider = exports.template = exports.onboardingMail = exports.mailTo = void 0;
 const nodemailer_1 = __importDefault(require("nodemailer"));
+exports.mailTo = {
+    dev: 'ole.bergen@starcar.de',
+    onboarding: 'onboarding@starcar.de',
+    perso: 'personalabteilung@starcar.de',
+    hardware: 'hardware@starcar.de',
+};
+const mailFrom = {
+    onboarding: 'STARCAR Onboarding <onboarding@starcar.de>',
+};
 const transporter = nodemailer_1.default.createTransport({
     host: '192.168.100.50',
     port: 25,
     secure: false,
 });
-const onboardingMail = async (to, subject, html) => transporter.sendMail({
-    from: 'STARCAR Onboarding <onboarding@starcar.local>',
+const sendMail = async (from, to, subject, html) => transporter.sendMail({
+    from,
     to,
     subject,
     html,
 });
+const onboardingMail = async (to, subject, html) => sendMail(mailFrom.onboarding, to, subject, html);
 exports.onboardingMail = onboardingMail;
 const template = (content) => `<!DOCTYPE html><html><head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"><style>

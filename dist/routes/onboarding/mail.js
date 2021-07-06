@@ -24,7 +24,7 @@ const onbFreigabeMail = async (data) => {
     const content = `Mitarbeiter <a href="${url}">#${id}</a> wurde angelegt von ${creator} und kann freigegeben werden.
   ${mail_1.divider}
   ${vl}`;
-    await mail_1.onboardingMail(helper_1.isDev ? 'ole.bergen@starcar.de' : 'personalabteilung@starcar.de', `Freigabe ${vorname[0]}. ${nachname} / ${helper_1.toLocalDate(eintritt)} / ${station_name}`, mail_1.template(content));
+    await mail_1.onboardingMail(helper_1.isDev ? mail_1.mailTo.dev : mail_1.mailTo.perso, `Freigabe ${vorname[0]}. ${nachname} / ${helper_1.toLocalDate(eintritt)} / ${station_name}`, mail_1.template(content));
 };
 exports.onbFreigabeMail = onbFreigabeMail;
 const onbNeuMail = async (data) => {
@@ -35,7 +35,7 @@ const onbNeuMail = async (data) => {
     const content = `Mitarbeiter <a href="${url}">#${id}</a> wurde angelegt von ${creator}.
   ${mail_1.divider}
   ${vl}`;
-    await mail_1.onboardingMail(helper_1.isDev ? 'ole.bergen@starcar.de' : 'onboarding@starcar.de', `Eintritt ${vorname[0]}. ${nachname} / ${helper_1.toLocalDate(eintritt)} /  ${station_name}`, mail_1.template(content));
+    await mail_1.onboardingMail(helper_1.isDev ? mail_1.mailTo.dev : mail_1.mailTo.onboarding, `Eintritt ${vorname[0]}. ${nachname} / ${helper_1.toLocalDate(eintritt)} /  ${station_name}`, mail_1.template(content));
 };
 exports.onbNeuMail = onbNeuMail;
 const onbHardwareMail = async (data) => {
@@ -47,7 +47,7 @@ const onbHardwareMail = async (data) => {
     const { array } = statusHelper_1.hardwareAnf(anforderungen);
     let tableBody = '';
     for (const item of array) {
-        tableBody += `<tr><td>${item.label}</td><td>${typeof item.value === 'boolean' ? '✓' : item.value}</td></tr>`;
+        tableBody += `<tr><td style="font-family:Helvetica, sans-serif;font-size:14px;line-height:1.4em;">${item.label}</td><td>${typeof item.value === 'boolean' ? '✓' : item.value}</td></tr>`;
     }
     const content = `Es wurde Hardware für <a href="${url}">${vorname} ${nachname}</a> von ${creator} angefordert.
   <table>
@@ -58,7 +58,7 @@ const onbHardwareMail = async (data) => {
 
   ${mail_1.divider}
   ${vl}`;
-    await mail_1.onboardingMail(helper_1.isDev ? 'ole.bergen@starcar.de' : 'onboarding@starcar.de', `Hardware für ${vorname[0]}. ${nachname} / ${helper_1.toLocalDate(eintritt)} /  ${station_name}`, mail_1.template(content));
+    await mail_1.onboardingMail(helper_1.isDev ? mail_1.mailTo.dev : mail_1.mailTo.hardware, `Hardware für ${vorname[0]}. ${nachname} / ${helper_1.toLocalDate(eintritt)} /  ${station_name}`, mail_1.template(content));
 };
 exports.onbHardwareMail = onbHardwareMail;
 const onbDoneMail = async (data) => {
@@ -68,7 +68,7 @@ const onbDoneMail = async (data) => {
     const content = `Mitarbeiter <a href="${url}">#${id}</a> wurde fertig bearbeitet.
   ${mail_1.divider}
   ${vl}`;
-    await mail_1.onboardingMail(helper_1.isDev ? 'ole.bergen@starcar.de' : 'onboarding@starcar.de', `Zugänge ${vorname[0]}. ${nachname} fertig`, mail_1.template(content));
+    await mail_1.onboardingMail(helper_1.isDev ? mail_1.mailTo.dev : mail_1.mailTo.onboarding, `Zugänge ${vorname[0]}. ${nachname} fertig`, mail_1.template(content));
 };
 exports.onbDoneMail = onbDoneMail;
 const onbErstellerMail = async (data) => {
@@ -84,18 +84,17 @@ const onbErstellerMail = async (data) => {
 
   <p>Viele Grüße,<br/>
   deine Personalabteilung</p>`;
-    await mail_1.onboardingMail(helper_1.isDev ? 'ole.bergen@starcar.de' : creatorMail, `${vorname} ${nachname} fertig bearbeitet`, mail_1.template(content));
+    await mail_1.onboardingMail(helper_1.isDev ? mail_1.mailTo.dev : creatorMail, `${vorname} ${nachname} fertig bearbeitet`, mail_1.template(content));
 };
 exports.onbErstellerMail = onbErstellerMail;
 const statwMail = async (data) => {
     const { name, date, station, docuware, creator } = data;
     const ersteller = helper_1.erstellerString(creator);
     const datum = helper_1.toLocalDate(date);
-    const ort = `${station === '1' ? 'Verwaltung' : `Station ${station}`}`;
-    let content = `${ersteller} meldet einen Stationswechsel:<br/>${name} wechselt am ${datum} in die ${ort}`;
-    if (docuware !== undefined)
-        content += `<br/>Neue Docuware Workflow Gruppen: ${docuware}`;
-    await mail_1.onboardingMail(helper_1.isDev ? 'ole.bergen@starcar.de' : 'onboarding@starcar.de', `Stationswechsel ${name} / ${datum} / ${ort}`, mail_1.template(content));
+    const ort = station === '1' ? 'Verwaltung' : `Station ${station}`;
+    const dw = docuware !== undefined ? `<br/>Neue Docuware Workflow Gruppen: ${docuware}` : '';
+    const content = `${ersteller} meldet einen Stationswechsel:<br/>${name} wechselt am ${datum} in die ${ort}.${dw}`;
+    await mail_1.onboardingMail(helper_1.isDev ? mail_1.mailTo.dev : mail_1.mailTo.onboarding, `Stationswechsel ${name} / ${datum} / ${ort}`, mail_1.template(content));
 };
 exports.statwMail = statwMail;
 const poswMail = async (data) => {
@@ -103,6 +102,6 @@ const poswMail = async (data) => {
     const ersteller = helper_1.erstellerString(creator);
     const datum = helper_1.toLocalDate(date);
     const content = `${ersteller} meldet einen Positionswechsel:<br/>${name} arbeitet ab ${datum} als ${position}`;
-    await mail_1.onboardingMail(helper_1.isDev ? 'ole.bergen@starcar.de' : 'onboarding@starcar.de', `Positionswechsel ${name} / ${datum} / ${position}`, mail_1.template(content));
+    await mail_1.onboardingMail(helper_1.isDev ? mail_1.mailTo.dev : mail_1.mailTo.onboarding, `Positionswechsel ${name} / ${datum} / ${position}`, mail_1.template(content));
 };
 exports.poswMail = poswMail;

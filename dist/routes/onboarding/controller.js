@@ -8,6 +8,7 @@ const sql_1 = __importDefault(require("../../sql"));
 const helper_1 = require("../../util/helper");
 const mail_1 = require("./mail");
 const status_1 = __importDefault(require("./status"));
+const statusHelper_1 = require("./statusHelper");
 const alleMa = async (req, res) => {
     const { query, close } = res.database();
     const { user } = req.session;
@@ -50,6 +51,11 @@ const freigabe = async (req, res) => {
         await query(sql_1.default.onboarding.updAnzeigen, [id]);
         await close();
         await mail_1.onbNeuMail(onboardingStation);
+        const anf = JSON.parse(onboardingStation.anforderungen);
+        const { array } = statusHelper_1.hardwareAnf(anf);
+        if (array.length !== 0) {
+            await mail_1.onbHardwareMail(onboardingStation);
+        }
         res.okmsg();
     }, close);
 };
