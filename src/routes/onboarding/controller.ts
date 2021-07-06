@@ -62,7 +62,7 @@ export const freigabe: RequestHandler = async (req, res) => {
     await close();
 
     await onbNeuMail(onboardingStation);
-    await onbHardwareMail(onboardingStation);
+    // await onbHardwareMail(onboardingStation);
     res.okmsg();
   }, close);
 };

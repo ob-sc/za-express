@@ -50,7 +50,6 @@ const freigabe = async (req, res) => {
         await query(sql_1.default.onboarding.updAnzeigen, [id]);
         await close();
         await mail_1.onbNeuMail(onboardingStation);
-        await mail_1.onbHardwareMail(onboardingStation);
         res.okmsg();
     }, close);
 };
