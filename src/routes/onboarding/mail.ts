@@ -74,8 +74,8 @@ export const onbHardwareMail: MailFunction<OnboardingStation> = async (data) => 
   for (const item of array) {
     tableBody += `<tr><td style="font-family:Helvetica, sans-serif;font-size:14px;line-height:1.4em;">${
       item.label
-    }</td><td>${
-      // kann nur true sein, weil hardwareAnf nur true gibt
+    }</td><td style="font-family:Helvetica, sans-serif;font-size:14px;line-height:1.4em;">${
+      // bool kann nur true sein, weil hardwareAnf nur true gibt
       typeof item.value === 'boolean' ? '✓' : item.value
     }</td></tr>`;
   }

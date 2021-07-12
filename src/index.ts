@@ -36,7 +36,7 @@ debug('server version', process.env.npm_package_version);
 if (cfg.errors !== 0) debug(`keine cfg: ${cfg.string}`);
 else debug('config geladen');
 debug('node', process.version);
-if (isDev) debug('devmode');
+debug('env', process.env.NODE_ENV ?? 'keine NODE_ENV');
 
 app.set('port', port);
 

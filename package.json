@@ -7,20 +7,20 @@
   "license": "UNLICENSED",
   "private": true,
   "scripts": {
+    "sync": "git pull && git submodule update --remote --merge",
     "syncinst": "yarn sync && yarn install",
     "prestart": "yarn syncinst",
     "start": "pm2 start ecosystem.config.js --env production",
     "reload": "pm2 reload http-api",
     "prerestart": "yarn syncinst",
     "restart": "pm2 delete http-api && yarn start && pm2 update",
-    "prewatch": "yarn sync",
+    "prewatch": "yarn syncinst",
     "watch": "nodemon -r dotenv/config src/index.ts",
     "compiled": "NODE_ENV=development node -r dotenv/config dist/index.js",
     "prettier": "prettier --write src",
     "prelint": "tsc --noemit",
     "lint": "eslint . --ext .ts,.tsx",
     "subinit": "git submodule init && git submodule update --remote --merge",
-    "sync": "git pull && git submodule update --remote --merge",
     "clean": "rm -rf dist",
     "prebuild": "yarn install",
     "build": "yarn clean && tsc",
@@ -31,9 +31,7 @@
     "minor": "yarn version --minor",
     "major": "yarn version --major",
     "dcup": "docker-compose up -d",
-    "dcdown": "docker-compose down",
-    "test": "echo test",
-    "posttest": "echo test2"
+    "dcdown": "docker-compose down"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
