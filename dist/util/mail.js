@@ -7,7 +7,7 @@ exports.divider = exports.template = exports.onboardingMail = exports.mailTo = v
 const nodemailer_1 = __importDefault(require("nodemailer"));
 exports.mailTo = {
     dev: 'ole.bergen@starcar.de',
-    onboarding: 'onboarding@starcar.de',
+    onboarding: 'sc-neue-ma@starcar.de',
     perso: 'personalabteilung@starcar.de',
     hardware: 'hardware@starcar.de',
 };

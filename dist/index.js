@@ -38,8 +38,7 @@ if (cfg.errors !== 0)
 else
     debug_1.default('config geladen');
 debug_1.default('node', process.version);
-if (helper_1.isDev)
-    debug_1.default('devmode');
+debug_1.default('env', process.env.NODE_ENV ?? 'keine NODE_ENV');
 app_1.default.set('port', config_1.port);
 const server = helper_1.isDev
     ? http_1.default.createServer(app_1.default)

@@ -47,7 +47,7 @@ const onbHardwareMail = async (data) => {
     const { array } = statusHelper_1.hardwareAnf(anforderungen);
     let tableBody = '';
     for (const item of array) {
-        tableBody += `<tr><td style="font-family:Helvetica, sans-serif;font-size:14px;line-height:1.4em;">${item.label}</td><td>${typeof item.value === 'boolean' ? '✓' : item.value}</td></tr>`;
+        tableBody += `<tr><td style="font-family:Helvetica, sans-serif;font-size:14px;line-height:1.4em;">${item.label}</td><td style="font-family:Helvetica, sans-serif;font-size:14px;line-height:1.4em;">${typeof item.value === 'boolean' ? '✓' : item.value}</td></tr>`;
     }
     const content = `Es wurde Hardware für <a href="${url}">${vorname} ${nachname}</a> von ${creator} angefordert.
   <table>
